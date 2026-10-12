@@ -309,6 +309,11 @@
   <button class="x" type="button" data-cerrar aria-label="Cerrar" data-ia="close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
   <div class="scroll">
     <h2 class="deco" id="hlTit" data-i="store_sheet_h">¿Dónde la recoges?</h2>
+    <button type="button" class="btn btn-linea btn-cerca" id="hlCerca">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.5" fill="currentColor"/></svg>
+      <span data-i="near_me">Cerca de mí</span>
+    </button>
+    <p class="cerca-msg" id="hlCercaMsg" role="status" aria-live="polite"></p>
     <div class="hl-locales" id="hlLocales" role="radiogroup"></div>
     <div id="hlHoraBox">
       <h3 class="hl-sub" data-i="time_h">¿A qué hora?</h3>

@@ -13,20 +13,23 @@ const CONFIG={
 /* LOCALES
    whatsapp: número del local en formato internacional sin + ni espacios (ej. 34612345678).
    pedidoUrl: si el local pide y cobra en una tienda online propia, el botón de pago lleva allí.
+   lat/lng: coordenadas EXACTAS de la puerta del local (con 4 decimales ≈ 10 m). Se usan para saber cuál
+   es el Pizzi más cercano. Para sacarlas: Google Maps → clic derecho sobre el local → copiar las coordenadas.
+   Revisadas en oct. 2026: Peris y Valero (estaba ~900 m desviado), Abastos (~500 m) y Mercado Central.
    foto: imagen de la fachada en assets/img. */
 /* Horarios: h[0]=lunes ... h[6]=domingo. Cada día es una lista de turnos [abre, cierra] en "HH:MM".
    Si cierra después de medianoche usa horas >24 (ej. "25:00" = 01:00). [] = cerrado. */
 const T=(a,c)=>[[a,c]];
 const LOCALES=[
-  {id:"mercado",lat:39.4744,lng:-0.3775,n:"Mercado Central",d:"C/ de les Carabasses, 3, Ciutat Vella, 46001 València",tel:"+34 744 78 47 37",whatsapp:"",maps:"https://maps.app.goo.gl/rAKcLgmbYJYk6TSh9",
+  {id:"mercado",lat:39.4737,lng:-0.3789,n:"Mercado Central",d:"C/ de les Carabasses, 3, Ciutat Vella, 46001 València",tel:"+34 744 78 47 37",whatsapp:"",maps:"https://maps.app.goo.gl/rAKcLgmbYJYk6TSh9",
    h:[[["12:00","15:00"],["19:00","24:00"]],[["12:00","15:00"],["19:00","24:00"]],[["12:00","15:00"],["19:00","24:00"]],[["12:00","15:00"],["19:00","24:00"]],T("12:00","24:00"),T("12:00","24:00"),T("12:00","24:00")]},
-  {id:"abastos",lat:39.4677,lng:-0.39,n:"Abastos",d:"C/ de Sant Francesc de Borja, 20, Extramurs, 46007 València",tel:"+34 673 16 14 66",whatsapp:"",maps:"https://maps.app.goo.gl/iob1fPZKLdyD8FNF9",
+  {id:"abastos",lat:39.4664,lng:-0.3851,n:"Abastos",d:"C/ de Sant Francesc de Borja, 20, Extramurs, 46007 València",tel:"+34 673 16 14 66",whatsapp:"",maps:"https://maps.app.goo.gl/iob1fPZKLdyD8FNF9",
    h:[[],T("18:30","23:30"),T("18:30","23:30"),T("18:30","23:30"),T("18:30","24:00"),T("18:30","24:00"),T("18:30","23:30")]},
   {id:"russafa",lat:39.4631,lng:-0.3739,n:"Ruzafa",d:"C. de Ruzafa, 58, L'Eixample, 46004 València",tel:"+34 744 78 47 37",whatsapp:"",maps:"https://maps.app.goo.gl/VfqsVDEDcRsKXxyu9",
    h:[T("18:30","23:30"),T("18:30","23:30"),T("18:30","23:30"),T("18:30","23:30"),T("18:30","24:00"),T("18:30","24:00"),T("18:30","23:30")]},
   {id:"canovas",lat:39.465,lng:-0.3676,n:"Cánovas",d:"C. de Joaquín Costa, 12, L'Eixample, 46005 València",tel:"+34 604 81 24 26",whatsapp:"",maps:"https://maps.app.goo.gl/L3ei1jMcgYXmEefz7",
    h:[T("18:00","23:30"),T("18:00","23:30"),T("18:00","23:30"),T("18:00","23:30"),T("18:00","25:00"),T("18:00","25:00"),T("18:00","23:30")]},
-  {id:"peris",lat:39.4545,lng:-0.37,pedidoUrl:"https://online.skytab.com/ca7f91bfeed306f50f4147d0dd13b011",n:"Peris y Valero",d:"Av. de Peris i Valero, 189, L'Eixample, 46005 València",tel:"+34 744 78 47 37",whatsapp:"",maps:"https://maps.app.goo.gl/iMcQYmXb9bt8SR686",
+  {id:"peris",lat:39.4624,lng:-0.3633,pedidoUrl:"https://online.skytab.com/ca7f91bfeed306f50f4147d0dd13b011",n:"Peris y Valero",d:"Av. de Peris i Valero, 189, L'Eixample, 46005 València",tel:"+34 744 78 47 37",whatsapp:"",maps:"https://maps.app.goo.gl/iMcQYmXb9bt8SR686",
    h:[T("18:30","23:30"),T("18:30","23:30"),T("18:30","23:30"),T("18:30","23:30"),T("18:30","24:00"),T("18:30","24:00"),T("18:30","23:30")]}
 ];
 const FOTO_LOCAL={mercado:"l-mercado",abastos:"l-abastos",russafa:"l-russafa",canovas:"l-canovas",peris:"l-peris"};
