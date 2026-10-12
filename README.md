@@ -18,6 +18,9 @@ Idiomas: español, inglés, italiano, francés y alemán. Se puede instalar en l
 ## Identidad
 
 - Colores: principal `#96041A` (vino) y secundario `#EBADAD` (rosa), más el damero de la caja.
+  - **Rosa**: fondo de toda la app; un rosa más claro para tarjetas, cajas y hojas.
+  - **Vino**: marca y navegación (cabecera, pestañas, pie) y botones de acción.
+  - **Blanco**, solo para lo que debe resaltar: el módulo «Empezar pedido», el resumen con «Confirmar pedido», «Ver mi pedido», el ticket, los campos de formulario, la opción elegida, y los botones clave sobre fondo rojo (+, etiquetas, «Ver la carta»).
 - **TT Modernoir Medium** solo en títulos (titulares de sección y nombres de pizza en la carta).
 - **Cervo Thin** en todo lo demás. Como solo tenemos el peso Thin, en etiquetas, botones y precios se le da cuerpo con un trazo fino (`--t-m` en `css/app.css`). Si conseguís **Cervo Medium**, añadidlo en `css/fonts.css` con `font-weight:500` y bajad ese trazo.
 - Logo sin tagline (`assets/img/logo-vino.png` y `logo-rosa.png`).

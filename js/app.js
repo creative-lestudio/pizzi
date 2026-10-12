@@ -361,7 +361,7 @@ function pintarCarta(){
 }
 function pintarAvisoCarta(){
   const l=localSel(),av=$("avisoCarta");
-  if(l&&l.pedidoUrl){av.hidden=false;av.innerHTML=`<p>${t("online_note",{n:esc(l.n)})}</p><a class="btn btn-vino" href="${l.pedidoUrl}" target="_blank" rel="noopener">${t("go_pay")}</a>`;}
+  if(l&&l.pedidoUrl){av.hidden=false;av.innerHTML=`<p>${t("online_note",{n:esc(l.n)})}</p><a class="btn btn-blanco" href="${l.pedidoUrl}" target="_blank" rel="noopener">${t("go_pay")}</a>`;}
   else if(l&&!abierto(l)){const p=proxima(l);av.hidden=false;av.innerHTML=`<p>${t("closed_sched",{n:esc(l.n),o:esc(p?(p.off===0?t("opens_today",{h:hhmm(p.m)}):t("opens_at",{d:nombreDia(p.off),h:hhmm(p.m)})):"")})}</p>`;}
   else av.hidden=true;
 }
