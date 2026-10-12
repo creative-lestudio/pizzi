@@ -1,42 +1,56 @@
-[README.md](https://github.com/user-attachments/files/32616303/README.md)
-# PIZZI · Web de pedidos para recoger (demo)
+# PIZZI · App web de pedidos para recoger
 
-Propuesta de web diseñada por **LE STUDIO** para Pizzi, Valencia.
-Es un único archivo (`index.html`) con todo incluido: diseño, fotos y lógica. No necesita servidor ni base de datos.
+Web principal de Pizzi (Valencia) diseñada por **LE STUDIO**. Funciona como una app (al estilo de Honest Greens): pestañas abajo en el móvil, hojas que suben desde abajo, carrito siempre a mano y un flujo corto pensado para convertir.
+Es una web estática: no necesita servidor ni base de datos (GitHub Pages, Cloudflare Pages…).
 
-## Qué hace
+## Flujo
 
-1. **Inicio**: portada con la identidad de Pizzi y dos accesos, pedir o ver locales.
-2. **Locales**: estado abierto/cerrado en tiempo real (hora de España), dirección, horario, enlace a Google Maps y botón *Pedir aquí* o *Programar pedido*.
-3. **Carta**: pizzas y bebidas con extras, notas para cocina y cantidades. El pedido se guarda en el navegador si el cliente sale y vuelve.
-4. **Datos**: local, hora de recogida (franjas de 15 min dentro del horario) y datos del cliente. Pago en el local.
-5. **Confirmación**: abre WhatsApp con la comanda lista para enviar al local, muestra el resumen con el importe a pagar y permite añadir un recordatorio al calendario.
+1. **Inicio**: saludo, el eslogan de la caja («Llévame a casa que estoy caliente») y una tarjeta con **Dónde** (local) y **Cuándo** (hora) + botón *Empezar pedido*. Debajo: *Repite tu último pedido*, *Las más pedidas* con botón **+** para añadir sin abrir la ficha, *Así de fácil* y los locales con su estado en tiempo real.
+2. **Selector de local y hora** (hoja inferior): locales con foto, estado abierto/cerrado y franjas de 15 min. Si el local está cerrado se programa el pedido.
+3. **Carta**: barra fija con el local y la hora, pestañas de categorías que siguen el scroll, tarjetas con **+** rápido. En escritorio, el pedido se ve siempre en un panel lateral.
+4. **Ficha de producto**: foto grande, descripción, alérgenos, notas para cocina y cantidad.
+5. **Pedido**: líneas editables, sugerencia de bebidas, recogida, datos (se pueden recordar en el dispositivo), pago en el local y botón fijo *Confirmar pedido · total*.
+6. **Confirmación**: abre WhatsApp con la comanda para el local, muestra el ticket y permite *Cómo llegar*, *Llamar* y *Añadir al calendario*.
 
-## Página de presentación
+Los locales con `pedidoUrl` (Peris y Valero) envían al cliente a su tienda online para pedir y pagar.
+Idiomas: español, inglés, italiano, francés y alemán. Se puede instalar en la pantalla de inicio (manifest).
 
-En `#como-funciona` (enlace en la barra superior de la demo) hay una página para presentar la propuesta al dueño: cómo pide el cliente, cómo llegan los mensajes, ventajas, calculadora de ahorro y fases (panel de gestión y automatización).
+## Identidad
 
-## Publicarla con GitHub Pages
+- Colores: vino `#97031E` y rosa `#E2B0AF`, más el damero de la caja.
+- Tipografías (alojadas en `fonts/`, sin llamadas a terceros): **Federant** para titulares (Art Déco, como la carta) y **Barlow Condensed / Barlow** para textos, precios y botones.
 
-1. Crea un repositorio nuevo en GitHub (por ejemplo `pizzi-web`).
-2. Sube `index.html` y este `README.md` (botón **Add file → Upload files**).
-3. Ve a **Settings → Pages**.
-4. En **Source** elige **Deploy from a branch**, rama `main` y carpeta `/ (root)`. Guarda.
-5. En uno o dos minutos la web estará en `https://TU-USUARIO.github.io/pizzi-web/`.
+## Archivos
 
-## Configurar los datos reales
+| Ruta | Qué contiene |
+| --- | --- |
+| `index.html` | Estructura de la app |
+| `css/app.css` | Diseño (variables de color al principio) |
+| `css/fonts.css`, `fonts/` | Tipografías |
+| `js/data.js` | **CONFIG, LOCALES, carta (`P`), destacadas (`TOP`) y categorías** |
+| `js/i18n.js` | Textos en 5 idiomas |
+| `js/legal.js` | Datos de empresa, alérgenos y páginas legales |
+| `js/app.js` | Lógica (navegación, carrito, horarios, WhatsApp) |
+| `assets/img/` | Imágenes optimizadas para web (`-s` = miniatura) |
+| `assets/` | Originales en alta |
 
-Abre `index.html` y busca estas dos zonas dentro del `<script>`:
+## Configurar los datos reales (`js/data.js`)
 
-- **`CONFIG`**: `demo:false` quita la barra de "demo". `whatsappDemo` es el número de prueba.
-- **`LOCALES`**: dirección (`d`), teléfono (`tel`), enlace de Google Maps (`maps`), horario semanal (`h`, de lunes a domingo, con uno o varios turnos por día; `24:00` es medianoche y `25:00` la 1:00) y `whatsapp` con el número del local en formato internacional sin `+` (ej. `34612345678`).
-- **Modo prueba**: mientras un local no tenga su `whatsapp`, los pedidos llegan al número de `CONFIG.whatsappDemo`.
+- **`CONFIG`**: `demo:false` quita la cinta de demo. `whatsappDemo` es el número de prueba.
+- **`LOCALES`**: dirección (`d`), teléfono (`tel`), Google Maps (`maps`), horario (`h`, de lunes a domingo; `24:00` = medianoche, `25:00` = 1:00), `whatsapp` en formato internacional sin `+` (ej. `34612345678`) y `pedidoUrl` si el local cobra online.
+- **Carta `P`**: nombre, tipo, descripciones, precio, etiqueta (`top` o `fresh`) e imagen.
+- Mientras un local no tenga su `whatsapp`, los pedidos llegan a `CONFIG.whatsappDemo`.
+- Datos legales y tabla de alérgenos: `EMPRESA` y `ALERG` en `js/legal.js` (lo que empieza por `[` sale resaltado hasta rellenarlo).
 
-La carta y los precios están en la lista `P`, y los extras en `EXTRAS`.
+## Probarla en local
+
+```bash
+python3 -m http.server 8000
+# abre http://localhost:8000
+```
 
 ## Pendiente para la versión final
 
 - WhatsApp de pedidos de cada local.
-- Fotos del resto de pizzas.
-- Confirmar los extras y sus precios (solo la mozzarella vegana viene de la carta).
+- Datos de empresa y validación de la tabla de alérgenos.
 - Envío 100 % automático (sin que el cliente pulse enviar en WhatsApp): requiere la API de WhatsApp Business o una herramienta de automatización.
