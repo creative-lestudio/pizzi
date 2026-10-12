@@ -18,9 +18,8 @@ Idiomas: español, inglés, italiano, francés y alemán. Se puede instalar en l
 ## Identidad
 
 - Colores: principal `#96041A` (vino) y secundario `#EBADAD` (rosa), más el damero de la caja.
-- Tipografía principal: **TT Modernoir Medium** (títulos, nombres de pizza, precios, botones).
-- Tipografía secundaria: **Cervo Thin** (descripciones y textos).
-- **Barlow** solo en formularios y textos legales, porque Cervo Thin es demasiado fina para textos pequeños.
+- **TT Modernoir Medium** solo en títulos (titulares de sección y nombres de pizza en la carta).
+- **Cervo Thin** en todo lo demás. Como solo tenemos el peso Thin, en etiquetas, botones y precios se le da cuerpo con un trazo fino (`--t-m` en `css/app.css`). Si conseguís **Cervo Medium**, añadidlo en `css/fonts.css` con `font-weight:500` y bajad ese trazo.
 - Logo sin tagline (`assets/img/logo-vino.png` y `logo-rosa.png`).
 - La **carta** reproduce la carta impresa: fondo rojo degradado, media pizza sobre la etiqueta rosa con nombre y precio, descripción debajo y bebidas en lista con puntos. El PDF original se puede descargar desde la carta (`assets/carta-pizzi.pdf`).
 
@@ -34,18 +33,18 @@ Idiomas: español, inglés, italiano, francés y alemán. Se puede instalar en l
 | --- | --- |
 | `index.html` | Estructura de la app |
 | `css/app.css` | Diseño (variables de color al principio) |
-| `css/fonts.css`, `fonts/` | Tipografías (TT Modernoir, Cervo, Barlow) |
+| `css/fonts.css`, `fonts/` | Tipografías (TT Modernoir, Cervo) |
 | `js/data.js` | **CONFIG, LOCALES, carta (`P`), destacadas (`TOP`) y categorías** |
 | `js/i18n.js` | Textos en 5 idiomas |
 | `js/legal.js` | Datos de empresa, alérgenos y páginas legales |
 | `js/app.js` | Lógica (navegación, carrito, horarios, WhatsApp) |
 | `assets/img/` | Imágenes optimizadas para web (`-s` = miniatura, `-m` = media pizza de la carta) |
-| `assets/` | Originales en alta |
+| `assets/carta-pizzi.pdf` | Carta impresa descargable |
 
 ## Configurar los datos reales (`js/data.js`)
 
 - **`CONFIG`**: `demo:false` quita la cinta de demo. `whatsappDemo` es el número de prueba.
-- **`LOCALES`**: dirección (`d`), teléfono (`tel`), Google Maps (`maps`), horario (`h`, de lunes a domingo; `24:00` = medianoche, `25:00` = 1:00), `whatsapp` en formato internacional sin `+` (ej. `34612345678`) y `pedidoUrl` si el local cobra online.
+- **`LOCALES`**: coordenadas `lat`/`lng` **exactas** de la puerta (Google Maps → clic derecho sobre el local → copiar coordenadas; se usan para saber cuál es el más cercano), dirección (`d`), teléfono (`tel`), Google Maps (`maps`), horario (`h`, de lunes a domingo; `24:00` = medianoche, `25:00` = 1:00), `whatsapp` en formato internacional sin `+` (ej. `34612345678`) y `pedidoUrl` si el local cobra online.
 - **Carta `P`**: nombre, tipo, descripciones, precio, etiqueta (`top` o `fresh`) e imagen.
 - Mientras un local no tenga su `whatsapp`, los pedidos llegan a `CONFIG.whatsappDemo`.
 - Datos legales y tabla de alérgenos: `EMPRESA` y `ALERG` en `js/legal.js` (lo que empieza por `[` sale resaltado hasta rellenarlo).
@@ -56,6 +55,10 @@ Idiomas: español, inglés, italiano, francés y alemán. Se puede instalar en l
 python3 -m http.server 8000
 # abre http://localhost:8000
 ```
+
+## «Tu Pizzi más cercano»
+
+Se pide la ubicación precisa (GPS) y durante unos segundos se toma la lectura más exacta. Si el navegador solo da una ubicación aproximada (por IP o wifi, de más de 1 km), la web no elige local por su cuenta: avisa al cliente y le deja elegir de la lista.
 
 ## Pendiente para la versión final
 

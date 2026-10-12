@@ -30,17 +30,17 @@ const ICO={
   bolsa:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 11.1a2 2 0 0 1-2 1.9H8.2a2 2 0 0 1-2-1.9z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>'
 };
 const IMG="assets/img/";
-function foto(it,small=true,cls=""){
-  const beb=it.t==="bebida";
-  return `<img src="${IMG}${it.img}${small?"-s":""}.webp" alt="${esc(cap(nm(it.n).toLowerCase()))}" class="${beb?"beb ":""}${cls}" loading="lazy" decoding="async">`;
+function foto(it,small=true){
+  return `<img src="${IMG}${it.img}${small?"-s":""}.webp" alt="${esc(cap(nm(it.n).toLowerCase()))}"${it.t==="bebida"?' class="beb"':""} loading="lazy" decoding="async">`;
 }
 /* Tarjeta de pizza con el estilo de la carta impresa: media pizza sobre la etiqueta rosa */
-const eurC=v=>(LANG==="en"?String(+v.toFixed(2)):String(+v.toFixed(2)).replace(".",","))+"€";
+/* Precio como en la carta impresa: pizzas "6,90€", bebidas "2,5€" */
+const eurCarta=(v,corto)=>{const s=corto?String(+v.toFixed(2)):v.toFixed(2);return (LANG==="en"?s:s.replace(".",","))+"€";};
 function pizzaCarta(it){
   const n=nm(it.n);
   return `<div class="pz" role="button" tabindex="0" data-prod="${it.i}" data-pi="${it.i}" aria-label="${esc(n)}, ${eur(it.p)}">
     <div class="pz-img"><img src="${IMG}${it.img}-m.webp" alt="${esc(cap(n.toLowerCase()))}" loading="lazy" decoding="async" width="520" height="278"></div>
-    <div class="pz-pill"><h3 class="${n.length>11?"largo":""}">${esc(n)}</h3><span class="pz-precio">${eur(it.p).replace(" ","")}</span></div>
+    <div class="pz-pill"><h3 class="${n.length>11?"largo":""}">${esc(n)}</h3><span class="pz-precio">${eurCarta(it.p)}</span></div>
     <p>${esc(desc(it))}</p>
     ${it.badge?`<span class="tag">${t(it.badge==="top"?"tag_top":"tag_fresh")}</span>`:""}
     <button type="button" class="mas" data-add="${it.i}" aria-label="${esc(t("quick_add",{n}))}">${ICO.mas}</button>
@@ -49,7 +49,7 @@ function pizzaCarta(it){
 /* Fila de bebida con puntos, como en la carta */
 function bebidaCarta(it){
   const n=nm(it.n);
-  return `<li class="bb" data-pi="${it.i}"><button type="button" class="bb-t" data-prod="${it.i}"><span class="bn">${esc(n)}</span><span class="pts" aria-hidden="true"></span><span class="bp">${eurC(it.p)}</span></button>
+  return `<li class="bb" data-pi="${it.i}"><button type="button" class="bb-t" data-prod="${it.i}"><span class="bn">${esc(n)}</span><span class="pts" aria-hidden="true"></span><span class="bp">${eurCarta(it.p,true)}</span></button>
     <button type="button" class="mas" data-add="${it.i}" aria-label="${esc(t("quick_add",{n}))}">${ICO.mas}</button></li>`;
 }
 const fotoLocal=l=>IMG+(FOTO_LOCAL[l.id]||"l-mercado")+".webp";
@@ -99,7 +99,7 @@ function horaCorta(l,v){
 
 /* ---------- Estado ---------- */
 const S={local:null,hora:null,carro:[],pedido:null,perfil:{}};
-try{const g=JSON.parse(localStorage.getItem("pizzi-carro-v2")||"[]");if(Array.isArray(g))S.carro=g.filter(c=>c&&porNombre(c.n)).map(c=>({...c,i:porNombre(c.n).i}));}catch(e){}
+try{const g=JSON.parse(localStorage.getItem("pizzi-carro-v2")||"[]");if(Array.isArray(g))S.carro=g.filter(c=>c&&porNombre(c.n)&&c.q>0).map(c=>{const it=porNombre(c.n);return{k:c.k,i:it.i,n:it.n,q:c.q,u:it.p,nota:c.nota||""};});}catch(e){}
 try{S.perfil=JSON.parse(localStorage.getItem("pizzi-perfil")||"{}")||{};}catch(e){S.perfil={};}
 {const i=LOCALES.findIndex(l=>l.id===S.perfil.local);if(i>=0)S.local=i;}
 const guardar=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}};
@@ -118,14 +118,12 @@ function elegirLocal(i){
 /* ---------- Carrito ---------- */
 const total=()=>S.carro.reduce((a,c)=>a+c.u*c.q,0);
 const nItems=()=>S.carro.reduce((a,c)=>a+c.q,0);
-function addCarro(i,q=1,nota=""){
+function sumar(i,q,nota){
   const it=P[i];nota=(nota||"").trim();
-  const k=it.n+"|"+nota;
-  const ya=S.carro.find(c=>c.k===k);
-  if(ya)ya.q+=q;else S.carro.push({k,i,n:it.n,q,u:it.p,ex:[],nota});
-  actCarro(true);
-  toast(t("added"));
+  const k=it.n+"|"+nota,ya=S.carro.find(c=>c.k===k);
+  if(ya)ya.q+=q;else S.carro.push({k,i,n:it.n,q,u:it.p,nota});
 }
+function addCarro(i,q=1,nota=""){sumar(i,q,nota);actCarro(true);toast(t("added"));}
 function cambiarQ(k,d){
   const c=S.carro.find(x=>x.k===k);if(!c)return;
   c.q+=d;if(c.q<=0)S.carro=S.carro.filter(x=>x!==c);
@@ -141,7 +139,7 @@ function actCarro(bump){
   actMiniBarra();
   pintarLateral();
   marcarEnCarro();
-  if(VISTA==="pedido"){if(!S.carro.length){location.hash="carta";return;}pintarPedido();}
+  if(VISTA==="pedido"&&location.hash==="#pedido"){if(!S.carro.length){location.replace("#carta");return;}pintarPedido();}
 }
 function actMiniBarra(){$("miniBarra").hidden=!(nItems()&&(VISTA==="inicio"||VISTA==="carta"));}
 function marcarEnCarro(){
@@ -186,7 +184,7 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"){if(hoja)cerrarHoja(
 /* ---------- Hoja de producto ---------- */
 let prod=null,cant=1;
 function abrirProd(i){
-  prod=P[i];cant=1;const it=prod,a=(typeof ALERG!=="undefined"&&ALERG[it.n])||[];
+  prod=P[i];cant=1;const it=prod,a=ALERG[it.n]||[];
   $("pCuerpo").innerHTML=`<div class="pf">${foto(it,false)}</div>
     <div class="pd">
       <div class="fila"><h2 id="pNombre">${esc(nm(it.n))}</h2><span class="precio">${eur(it.p)}</span></div>
@@ -254,23 +252,42 @@ $("hlOk").onclick=()=>{
 document.addEventListener("click",e=>{const b=e.target.closest("[data-abrir-local]");if(b){e.preventDefault();abrirLocal(b.dataset.abrirLocal);}});
 $("chipLocal").onclick=()=>abrirLocal();
 
-/* ---------- Geolocalización ---------- */
-let ORDEN=LOCALES.map((_,i)=>i),DIST={};
+/* ---------- Geolocalización ----------
+   Pide la ubicación precisa (GPS), escucha unos segundos y se queda con la lectura más exacta.
+   Si la precisión es mala (ubicación por IP o wifi), no elige local automáticamente y lo avisa. */
+let ORDEN=LOCALES.map((_,i)=>i),DIST={},PREC=null;
 const km=(a,b,c,d)=>{const r=x=>x*Math.PI/180,h=Math.sin(r(c-a)/2)**2+Math.cos(r(a))*Math.cos(r(c))*Math.sin(r(d-b)/2)**2;return 12742*Math.asin(Math.sqrt(h))};
-const fmtKm=k=>k<1?Math.round(k*10)*100+" m":(LANG==="en"?k.toFixed(1):k.toFixed(1).replace(".",","))+" km";
-$("btnCerca").onclick=()=>{
-  const b=$("btnCerca"),m=$("cercaMsg");
-  if(!navigator.geolocation){m.textContent=t("near_none");return;}
-  b.disabled=true;m.textContent=t("near_search");
-  navigator.geolocation.getCurrentPosition(p=>{
-    const {latitude:a,longitude:o}=p.coords;
+const fmtKm=k=>k<1?Math.max(50,Math.round(k*20)*50)+" m":(LANG==="en"?k.toFixed(1):k.toFixed(1).replace(".",","))+" km";
+const PREC_OK=40,PREC_MALA=1000,ESPERA=8000;
+function ubicar(fin){
+  if(!navigator.geolocation){fin("none");return;}
+  let mejor=null,hecho=false,wid=null,to=null;
+  const acabar=motivo=>{if(hecho)return;hecho=true;clearTimeout(to);if(wid!==null)navigator.geolocation.clearWatch(wid);
+    if(!mejor){fin(motivo||"err");return;}
+    const {latitude:a,longitude:o,accuracy:pr}=mejor.coords;PREC=pr;
     DIST={};LOCALES.forEach((l,i)=>DIST[i]=km(a,o,l.lat,l.lng));
     ORDEN=LOCALES.map((_,i)=>i).sort((x,y)=>DIST[x]-DIST[y]);
-    b.disabled=false;m.innerHTML=t("near_msg",{n:esc(LOCALES[ORDEN[0]].n),d:fmtKm(DIST[ORDEN[0]])});
-    if(S.local===null)elegirLocal(ORDEN[0]);
-    refrescar();
-  },()=>{b.disabled=false;m.textContent=t("near_err");},{enableHighAccuracy:false,timeout:10000,maximumAge:60000});
-};
+    fin(pr>PREC_MALA?"aprox":"ok");};
+  wid=navigator.geolocation.watchPosition(p=>{if(!mejor||p.coords.accuracy<mejor.coords.accuracy)mejor=p;if(p.coords.accuracy<=PREC_OK)acabar();},
+    e=>{if(e.code===1||!mejor)acabar(e.code===1?"denied":"err");},{enableHighAccuracy:true,maximumAge:0,timeout:ESPERA+2000});
+  to=setTimeout(()=>acabar("err"),ESPERA);
+}
+/* Texto del resultado; si es fiable y no hay local elegido, elige el más cercano */
+function textoUbicacion(r){
+  if(r==="none")return t("near_none");
+  if(r==="denied")return t("near_denied");
+  if(r==="err")return t("near_err");
+  const n=ORDEN[0];
+  if(r==="aprox")return t("near_imprecise",{a:fmtKm(PREC/1000)});
+  if(S.local===null)elegirLocal(n);
+  return t("near_msg",{n:esc(LOCALES[n].n),d:fmtKm(DIST[n])});
+}
+function botonUbicar(b,msg,despues){
+  b.disabled=true;msg.textContent=t("near_search");
+  ubicar(r=>{b.disabled=false;msg.innerHTML=textoUbicacion(r);despues&&despues(r);});
+}
+$("btnCerca").onclick=()=>botonUbicar($("btnCerca"),$("cercaMsg"),()=>refrescar());
+$("hlCerca").onclick=()=>botonUbicar($("hlCerca"),$("hlCercaMsg"),r=>{if(r==="ok")hlLocal=ORDEN[0];pintarHojaLocal();});
 
 /* ---------- Cabecera: local + hora ---------- */
 function pintarLocalSel(){
@@ -303,7 +320,7 @@ function pintarInicio(){
     r.innerHTML=`<div class="mini">${ult.slice(0,3).map(x=>foto(porNombre(x.n))).join("")}</div>
       <div class="tx"><b>${t("repeat_h")}</b><span>${ult.map(x=>x.q+"× "+esc(nm(x.n))).join(", ")}</span></div>
       <button type="button" class="btn btn-vino" id="btnRepetir">${t("repeat_btn")}</button>`;
-    $("btnRepetir").onclick=()=>{ult.forEach(x=>{const it=porNombre(x.n);const k=it.n+"|"+(x.nota||"");const ya=S.carro.find(c=>c.k===k);if(ya)ya.q+=x.q;else S.carro.push({k,i:it.i,n:it.n,q:x.q,u:it.p,ex:[],nota:x.nota||""});});actCarro(true);location.hash="pedido";};
+    $("btnRepetir").onclick=()=>{ult.forEach(x=>sumar(porNombre(x.n).i,x.q,x.nota));actCarro(true);location.hash="pedido";};
   }else r.hidden=true;
   // Locales
   const nAb=LOCALES.filter(abierto).length;
@@ -340,6 +357,9 @@ function pintarCarta(){
         :`<ul class="bebidas">${P.filter(x=>x.t===tipo).map(bebidaCarta).join("")}</ul>`}
     </section>`).join("");
   marcarEnCarro();
+  pintarAvisoCarta();
+}
+function pintarAvisoCarta(){
   const l=localSel(),av=$("avisoCarta");
   if(l&&l.pedidoUrl){av.hidden=false;av.innerHTML=`<p>${t("online_note",{n:esc(l.n)})}</p><a class="btn btn-vino" href="${l.pedidoUrl}" target="_blank" rel="noopener">${t("go_pay")}</a>`;}
   else if(l&&!abierto(l)){const p=proxima(l);av.hidden=false;av.innerHTML=`<p>${t("closed_sched",{n:esc(l.n),o:esc(p?(p.off===0?t("opens_today",{h:hhmm(p.m)}):t("opens_at",{d:nombreDia(p.off),h:hhmm(p.m)})):"")})}</p>`;}
@@ -413,7 +433,7 @@ $("confirmar").onclick=()=>{
   guardarPerfil();
   pintarHecho();
   window.open(S.pedido.wa,"_blank","noopener");
-  S.carro=[];actCarro();location.hash="hecho";
+  location.hash="hecho";S.carro=[];actCarro();
 };
 
 /* ---------- CONFIRMACIÓN ---------- */
@@ -449,11 +469,12 @@ $("nuevo").onclick=()=>{S.pedido=null;};
 
 /* ---------- Router ---------- */
 const VISTAS=["inicio","carta","locales","pedido","hecho","legal"];
-const ALIAS={menu:"carta",""  :"inicio"};
+const ALIAS={"":"inicio",menu:"carta"};
 let VISTA=null;
 function ir(){
   let v=location.hash.replace("#","");
-  if(v.startsWith("cat-"))return;
+  // Enlace directo a una categoría (#cat-pizzas): abre la carta si no está abierta
+  if(v.startsWith("cat-")){if(VISTA==="carta")return;const cat=v;v="carta";setTimeout(()=>{const el=$(cat);if(el)el.scrollIntoView();},50);}
   v=ALIAS[v]!==undefined?ALIAS[v]:v;
   let pg=null;if(PAGINAS.includes(v)){pg=v;v="legal";}
   if(!VISTAS.includes(v))v="inicio";
@@ -510,5 +531,6 @@ function pintarPie(){$("pieLocales").innerHTML=LOCALES.map(l=>`<li><a href="${l.
 if(CONFIG.demo)$("demo").hidden=false;
 asegurarHora();
 aplicarIdioma();pintarPie();ir();actCarro();
-/* Refresca estados abierto/cerrado cada minuto */
-setInterval(()=>{if(!hoja)refrescar();},60000);
+/* Cada minuto actualiza solo lo que depende de la hora (abierto/cerrado, franjas), sin repintar la carta */
+setInterval(()=>{if(hoja)return;refrescarCab();
+  if(VISTA==="inicio")pintarInicio();else if(VISTA==="carta")pintarAvisoCarta();else if(VISTA==="locales")pintarLocales();else if(VISTA==="pedido")pintarPedido();},60000);
