@@ -32,8 +32,11 @@
   color-scheme:light;
 }
 *,*::before,*::after{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%; scroll-padding-top:calc(var(--sat) + var(--hdr) + 70px)}
-body{margin:0; background:var(--rosa); color:var(--tinta); font-family:var(--txt); font-size:19px; line-height:1.4; -webkit-text-stroke:var(--t-r) currentColor; -webkit-font-smoothing:antialiased; overflow-x:hidden; -webkit-tap-highlight-color:transparent}
+/* Fondo vino en <html>: el rebote al tirar de la página (iOS) muestra el color de la cabecera.
+   scrollbar-gutter evita que el contenido salte de lado al abrir una hoja en escritorio. */
+html{-webkit-text-size-adjust:100%; background:var(--vino); scrollbar-gutter:stable; scroll-padding-top:calc(var(--sat) + var(--hdr) + 140px)}
+html.bloqueado{overflow:hidden; overscroll-behavior:none}
+body{margin:0; background:var(--rosa); color:var(--tinta); font-family:var(--txt); font-size:19px; line-height:1.4; -webkit-text-stroke:var(--t-r) currentColor; -webkit-font-smoothing:antialiased; overflow-x:hidden; overflow-x:clip; -webkit-tap-highlight-color:transparent}
 img{max-width:100%; height:auto; display:block}
 a{color:inherit}
 button{font:inherit; color:inherit}
@@ -401,7 +404,7 @@ mark.pend{background:#FFE066; color:var(--tinta); padding:0 4px; border-radius:4
   .hoja{left:50%; right:auto; bottom:auto; top:50%; width:min(560px,92vw); max-height:88vh; border-radius:var(--r-xl); transform:translate(-50%,-46%) scale(.96); opacity:0; transition:transform .3s cubic-bezier(.2,.8,.2,1), opacity .25s}
   .hoja.on{transform:translate(-50%,-50%); opacity:1}
 }
-.hoja .scroll{overflow:auto; overscroll-behavior:contain; flex:1}
+.hoja .scroll{overflow:auto; flex:1}
 .hoja .x{position:absolute; right:12px; top:12px; z-index:3; width:42px; height:42px; border-radius:50%; border:0; background:rgba(255,255,255,.92); color:var(--vino); display:grid; place-items:center; cursor:pointer; box-shadow:0 4px 12px rgba(60,0,10,.18)}
 .hoja .x svg{width:20px; height:20px}
 .hoja-pie{display:flex; gap:12px; align-items:center; padding:12px 16px calc(12px + var(--sab)); border-top:1px solid var(--linea); background:var(--rosa-c)}
@@ -474,8 +477,7 @@ mark.pend{background:#FFE066; color:var(--tinta); padding:0 4px; border-radius:4
 .mas.pop{animation:pop .45s cubic-bezier(.2,1.6,.4,1)}
 @keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.25)}100%{transform:scale(1)}}
 
-#v-carta{background:var(--carta); background-attachment:fixed; color:var(--rosa-txt)}
-@supports (-webkit-touch-callout:none){#v-carta{background-attachment:scroll}}
+#v-carta{background:var(--carta); color:var(--rosa-txt)}
 #v-carta .carta-cab{box-shadow:0 6px 18px rgba(60,0,10,.25)}
 #v-carta .recoger-bar{background:rgba(255,255,255,.1); box-shadow:none}
 #v-carta .recoger-bar small{color:var(--rosa)}
@@ -543,3 +545,9 @@ mark.pend{background:#FFE066; color:var(--tinta); padding:0 4px; border-radius:4
 /* El estado dentro de la hoja de locales no hereda el color gris de la dirección */
 .hl .t .st.ab{color:var(--ok)}
 .hl .t .st.ce{color:#fff}
+
+/* Con el teclado abierto en móvil se ocultan las barras fijas para que no tapen el campo */
+@media (max-width:899px){body.escribiendo .tabs,body.escribiendo .cta-fija,body.escribiendo .mini-barra{display:none!important}}
+/* Desplazamientos dentro de hojas y carriles sin arrastrar la página */
+.hoja .scroll,.lat-cuerpo{overscroll-behavior:contain}
+.carril,.cats{overscroll-behavior-x:contain}

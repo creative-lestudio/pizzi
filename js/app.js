@@ -164,16 +164,19 @@ function toast(msg){const el=$("toast");el.innerHTML=ICO.ok+"<span>"+esc(msg)+"<
 
 /* ---------- Hojas ---------- */
 const velo=$("velo");let hoja=null,focoPrevio=null;
+/* Bloquea el desplazamiento de la página por detrás de la hoja. Se hace en <html> (iOS 16+ lo respeta)
+   para no mover la página: así la cabecera fija y la posición se mantienen al cerrar. */
+const bloquearFondo=si=>{document.documentElement.classList.toggle("bloqueado",si);};
 function abrirHoja(id){
   if(hoja)cerrarHoja(true);
   focoPrevio=document.activeElement;hoja=$(id);hoja.hidden=false;
   requestAnimationFrame(()=>{hoja.classList.add("on");velo.classList.add("on");});
-  document.body.style.overflow="hidden";
+  bloquearFondo(true);
   setTimeout(()=>{const f=hoja.querySelector(".x");if(f)f.focus({preventScroll:true});},60);
 }
 function cerrarHoja(inmediato){
   if(!hoja)return;const h=hoja;hoja=null;
-  h.classList.remove("on");velo.classList.remove("on");document.body.style.overflow="";
+  h.classList.remove("on");velo.classList.remove("on");bloquearFondo(false);
   if(inmediato)h.hidden=true;else setTimeout(()=>{if(!h.classList.contains("on"))h.hidden=true;},350);
   if(focoPrevio&&focoPrevio.focus)focoPrevio.focus({preventScroll:true});
 }
@@ -216,7 +219,8 @@ let hlLocal=null,hlHora=null,hlDespues=null;
 function abrirLocal(foco,despues){
   hlLocal=S.local;hlHora=S.hora;hlDespues=despues||null;
   pintarHojaLocal();abrirHoja("hLocal");
-  if(foco==="hora"&&hlLocal!==null)setTimeout(()=>$("hlHoraBox").scrollIntoView({block:"start",behavior:"smooth"}),300);
+  const sc=$("hLocal").querySelector(".scroll");sc.scrollTop=0;
+  if(foco==="hora"&&hlLocal!==null)setTimeout(()=>verHoras("start"),300);
 }
 function pintarHojaLocal(){
   const orden=ORDEN.slice();
@@ -239,8 +243,13 @@ function pintarHojaLocal(){
   });
   $("hlHoras").innerHTML=h||`<p class="sin">${t("closed")}</p>`;
 }
-$("hlLocales").onclick=e=>{const b=e.target.closest("[data-hl]");if(!b)return;hlLocal=+b.dataset.hl;pintarHojaLocal();
-  setTimeout(()=>$("hlHoraBox").scrollIntoView({block:"nearest",behavior:"smooth"}),50);};
+/* Lleva la lista de horas a la vista desplazando solo el contenido de la hoja */
+function verHoras(modo){
+  const sc=$("hLocal").querySelector(".scroll"),box=$("hlHoraBox");if(box.hidden)return;
+  const top=box.offsetTop-12,vis=sc.scrollTop+sc.clientHeight;
+  if(modo==="start"||top+80>vis)sc.scrollTo({top:modo==="start"?top:Math.min(top,box.offsetTop+box.offsetHeight-sc.clientHeight),behavior:"smooth"});
+}
+$("hlLocales").onclick=e=>{const b=e.target.closest("[data-hl]");if(!b)return;hlLocal=+b.dataset.hl;pintarHojaLocal();setTimeout(()=>verHoras(),50);};
 $("hlHoras").onclick=e=>{const b=e.target.closest("[data-hh]");if(!b)return;hlHora=b.dataset.hh;
   $("hlHoras").querySelectorAll("[data-hh]").forEach(x=>x.setAttribute("aria-checked",x===b));};
 $("hlOk").onclick=()=>{
@@ -308,7 +317,10 @@ function pintarLocalSel(){
 }
 
 /* ---------- INICIO ---------- */
-function pintarInicio(){
+/* Repinta conservando el desplazamiento horizontal de los carruseles */
+function conCarriles(fn){const ids=["topList","homeLocales"],x=ids.map(i=>$(i).scrollLeft);fn();ids.forEach((i,k)=>{$(i).scrollLeft=x[k];});}
+function pintarInicio(){conCarriles(pintarInicioYa);}
+function pintarInicioYa(){
   const h=ahora();$("saludo").textContent=t(h<720&&h>=360?"hi_m":h<1230&&h>=720?"hi_a":"hi_n");
   // Destacadas
   $("topList").innerHTML=TOP.map(porNombre).filter(Boolean).map(pizzaCarta).join("");
@@ -366,14 +378,15 @@ function pintarAvisoCarta(){
   else av.hidden=true;
 }
 /* Pestañas de categorías: scroll suave y resaltado según la sección visible */
-$("cats").addEventListener("click",e=>{const a=e.target.closest("[data-cat]");if(!a)return;e.preventDefault();
-  const s=$("cat-"+a.dataset.cat),off=$("hdr").offsetHeight+document.querySelector(".carta-cab").offsetHeight-4;
-  window.scrollTo({top:s.getBoundingClientRect().top+scrollY-off,behavior:"smooth"});});
+const altoFijo=()=>$("hdr").offsetHeight+document.querySelector(".carta-cab").offsetHeight;
+function irACat(id,suave){const s=$("cat-"+id);if(s)window.scrollTo({top:s.getBoundingClientRect().top+scrollY-altoFijo()+4,behavior:suave?"smooth":"auto"});}
+$("cats").addEventListener("click",e=>{const a=e.target.closest("[data-cat]");if(!a)return;e.preventDefault();irACat(a.dataset.cat,true);});
+function centrarCat(a){const c=$("cats");c.scrollTo({left:a.offsetLeft-(c.clientWidth-a.offsetWidth)/2,behavior:"smooth"});}
 let spyRaf=0;
 window.addEventListener("scroll",()=>{if(VISTA!=="carta"||spyRaf)return;spyRaf=requestAnimationFrame(()=>{spyRaf=0;
-  const lim=$("hdr").offsetHeight+document.querySelector(".carta-cab").offsetHeight+40;let act=CATS[0][0];
+  const lim=altoFijo()+40;let act=CATS[0][0];
   document.querySelectorAll("[data-sec]").forEach(s=>{if(s.getBoundingClientRect().top<=lim)act=s.dataset.sec;});
-  document.querySelectorAll("#cats a").forEach(a=>{const on=a.dataset.cat===act;if(on!==a.classList.contains("on")){a.classList.toggle("on",on);if(on)a.scrollIntoView({inline:"center",block:"nearest"});}});
+  document.querySelectorAll("#cats a").forEach(a=>{const on=a.dataset.cat===act;if(on!==a.classList.contains("on")){a.classList.toggle("on",on);if(on)centrarCat(a);}});
 });},{passive:true});
 
 /* Carrito lateral (escritorio) */
@@ -474,7 +487,8 @@ let VISTA=null;
 function ir(){
   let v=location.hash.replace("#","");
   // Enlace directo a una categoría (#cat-pizzas): abre la carta si no está abierta
-  if(v.startsWith("cat-")){if(VISTA==="carta")return;const cat=v;v="carta";setTimeout(()=>{const el=$(cat);if(el)el.scrollIntoView();},50);}
+  let cat=null;
+  if(v.startsWith("cat-")){cat=v.slice(4);if(VISTA==="carta"){irACat(cat,true);return;}v="carta";}
   v=ALIAS[v]!==undefined?ALIAS[v]:v;
   let pg=null;if(PAGINAS.includes(v)){pg=v;v="legal";}
   if(!VISTAS.includes(v))v="inicio";
@@ -482,6 +496,7 @@ function ir(){
   if(v==="hecho"&&!S.pedido){location.replace("#inicio");return;}
   if(hoja)cerrarHoja(true);
   const cambia=v!==VISTA||v==="legal";
+  if(VISTA&&cambia)POS[VISTA]=scrollY;
   VISTA=v;
   VISTAS.forEach(x=>$("v-"+x).hidden=x!==v);
   document.querySelectorAll("[data-tab]").forEach(a=>a.classList.toggle("on",a.dataset.tab===v));
@@ -494,8 +509,13 @@ function ir(){
   if(v==="pedido")pintarPedido();
   if(v==="legal")pintarLegal(pg);
   actMiniBarra();
-  if(cambia)window.scrollTo(0,0);
+  if(cat)requestAnimationFrame(()=>irACat(cat,false));
+  else if(cambia)window.scrollTo(0,RECUERDA.includes(v)?(POS[v]||0):0);
 }
+/* Vistas que recuerdan su posición al volver (pestañas); el resto empieza arriba */
+const RECUERDA=["inicio","carta","locales"],POS={};
+/* Tocar la pestaña de la vista actual vuelve arriba, como en las apps */
+document.querySelectorAll("[data-tab]").forEach(a=>a.addEventListener("click",e=>{if(a.dataset.tab===VISTA){e.preventDefault();window.scrollTo({top:0,behavior:"smooth"});}}));
 window.addEventListener("hashchange",ir);
 $("volver").onclick=()=>{
   if(VISTA==="legal"&&history.length>1){history.back();return;}
@@ -527,10 +547,18 @@ langList.onclick=e=>{const b=e.target.closest("[data-l]");if(!b)return;LANG=b.da
 /* ---------- Pie ---------- */
 function pintarPie(){$("pieLocales").innerHTML=LOCALES.map(l=>`<li><a href="${l.maps}" target="_blank" rel="noopener">Pizzi ${esc(l.n)}</a></li>`).join("");}
 
+/* ---------- Teclado en móvil ----------
+   Con el teclado abierto, las barras fijas (pestañas, «Confirmar pedido») subirían y taparían el campo */
+const esCampo=el=>el&&el.matches&&el.matches("input[type=text],input[type=tel],textarea");
+document.addEventListener("focusin",e=>{if(esCampo(e.target))document.body.classList.add("escribiendo");});
+document.addEventListener("focusout",e=>{if(esCampo(e.target))setTimeout(()=>{if(!esCampo(document.activeElement))document.body.classList.remove("escribiendo");},100);});
+
 /* ---------- Arranque ---------- */
 if(CONFIG.demo)$("demo").hidden=false;
 asegurarHora();
 aplicarIdioma();pintarPie();ir();actCarro();
 /* Cada minuto actualiza solo lo que depende de la hora (abierto/cerrado, franjas), sin repintar la carta */
-setInterval(()=>{if(hoja)return;refrescarCab();
+let firmaHora="";
+const firma=()=>LOCALES.map(l=>abierto(l)+"|"+hrTexto(l)).join()+"|"+horaCorta(localSel(),S.hora)+"|"+t(ahora()<720&&ahora()>=360?"hi_m":ahora()<1230&&ahora()>=720?"hi_a":"hi_n");
+setInterval(()=>{if(hoja)return;const f=firma();if(f===firmaHora)return;firmaHora=f;refrescarCab();
   if(VISTA==="inicio")pintarInicio();else if(VISTA==="carta")pintarAvisoCarta();else if(VISTA==="locales")pintarLocales();else if(VISTA==="pedido")pintarPedido();},60000);
