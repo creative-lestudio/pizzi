@@ -130,6 +130,8 @@ const I={"title":["PIZZI · Pide para recoger","PIZZI · Order for pickup","PIZZ
 "ics_d":["Pagas {t} al recoger.","You pay {t} on pickup.","Paghi {t} al ritiro.","Vous payez {t} au retrait.","Du zahlst {t} bei Abholung."],
 "ics_a":["Tu pizza te espera","Your pizza is waiting","La tua pizza ti aspetta","Votre pizza vous attend","Deine Pizza wartet"],
 "skip":["Saltar al contenido","Skip to content","Vai al contenuto","Aller au contenu","Zum Inhalt springen"],
+"cat_pizzas_31":["Pizzas de 31cm","31 cm pizzas","Pizze da 31 cm","Pizzas de 31 cm","Pizzen 31 cm"],
+"pdf_dl":["Descargar la carta en PDF","Download the menu (PDF)","Scarica il menù in PDF","Télécharger la carte en PDF","Speisekarte als PDF herunterladen"],
 "tab_home":["Inicio","Home","Home","Accueil","Start"],
 "tab_menu":["Carta","Menu","Menù","Carte","Speisekarte"],
 "tab_locs":["Locales","Stores","Locali","Restaurants","Filialen"],

@@ -17,8 +17,16 @@ Idiomas: español, inglés, italiano, francés y alemán. Se puede instalar en l
 
 ## Identidad
 
-- Colores: vino `#97031E` y rosa `#E2B0AF`, más el damero de la caja.
-- Tipografías (alojadas en `fonts/`, sin llamadas a terceros): **Federant** para titulares (Art Déco, como la carta) y **Barlow Condensed / Barlow** para textos, precios y botones.
+- Colores: principal `#96041A` (vino) y secundario `#EBADAD` (rosa), más el damero de la caja.
+- Tipografía principal: **TT Modernoir Medium** (títulos, nombres de pizza, precios, botones).
+- Tipografía secundaria: **Cervo Thin** (descripciones y textos).
+- **Barlow** solo en formularios y textos legales, porque Cervo Thin es demasiado fina para textos pequeños.
+- Logo sin tagline (`assets/img/logo-vino.png` y `logo-rosa.png`).
+- La **carta** reproduce la carta impresa: fondo rojo degradado, media pizza sobre la etiqueta rosa con nombre y precio, descripción debajo y bebidas en lista con puntos. El PDF original se puede descargar desde la carta (`assets/carta-pizzi.pdf`).
+
+> ⚠️ **Licencia de TT Modernoir**: el archivo es la versión *Trial* de DaFont, que solo permite evaluación, no uso comercial.
+> Antes de publicar, comprad la licencia web en [typetype.org](https://typetype.org/licensing/) y sustituid `fonts/TTModernoir-Medium.woff2`.
+> Revisad también la licencia de Cervo para uso web.
 
 ## Archivos
 
@@ -26,12 +34,12 @@ Idiomas: español, inglés, italiano, francés y alemán. Se puede instalar en l
 | --- | --- |
 | `index.html` | Estructura de la app |
 | `css/app.css` | Diseño (variables de color al principio) |
-| `css/fonts.css`, `fonts/` | Tipografías |
+| `css/fonts.css`, `fonts/` | Tipografías (TT Modernoir, Cervo, Barlow) |
 | `js/data.js` | **CONFIG, LOCALES, carta (`P`), destacadas (`TOP`) y categorías** |
 | `js/i18n.js` | Textos en 5 idiomas |
 | `js/legal.js` | Datos de empresa, alérgenos y páginas legales |
 | `js/app.js` | Lógica (navegación, carrito, horarios, WhatsApp) |
-| `assets/img/` | Imágenes optimizadas para web (`-s` = miniatura) |
+| `assets/img/` | Imágenes optimizadas para web (`-s` = miniatura, `-m` = media pizza de la carta) |
 | `assets/` | Originales en alta |
 
 ## Configurar los datos reales (`js/data.js`)

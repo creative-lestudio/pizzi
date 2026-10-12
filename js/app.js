@@ -34,6 +34,24 @@ function foto(it,small=true,cls=""){
   const beb=it.t==="bebida";
   return `<img src="${IMG}${it.img}${small?"-s":""}.webp" alt="${esc(cap(nm(it.n).toLowerCase()))}" class="${beb?"beb ":""}${cls}" loading="lazy" decoding="async">`;
 }
+/* Tarjeta de pizza con el estilo de la carta impresa: media pizza sobre la etiqueta rosa */
+const eurC=v=>(LANG==="en"?String(+v.toFixed(2)):String(+v.toFixed(2)).replace(".",","))+"€";
+function pizzaCarta(it){
+  const n=nm(it.n);
+  return `<div class="pz" role="button" tabindex="0" data-prod="${it.i}" data-pi="${it.i}" aria-label="${esc(n)}, ${eur(it.p)}">
+    <div class="pz-img"><img src="${IMG}${it.img}-m.webp" alt="${esc(cap(n.toLowerCase()))}" loading="lazy" decoding="async" width="520" height="278"></div>
+    <div class="pz-pill"><h3 class="${n.length>11?"largo":""}">${esc(n)}</h3><span class="pz-precio">${eur(it.p).replace(" ","")}</span></div>
+    <p>${esc(desc(it))}</p>
+    ${it.badge?`<span class="tag">${t(it.badge==="top"?"tag_top":"tag_fresh")}</span>`:""}
+    <button type="button" class="mas" data-add="${it.i}" aria-label="${esc(t("quick_add",{n}))}">${ICO.mas}</button>
+  </div>`;
+}
+/* Fila de bebida con puntos, como en la carta */
+function bebidaCarta(it){
+  const n=nm(it.n);
+  return `<li class="bb" data-pi="${it.i}"><button type="button" class="bb-t" data-prod="${it.i}"><span class="bn">${esc(n)}</span><span class="pts" aria-hidden="true"></span><span class="bp">${eurC(it.p)}</span></button>
+    <button type="button" class="mas" data-add="${it.i}" aria-label="${esc(t("quick_add",{n}))}">${ICO.mas}</button></li>`;
+}
 const fotoLocal=l=>IMG+(FOTO_LOCAL[l.id]||"l-mercado")+".webp";
 const porNombre=n=>P.find(x=>x.n===n);
 
@@ -127,7 +145,7 @@ function actCarro(bump){
 }
 function actMiniBarra(){$("miniBarra").hidden=!(nItems()&&(VISTA==="inicio"||VISTA==="carta"));}
 function marcarEnCarro(){
-  document.querySelectorAll(".pr[data-pi]").forEach(el=>{
+  document.querySelectorAll("#cartaCuerpo [data-pi]").forEach(el=>{
     const q=S.carro.filter(c=>c.i===+el.dataset.pi).reduce((a,c)=>a+c.q,0);
     let b=el.querySelector(".en");
     if(q){if(!b){b=document.createElement("span");b.className="en";el.appendChild(b);}b.textContent=q+"×";}
@@ -276,13 +294,7 @@ function pintarLocalSel(){
 function pintarInicio(){
   const h=ahora();$("saludo").textContent=t(h<720&&h>=360?"hi_m":h<1230&&h>=720?"hi_a":"hi_n");
   // Destacadas
-  $("topList").innerHTML=TOP.map(porNombre).filter(Boolean).map(it=>`
-    <div class="tc" role="button" tabindex="0" data-prod="${it.i}" aria-label="${esc(nm(it.n))}">
-      ${it.badge?`<span class="tag">${t(it.badge==="top"?"tag_top":"tag_fresh")}</span>`:""}
-      <div class="foto">${foto(it)}</div>
-      <h3>${esc(nm(it.n))}</h3><p>${esc(desc(it))}</p>
-      <div class="fila"><span class="precio">${eur(it.p)}</span><button type="button" class="mas" data-add="${it.i}" aria-label="${esc(t("quick_add",{n:nm(it.n)}))}">${ICO.mas}</button></div>
-    </div>`).join("");
+  $("topList").innerHTML=TOP.map(porNombre).filter(Boolean).map(pizzaCarta).join("");
   // Repetir último pedido
   const ult=(S.perfil.ultimo||[]).filter(x=>porNombre(x.n));
   const r=$("repetir");
@@ -323,13 +335,9 @@ function pintarCarta(){
   $("cats").innerHTML=CATS.map(([id,k],j)=>`<a href="#cat-${id}" data-cat="${id}" class="${j===0?"on":""}">${t(k)}</a>`).join("");
   $("cartaCuerpo").innerHTML=CATS.map(([id,k,tipo])=>`
     <section class="cat-sec" id="cat-${id}" data-sec="${id}">
-      <h2 class="deco">${t(k)}</h2>${tipo==="pizza"?`<p class="cat-p">${t("menu_pdf")}</p>`:""}
-      <div class="lista">${P.filter(x=>x.t===tipo).map(it=>`
-        <div class="pr" role="button" tabindex="0" data-prod="${it.i}" data-pi="${it.i}" aria-label="${esc(nm(it.n))}, ${eur(it.p)}">
-          <div class="tx">${it.badge?`<span class="tag">${t(it.badge==="top"?"tag_top":"tag_fresh")}</span>`:""}<h3>${esc(nm(it.n))}</h3><p>${esc(desc(it))}</p><span class="precio">${eur(it.p)}</span></div>
-          <div class="foto">${foto(it)}</div>
-          <button type="button" class="mas" data-add="${it.i}" aria-label="${esc(t("quick_add",{n:nm(it.n)}))}">${ICO.mas}</button>
-        </div>`).join("")}</div>
+      <div class="cat-cab"><img src="assets/img/logo-rosa.png" alt="PIZZI" width="1231" height="673"><h2 class="deco">${tipo==="pizza"?t("cat_pizzas_31"):t(k)}</h2></div>
+      ${tipo==="pizza"?`<div class="carta-pz">${P.filter(x=>x.t===tipo).map(pizzaCarta).join("")}</div>`
+        :`<ul class="bebidas">${P.filter(x=>x.t===tipo).map(bebidaCarta).join("")}</ul>`}
     </section>`).join("");
   marcarEnCarro();
   const l=localSel(),av=$("avisoCarta");

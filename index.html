@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>PIZZI · Pide para recoger</title>
 <meta name="description" content="Pizzi · Auténtica pizza napoletana en Valencia. Pide online en tu Pizzi más cercano y recógela recién salida del horno.">
-<meta name="theme-color" content="#97031E">
+<meta name="theme-color" content="#96041A">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -16,8 +16,8 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="assets/img/icon-192.png">
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
-<link rel="preload" href="fonts/Federant-400-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="fonts/BarlowCondensed-600-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/TTModernoir-Medium.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/Cervo-Thin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/fonts.css">
 <link rel="stylesheet" href="css/app.css">
 </head>
@@ -31,7 +31,7 @@
     <button class="ico-btn volver" id="volver" type="button" aria-label="Volver" data-ia="back" hidden>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
     </button>
-    <a class="marca" href="#inicio" aria-label="Pizzi, inicio" data-ia="home"><img src="assets/img/logo-rosa.png" alt="PIZZI" width="596" height="327"></a>
+    <a class="marca" href="#inicio" aria-label="Pizzi, inicio" data-ia="home"><img src="assets/img/logo-rosa.png" alt="PIZZI" width="1231" height="673"></a>
     <nav class="nav-d" aria-label="Principal">
       <a href="#inicio" data-tab="inicio" data-i="tab_home">Inicio</a>
       <a href="#carta" data-tab="carta" data-i="tab_menu">Carta</a>
@@ -87,9 +87,9 @@
 
     <div class="repetir" id="repetir" hidden></div>
 
-    <section class="bloque">
+    <section class="bloque bloque-carta">
       <div class="bloque-cab"><h2 class="deco" data-i="top_h">Las más pedidas</h2><a href="#carta" class="ver" data-i="see_all">Ver todo</a></div>
-      <div class="carril" id="topList"></div>
+      <div class="carril carril-pz" id="topList"></div>
     </section>
 
     <section class="bloque">
@@ -133,7 +133,10 @@
     <div class="carta-main">
       <div class="aviso-carta" id="avisoCarta" hidden></div>
       <div id="cartaCuerpo"></div>
-      <a class="carta-pdf" href="#alergenos" data-i="aler_more">Ver información de alérgenos</a>
+      <div class="carta-links">
+        <a class="btn btn-rosa" href="assets/carta-pizzi.pdf" target="_blank" rel="noopener" download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg><span data-i="pdf_dl">Descargar la carta en PDF</span></a>
+        <a class="enlace-c" href="#alergenos" data-i="aler_more">Ver información de alérgenos</a>
+      </div>
     </div>
     <aside class="lateral" id="lateral" aria-label="Tu pedido" data-ia="your_order"></aside>
   </div>
@@ -256,8 +259,7 @@
   <div class="damero" aria-hidden="true"></div>
   <div class="wrap pie-in">
     <div class="pie-marca">
-      <img src="assets/img/logo-rosa.png" alt="PIZZI" width="596" height="327" loading="lazy">
-      <p data-i="foot_tag">Autentica pizza napoletana</p>
+      <img src="assets/img/logo-rosa.png" alt="PIZZI" width="1231" height="673" loading="lazy">
       <div class="redes">
         <a href="https://www.instagram.com/pizzi.es/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="5.4"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1" fill="currentColor" stroke="none"/></svg></a>
         <a href="https://www.tiktok.com/@pizzi_valencia" target="_blank" rel="noopener" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg></a>
