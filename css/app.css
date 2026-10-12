@@ -365,12 +365,13 @@ mark.pend{background:#FFE066; color:var(--tinta); padding:0 4px; border-radius:4
 @media (min-width:900px){.pie{padding-bottom:28px}}
 .pie-in{display:grid; gap:28px; padding-top:40px; padding-bottom:24px}
 @media (min-width:760px){.pie-in{grid-template-columns:1.4fr 1fr 1fr}}
+.pie-marca{display:flex; flex-direction:column; align-items:flex-start; gap:24px}
 .pie-marca img{height:70px; width:auto}
 .pie h2{font:700 17px/1 var(--cond); letter-spacing:.1em; text-transform:uppercase; color:#fff; margin:0 0 15px; -webkit-text-stroke:var(--t-m) currentColor}
 .pie ul{list-style:none; padding:0; margin:0; line-height:2}
 .pie ul a{text-decoration:none}
 .pie ul a:hover{text-decoration:underline; color:#fff}
-.redes{display:flex; gap:16px}
+.redes{display:flex; gap:20px}
 .redes a{display:inline-flex; color:var(--rosa); transition:transform .15s, color .15s}
 .redes a:hover{transform:translateY(-2px); color:#fff}
 .redes svg{width:30px; height:30px}
