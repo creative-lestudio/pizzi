@@ -2,32 +2,40 @@
    PIZZI · App móvil (js/movil.js)
    Solo se ve en pantallas de menos de 900 px y en el inicio: tapa la web y funciona como una app.
    ========================================================= */
-html.modo-app,html.modo-app body{overflow:hidden; height:100%}
+/* Fondo vino también en <html> y <body>: si no, el rosa de la web asoma abajo (barra del navegador, zona segura) */
+html.modo-app,html.modo-app body{overflow:hidden; height:100%; background:#6A0F18}
 html.modo-app body>:not(.app-m):not(.toast){display:none!important}
 
 .app-m{
-  --am-rosa:#EBADAD; --am-verde:#2E7D4F; --am-verde-bg:#DDF2E3;
+  --am-rosa:#EBADAD; --am-borde:rgba(150,4,26,.18); --am-verde:#2E7D4F; --am-verde-bg:#DDF2E3;
   position:fixed; inset:0; z-index:90; overflow-x:hidden; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
-  background:linear-gradient(180deg,#A3051D 0%,#8E0619 55%,#6A0F18 100%) fixed; color:#fff}
+  background:linear-gradient(180deg,#A3051D 0%,#8E0619 55%,#6A0F18 100%); color:#fff}
 @media (min-width:900px){.app-m{display:none!important}}
 .app-m [hidden]{display:none!important}
 
 /* Pizza de fondo: entera en el inicio, recortada en «Pide ahora» */
+/* .am-recorte corta lo que sobresale por los lados: si no, la página se podría desplazar en horizontal */
+.am-recorte{position:absolute; top:0; left:0; right:0; height:min(140vw,760px); overflow:hidden; pointer-events:none}
 .am-fondo{position:absolute; top:0; left:50%; width:min(122vw,620px); transform:translate(-50%,-4%); pointer-events:none;
   -webkit-mask-image:linear-gradient(180deg,#000 62%,transparent 94%); mask-image:linear-gradient(180deg,#000 62%,transparent 94%); transition:transform .45s cubic-bezier(.2,.8,.2,1)}
 .am-fondo img{width:100%; height:auto; filter:drop-shadow(0 18px 40px rgba(40,0,6,.45))}
-/* Oscurece la parte baja de la pizza para que el saludo se lea bien */
-.am-fondo::after{content:""; position:absolute; inset:0; background:linear-gradient(180deg,rgba(110,2,20,0) 18%,rgba(110,2,20,.82) 58%); transition:opacity .45s}
-.en-pide .am-fondo::after{opacity:.35}
+/* Velo vino sobre la pizza: arriba atenúa para que resalte el logo, abajo para que se lea el saludo */
+.am-fondo::after{content:""; position:absolute; inset:0; background:linear-gradient(180deg,rgba(130,3,24,.78) 0%,rgba(130,3,24,.5) 22%,rgba(130,3,24,.35) 38%,rgba(110,2,20,.85) 62%)}
+.en-pide .am-fondo::after{background:linear-gradient(180deg,rgba(130,3,24,.55) 40%,rgba(130,3,24,.7) 70%)}
 .en-pide .am-fondo{transform:translate(-50%,-50%); -webkit-mask-image:linear-gradient(180deg,#000 70%,transparent 98%); mask-image:linear-gradient(180deg,#000 70%,transparent 98%)}
 
 /* Barra superior */
 .am-top{position:relative; z-index:2; display:grid; grid-template-columns:48px 1fr 48px; align-items:center; padding:calc(var(--sat) + 14px) 16px 0}
-.am-logo{grid-column:2; justify-self:center; width:min(28vw,124px); filter:drop-shadow(0 2px 12px rgba(60,0,10,.35))}
-.am-volver,.am-lang{width:44px; height:44px; background:var(--am-rosa); color:var(--vino); box-shadow:0 6px 18px rgba(40,0,6,.25)}
+.am-logo{grid-column:2; justify-self:center; width:min(28vw,124px); filter:drop-shadow(0 3px 14px rgba(60,0,10,.55))}
+.am-volver,.am-lang{width:44px; height:44px; background:#fff; color:var(--vino); box-shadow:0 6px 18px rgba(40,0,6,.25)}
 .am-volver{grid-column:1; grid-row:1}
 .am-volver svg{width:22px; height:22px}
-.am-lang{grid-column:3; grid-row:1; justify-self:end; width:40px; height:40px; font:700 14px/1 var(--cond); letter-spacing:.06em; -webkit-text-stroke:var(--t-m) currentColor}
+.am-lang-w{grid-column:3; grid-row:1; justify-self:end; position:relative}
+.am-lang{width:44px; height:44px; font:700 14px/1 var(--cond); letter-spacing:.06em; -webkit-text-stroke:var(--t-m) currentColor}
+.am-lang-l{position:absolute; right:0; top:calc(100% + 8px); z-index:5; min-width:190px; margin:0; padding:6px; list-style:none; background:#fff; border-radius:var(--r-m); box-shadow:0 16px 40px rgba(40,0,6,.35); animation:am-in .2s ease both}
+.am-lang-l button{display:flex; justify-content:space-between; align-items:center; gap:16px; width:100%; min-height:46px; padding:8px 14px; border:0; border-radius:var(--r-s); background:none; color:var(--vino); cursor:pointer; font:400 18px/1 var(--cond); text-align:left; -webkit-text-stroke:var(--t-r) currentColor}
+.am-lang-l b{font-weight:600; font-size:14px; letter-spacing:.08em; opacity:.7}
+.am-lang-l [aria-selected="true"]{background:var(--rosa-cc)}
 
 /* Pantallas */
 .am-p{position:relative; z-index:1; padding:0 16px calc(28px + var(--sab)); animation:am-in .35s ease both}
@@ -41,8 +49,8 @@ html.modo-app body>:not(.app-m):not(.toast){display:none!important}
 .am-hola-tx .deco span{display:block; color:var(--am-rosa)}
 
 /* Tarjeta del local más cercano */
-.am-cerca{display:flex; align-items:center; gap:16px; padding:18px; border-radius:var(--r-xl); background:var(--am-rosa); color:var(--vino); text-decoration:none; box-shadow:0 14px 34px rgba(40,0,6,.3)}
-.am-cerca-ic{width:56px; height:56px; flex:none; display:grid; place-items:center; border-radius:50%; background:var(--vino); color:#fff}
+.am-cerca{display:flex; align-items:center; gap:16px; padding:18px; border-radius:var(--r-xl); background:#fff; color:var(--vino); text-decoration:none; box-shadow:0 14px 34px rgba(40,0,6,.3)}
+.am-cerca-ic{width:56px; height:56px; flex:none; display:grid; place-items:center; border-radius:50%; box-shadow:inset 0 0 0 2px var(--vino); color:var(--vino)}
 .am-cerca-ic svg{width:26px; height:26px}
 .am-cerca-t{display:flex; flex-direction:column; gap:6px; min-width:0}
 .am-cerca-t small{font:600 14px/1 var(--cond); letter-spacing:.12em; text-transform:uppercase; -webkit-text-stroke:var(--t-r) currentColor}
@@ -57,22 +65,22 @@ html.modo-app body>:not(.app-m):not(.toast){display:none!important}
 .am-st.ab{background:var(--am-verde-bg); color:var(--am-verde)}
 .am-st.ce{background:var(--vino); color:#fff}
 .am-dist{font:600 17px/1 var(--cond); letter-spacing:.06em; text-transform:uppercase; color:var(--vino); -webkit-text-stroke:var(--t-r) currentColor}
-.am-mc{padding:5px 10px; border-radius:8px; background:var(--vino); color:#fff; font:600 14px/1 var(--cond); letter-spacing:.08em; text-transform:uppercase; -webkit-text-stroke:var(--t-r) currentColor}
+.am-mc{padding:5px 10px; border-radius:8px; box-shadow:inset 0 0 0 1.5px var(--vino); color:var(--vino); font:600 14px/1 var(--cond); letter-spacing:.08em; text-transform:uppercase; -webkit-text-stroke:var(--t-r) currentColor}
 
 .am-msg{margin:0; padding:0 6px; font-size:16px; color:var(--rosa-txt)}
 .am-msg:empty{display:none}
 
 /* Botones-píldora (Pedir aquí, A domicilio, Ver carta, Glovo, Uber Eats…) */
 .am-acc{display:grid; gap:12px}
-.am-pill{display:flex; align-items:center; justify-content:space-between; gap:12px; min-height:76px; padding:10px 10px 10px 26px; border-radius:999px; background:var(--am-rosa); color:var(--vino); text-decoration:none; box-shadow:0 12px 28px rgba(40,0,6,.28); transition:transform .15s}
+.am-pill{display:flex; align-items:center; justify-content:space-between; gap:12px; min-height:76px; padding:10px 10px 10px 26px; border-radius:999px; background:#fff; color:var(--vino); text-decoration:none; box-shadow:0 12px 28px rgba(40,0,6,.28); transition:transform .15s}
 .am-pill:active,.am-cerca:active,.am-tabs a:active{transform:scale(.97)}
 .am-pill-t{display:flex; flex-direction:column; gap:4px; min-width:0}
 .am-pill-t b{font:400 clamp(26px,7.4vw,32px)/1 var(--deco); text-transform:uppercase; -webkit-text-stroke:0}
 .am-pill-t small{font:600 14px/1 var(--cond); letter-spacing:.14em; text-transform:uppercase; -webkit-text-stroke:var(--t-r) currentColor}
-.am-flecha{width:56px; height:56px; flex:none; display:grid; place-items:center; border-radius:50%; background:var(--vino); color:#fff}
+.am-flecha{width:56px; height:56px; flex:none; display:grid; place-items:center; border-radius:50%; box-shadow:inset 0 0 0 2px var(--vino); color:var(--vino)}
 .am-flecha svg{width:26px; height:26px}
-.am-acc .am-flecha:empty{background:var(--vino) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E") center/26px no-repeat}
-.am-pill-c{justify-content:center; gap:14px; min-height:64px; padding:10px 24px; background:rgba(235,173,173,.92)}
+.am-acc .am-flecha:empty{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2396041A' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E") center/26px no-repeat}
+.am-pill-c{justify-content:center; gap:14px; min-height:64px; padding:10px 24px}
 .am-pill-c b{font:400 26px/1 var(--deco); text-transform:uppercase; -webkit-text-stroke:0}
 
 /* Porción de pizza (icono de la carta) */
@@ -85,15 +93,15 @@ html.modo-app body>:not(.app-m):not(.toast){display:none!important}
 .am-pide>.deco{font-size:clamp(40px,12vw,54px); color:#fff; text-shadow:0 3px 18px rgba(40,0,6,.5)}
 .am-sub{margin:8px 0 20px; font-size:19px}
 .am-tabs{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:24px}
-.am-tabs a{display:flex; flex-direction:column; justify-content:space-between; gap:18px; min-height:96px; padding:14px 12px 14px 14px; border-radius:var(--r-l); background:var(--am-rosa); color:var(--vino); text-decoration:none; font:600 15px/1.05 var(--cond); letter-spacing:.03em; text-transform:uppercase; -webkit-text-stroke:var(--t-r) currentColor; transition:transform .15s, background .2s}
-.am-tabs a.on{background:#fff; box-shadow:0 10px 24px rgba(40,0,6,.25)}
+.am-tabs a{display:flex; flex-direction:column; justify-content:space-between; gap:18px; min-height:96px; padding:14px 12px 14px 14px; border-radius:var(--r-l); background:#fff; color:var(--vino); text-decoration:none; font:600 15px/1.05 var(--cond); letter-spacing:.03em; text-transform:uppercase; -webkit-text-stroke:var(--t-r) currentColor; box-shadow:0 8px 20px rgba(40,0,6,.2); transition:transform .15s, box-shadow .2s}
+.am-tabs a.on{box-shadow:inset 0 0 0 3px var(--vino),0 10px 24px rgba(40,0,6,.25)}
 .am-tabs svg{width:28px; height:28px; -webkit-text-stroke:0}
 .am-tabs .am-porcion{width:28px; height:28px}
 .am-txt{margin:0 0 16px; font-size:19px}
 
 /* Ubicaciones (desplegables) */
 .am-locs{display:grid; gap:12px}
-.am-loc{border-radius:var(--r-xl); background:var(--am-rosa); color:var(--vino); box-shadow:0 12px 28px rgba(40,0,6,.25); overflow:hidden}
+.am-loc{border-radius:var(--r-xl); background:#fff; color:var(--vino); box-shadow:0 12px 28px rgba(40,0,6,.25); overflow:hidden}
 .am-loc-cab{display:flex; align-items:center; gap:12px; width:100%; padding:18px 18px 18px 20px; border:0; background:none; color:inherit; text-align:left; cursor:pointer}
 .am-loc-t{flex:1; display:flex; flex-direction:column; gap:10px; min-width:0}
 .am-loc-t b{font:400 clamp(26px,7.6vw,32px)/1 var(--deco); text-transform:uppercase; -webkit-text-stroke:0}
@@ -103,7 +111,7 @@ html.modo-app body>:not(.app-m):not(.toast){display:none!important}
 .am-loc-c{display:grid; gap:12px; padding:0 12px 14px; animation:am-in .3s ease both}
 .am-loc-c img{width:100%; aspect-ratio:16/10; object-fit:cover; border-radius:var(--r-l)}
 .am-loc-d{margin:2px 8px; font-size:17px; color:var(--suave)}
-.am-loc-c .am-pill{background:#fff; box-shadow:none; min-height:68px}
+.am-loc-c .am-pill{box-shadow:inset 0 0 0 2px var(--am-borde); min-height:68px}
 .am-loc-c .am-flecha{width:50px; height:50px}
 .am-loc-acc{display:grid; grid-template-columns:1fr 1fr; gap:10px}
 .am-mini{display:grid; place-items:center; min-height:48px; padding:8px 10px; border-radius:999px; box-shadow:inset 0 0 0 2px var(--vino); color:var(--vino); text-decoration:none; text-align:center; font:600 15px/1.05 var(--cond); letter-spacing:.04em; text-transform:uppercase; -webkit-text-stroke:var(--t-r) currentColor}
@@ -119,11 +127,9 @@ html.modo-app body>:not(.app-m):not(.toast){display:none!important}
 /* Carta */
 .am-carta-cab{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px}
 .am-carta-cab .deco{font-size:clamp(40px,12vw,54px); color:#fff}
-.am-pdf{display:inline-flex; align-items:center; gap:10px; min-height:48px; padding:10px 18px; border-radius:999px; background:var(--am-rosa); color:var(--vino); text-decoration:none; font:600 15px/1 var(--cond); letter-spacing:.06em; text-transform:uppercase; -webkit-text-stroke:var(--t-r) currentColor; box-shadow:0 8px 20px rgba(40,0,6,.25); white-space:nowrap}
-.am-pdf svg{width:20px; height:20px}
 .am-chips{display:flex; gap:10px; overflow-x:auto; margin:0 -16px 22px; padding:2px 16px 4px; scrollbar-width:none}
 .am-chips::-webkit-scrollbar{display:none}
-.am-chips button{flex:none; min-height:44px; padding:8px 22px; border:0; border-radius:999px; background:var(--am-rosa); color:var(--vino); cursor:pointer; font:600 17px/1 var(--cond); letter-spacing:.06em; text-transform:uppercase; -webkit-text-stroke:var(--t-r) currentColor}
+.am-chips button{flex:none; min-height:44px; padding:8px 22px; border:0; border-radius:999px; background:#fff; color:var(--vino); cursor:pointer; font:600 17px/1 var(--cond); letter-spacing:.06em; text-transform:uppercase; -webkit-text-stroke:var(--t-r) currentColor}
 .am-cat{margin-bottom:34px}
 .am-cat>h3{font-size:clamp(30px,9vw,40px); color:#fff; text-align:right; margin-bottom:20px}
 .am-cat .pz{cursor:default}
@@ -131,5 +137,5 @@ html.modo-app body>:not(.app-m):not(.toast){display:none!important}
 
 /* Redes */
 .am-redes{display:flex; justify-content:center; gap:14px; padding:30px 0 6px}
-.am-redes a{width:52px; height:52px; display:grid; place-items:center; border-radius:50%; box-shadow:inset 0 0 0 2px #fff; color:#fff}
+.am-redes a{width:52px; height:52px; display:grid; place-items:center; border-radius:50%; background:#fff; color:var(--vino); box-shadow:0 8px 20px rgba(40,0,6,.25)}
 .am-redes svg{width:24px; height:24px}

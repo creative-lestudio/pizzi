@@ -329,13 +329,16 @@
      hola → local más cercano → «Pedir aquí» (SkyTab) o «A domicilio» (Uber Eats / Glovo).
      Desde «Pide ahora» se ven los locales, el reparto y la carta en pestañas. -->
 <div class="app-m" id="appM" hidden>
-  <div class="am-fondo" aria-hidden="true"><img src="assets/img/p-italianisima.webp" alt="" width="640" height="640"></div>
+  <div class="am-recorte" aria-hidden="true"><div class="am-fondo"><img src="assets/img/p-italianisima.webp" alt="" width="640" height="640"></div></div>
   <div class="am-top">
     <button class="ico-btn am-volver" id="amVolver" type="button" aria-label="Volver" data-ia="back" hidden>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
     </button>
     <img class="am-logo" src="assets/img/logo-rosa.png" alt="PIZZI" width="1231" height="673">
-    <button type="button" class="ico-btn am-lang" id="amLang" aria-label="Idioma" data-ia="lang_label"><span id="amLangCode">ES</span></button>
+    <div class="am-lang-w">
+      <button type="button" class="ico-btn am-lang" id="amLang" aria-haspopup="listbox" aria-expanded="false" aria-label="Idioma" data-ia="lang_label"><span id="amLangCode">ES</span></button>
+      <ul class="am-lang-l" id="amLangL" role="listbox" hidden></ul>
+    </div>
   </div>
 
   <!-- Pantalla 1: hola + local más cercano -->
@@ -377,7 +380,6 @@
     <div class="am-tab am-carta" id="amt-lacarta">
       <div class="am-carta-cab">
         <h2 class="deco" data-i="app_t_menu">Carta</h2>
-        <a class="am-pdf" href="assets/carta-pizzi.pdf" target="_blank" rel="noopener" download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg><span data-i="app_pdf">Carta en PDF</span></a>
       </div>
       <nav class="am-chips" id="amChips"></nav>
       <div id="amCarta"></div>
