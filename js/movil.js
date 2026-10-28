@@ -146,7 +146,7 @@ function alEntrar(){
   const p=pantallaApp(),grupo=x=>x==="hola"?"hola":"pide";
   if(APP.pant!==null&&grupo(APP.pant)!==grupo(p))APP.desdeHola=p!=="hola"&&APP.pant==="hola";
   // Al pasar del inicio a «Pide ahora» (o al revés) se vuelve arriba; entre pestañas no
-  if(!visible||APP.pant===null||grupo(APP.pant)!==grupo(p))$("appM").scrollTop=0;
+  if(!visible||APP.pant===null||grupo(APP.pant)!==grupo(p))window.scrollTo(0,0);
   APP.pant=p;
   // La primera vez que se abre la app pide la ubicación (salta el permiso del navegador)
   if(APP.estado===null)buscar();
@@ -163,7 +163,7 @@ $("appM").addEventListener("click",e=>{
   const pe=e.target.closest("[data-am-pedir]");
   if(pe){APP.manual=true;elegirLocal(+pe.dataset.amPedir);refrescar();return;}
   const c=e.target.closest("[data-am-cat]");
-  if(c){const s=$("amc-"+c.dataset.amCat),m=$("appM");m.scrollTo({top:s.getBoundingClientRect().top+m.scrollTop-80,behavior:"smooth"});}
+  if(c){const s=$("amc-"+c.dataset.amCat);window.scrollTo({top:s.getBoundingClientRect().top+scrollY-20,behavior:"smooth"});}
 });
 $("amVolver").onclick=()=>{if(APP.desdeHola)history.back();else location.replace("#hola");};
 /* Selector de idioma: lista desplegable */
