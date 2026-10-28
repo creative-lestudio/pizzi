@@ -80,13 +80,18 @@ html.modo-app body>:not(.app-m):not(.toast){display:none!important}
 .am-plat{display:flex; align-items:center; gap:14px; min-height:76px; padding:14px 18px; border-radius:var(--r-l); text-decoration:none; transition:transform .15s; box-shadow:var(--sombra)}
 .am-plat b{flex:1; font:600 19px/1.1 var(--cond); letter-spacing:.04em; text-transform:uppercase; -webkit-text-stroke:var(--t-m) currentColor}
 .am-plat .cv{width:22px; height:22px; flex:none}
-.am-plat-m{flex:none; min-width:92px; padding:10px 12px; border-radius:var(--r-s); text-align:center; font:800 17px/1 system-ui,sans-serif; letter-spacing:-.01em; -webkit-text-stroke:0}
+.am-plat-m{flex:none; width:96px; height:auto}
 .am-uber{background:#000; color:#fff}
-.am-uber .am-plat-m{background:#fff; color:#000}
-.am-glovo{background:#FFC244; color:#1D1D1B}
-.am-glovo .am-plat-m{background:#00A082; color:#fff}
+.am-uber .am-plat-m{width:80px}
+.am-glovo{background:#fff; color:#00A082}
 
-/* Enlaces */
-.am-links{display:flex; justify-content:center; gap:22px; flex-wrap:wrap; padding-top:4px}
-.am-links a{color:var(--vino); font:600 17px/1 var(--cond); letter-spacing:.04em; text-transform:uppercase; -webkit-text-stroke:var(--t-m) currentColor; padding:10px 2px}
-.am-links a[hidden]{display:none}
+/* Botones secundarios (elegir otro local, ver la carta…) */
+.am-links{display:grid; grid-template-columns:1fr 1fr; gap:10px; padding-top:4px}
+.am-links-1{grid-template-columns:1fr}
+.am-bt{display:flex; align-items:center; gap:10px; min-height:58px; padding:10px 14px; border-radius:var(--r-m); background:var(--rosa-cc); color:var(--vino); text-decoration:none; font:600 16px/1.1 var(--cond); letter-spacing:.04em; text-transform:uppercase; -webkit-text-stroke:var(--t-m) currentColor; box-shadow:inset 0 0 0 1.5px var(--linea); transition:transform .15s}
+.am-bt:active{transform:scale(.97)}
+.am-bt-ic{width:36px; height:36px; flex:none; display:grid; place-items:center; border-radius:50%; background:#fff}
+.am-bt-ic svg{width:20px; height:20px; -webkit-text-stroke:0}
+.am-links-1 .am-bt{justify-content:center}
+.am-bt[hidden]{display:none}
+.am-links:has(.am-bt[hidden]) {grid-template-columns:1fr}

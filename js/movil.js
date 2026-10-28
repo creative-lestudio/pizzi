@@ -85,7 +85,7 @@ function pintarDomicilio(){
   const i=ops.length?r[ops[0]].i:S.local;
   $("amRepTxt").textContent=!ops.length?t("app_deliv_none"):!r.centrica?t("app_deliv_far",{n:LOCALES[i].n}):t("app_deliv_p",{n:LOCALES[i].n});
   $("amRep").innerHTML=ops.map(p=>`<a class="am-plat am-${p}" href="${esc(r[p].u)}" rel="noopener">
-    <span class="am-plat-m">${PLAT[p]}</span><b>${esc(t("app_open_with",{p:PLAT[p]}))}</b>
+    <img class="am-plat-m" src="assets/img/${p}.webp" alt="${PLAT[p]}" width="360" height="${p==="uber"?126:118}"><b>${esc(t("app_open_with",{p:PLAT[p]}))}</b>
     <svg class="cv" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></a>`).join("")
     ||`<a class="btn btn-vino full" href="#hola" data-i="app_pickup_instead">${esc(t("app_pickup_instead"))}</a>`;
 }
