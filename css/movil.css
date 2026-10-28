@@ -13,16 +13,18 @@ html.modo-app body>:not(.app-m):not(.toast){display:none!important}
 @media (min-width:900px){.app-m{display:none!important}}
 .app-m [hidden]{display:none!important}
 
-/* Pizza de fondo: entera en el inicio, recortada en «Pide ahora» */
-/* .am-recorte corta lo que sobresale por los lados: si no, la página se podría desplazar en horizontal */
-.am-recorte{position:absolute; top:0; left:0; right:0; height:min(140vw,760px); overflow:hidden; pointer-events:none}
-.am-fondo{position:absolute; top:0; left:50%; width:min(122vw,620px); transform:translate(-50%,-4%); pointer-events:none;
-  -webkit-mask-image:linear-gradient(180deg,#000 62%,transparent 94%); mask-image:linear-gradient(180deg,#000 62%,transparent 94%); transition:transform .45s cubic-bezier(.2,.8,.2,1)}
-.am-fondo img{width:100%; height:auto; filter:drop-shadow(0 18px 40px rgba(40,0,6,.45))}
-/* Velo vino sobre la pizza: arriba atenúa para que resalte el logo, abajo para que se lea el saludo */
-.am-fondo::after{content:""; position:absolute; inset:0; background:linear-gradient(180deg,rgba(130,3,24,.78) 0%,rgba(130,3,24,.5) 22%,rgba(130,3,24,.35) 38%,rgba(110,2,20,.85) 62%)}
-.en-pide .am-fondo::after{background:linear-gradient(180deg,rgba(130,3,24,.55) 40%,rgba(130,3,24,.7) 70%)}
-.en-pide .am-fondo{transform:translate(-50%,-50%); -webkit-mask-image:linear-gradient(180deg,#000 70%,transparent 98%); mask-image:linear-gradient(180deg,#000 70%,transparent 98%)}
+/* Foto de fondo (la caja sobre las baldosas): completa en el inicio, subida y más tapada en «Pide ahora».
+   .am-recorte corta lo que sobresale: si no, la página se podría desplazar en horizontal */
+.am-recorte{position:absolute; top:0; left:0; right:0; height:calc(var(--sat) + 60px + 140vw); overflow:hidden; pointer-events:none}
+/* En el inicio la foto empieza bajo el saludo, para que la caja quede en el hueco entre el saludo y los botones */
+.am-fondo{position:absolute; top:calc(var(--sat) + 60px); left:0; width:100%; transition:transform .45s cubic-bezier(.2,.8,.2,1), top .45s cubic-bezier(.2,.8,.2,1);
+  -webkit-mask-image:linear-gradient(180deg,transparent 0%,#000 24%,#000 70%,transparent 98%); mask-image:linear-gradient(180deg,transparent 0%,#000 24%,#000 70%,transparent 98%)}
+.am-fondo img{width:100%; height:auto}
+/* Velo vino: arriba resalta el logo, en medio deja ver la caja y abajo hace legible el saludo */
+.am-fondo::after{content:""; position:absolute; inset:0; transition:opacity .45s;
+  background:linear-gradient(180deg,rgba(120,2,22,.6) 10%,rgba(120,2,22,0) 30%,rgba(120,2,22,0) 46%,rgba(120,2,22,.35) 60%,rgba(110,2,20,.9) 76%)}
+.en-pide .am-fondo{top:0; transform:translateY(-26%); -webkit-mask-image:linear-gradient(180deg,#000 70%,transparent 98%); mask-image:linear-gradient(180deg,#000 70%,transparent 98%)}
+.en-pide .am-fondo::after{background:linear-gradient(180deg,rgba(120,2,22,.88) 26%,rgba(120,2,22,.7) 45%,rgba(110,2,20,.92) 68%)}
 
 /* Barra superior */
 .am-top{position:relative; z-index:2; display:grid; grid-template-columns:48px 1fr 48px; align-items:center; padding:calc(var(--sat) + 14px) 16px 0}
@@ -42,15 +44,17 @@ html.modo-app body>:not(.app-m):not(.toast){display:none!important}
 @keyframes am-in{from{opacity:0; transform:translateY(14px)}to{opacity:1; transform:none}}
 
 /* ---------- Inicio ---------- */
-.am-hola{min-height:calc(100dvh - var(--sat) - 70px); display:flex; flex-direction:column; justify-content:flex-end; gap:12px}
+.am-hola{min-height:calc(100dvh - var(--sat) - 70px); display:flex; flex-direction:column; gap:12px}
+/* Saludo arriba y acciones abajo: la caja de la foto queda a la vista en el hueco */
+.am-hola-tx{margin-bottom:auto; padding:10px 6px 48px!important; text-align:center}
 .am-hola-tx{padding:0 6px 4px; text-shadow:0 3px 18px rgba(40,0,6,.55)}
 .am-hola-tx .saludo{margin:0 0 8px}
-.am-hola-tx .deco{font-size:clamp(38px,11.5vw,52px); color:#fff}
-.am-hola-tx .deco span{display:block; color:var(--am-rosa)}
+.am-hola-tx .deco{font-size:clamp(30px,8.6vw,40px); color:#fff}
+.am-hola-tx .deco span{color:var(--am-rosa)}
 
 /* Tarjeta del local más cercano */
 .am-cerca{display:flex; align-items:center; gap:16px; padding:18px; border-radius:var(--r-xl); background:#fff; color:var(--vino); text-decoration:none; box-shadow:0 14px 34px rgba(40,0,6,.3)}
-.am-cerca-ic{width:56px; height:56px; flex:none; display:grid; place-items:center; border-radius:50%; box-shadow:inset 0 0 0 2px var(--vino); color:var(--vino)}
+.am-cerca-ic{width:56px; height:56px; flex:none; display:grid; place-items:center; border-radius:18px; background:var(--rosa-cc); color:var(--vino)}
 .am-cerca-ic svg{width:26px; height:26px}
 .am-cerca-t{display:flex; flex-direction:column; gap:6px; min-width:0}
 .am-cerca-t small{font:600 14px/1 var(--cond); letter-spacing:.12em; text-transform:uppercase; -webkit-text-stroke:var(--t-r) currentColor}
@@ -67,21 +71,33 @@ html.modo-app body>:not(.app-m):not(.toast){display:none!important}
 .am-dist{font:600 17px/1 var(--cond); letter-spacing:.06em; text-transform:uppercase; color:var(--vino); -webkit-text-stroke:var(--t-r) currentColor}
 .am-mc{padding:5px 10px; border-radius:8px; box-shadow:inset 0 0 0 1.5px var(--vino); color:var(--vino); font:600 14px/1 var(--cond); letter-spacing:.08em; text-transform:uppercase; -webkit-text-stroke:var(--t-r) currentColor}
 
-.am-msg{margin:0; padding:0 6px; font-size:16px; color:var(--rosa-txt)}
+.am-msg{margin:0; padding:10px 14px; border-radius:var(--r-m); background:rgba(60,0,10,.6); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); font-size:16px; line-height:1.3; color:#fff}
 .am-msg:empty{display:none}
 
 /* Botones-píldora (Pedir aquí, A domicilio, Ver carta, Glovo, Uber Eats…) */
 .am-acc{display:grid; gap:12px}
-.am-pill{display:flex; align-items:center; justify-content:space-between; gap:12px; min-height:76px; padding:10px 10px 10px 26px; border-radius:999px; background:#fff; color:var(--vino); text-decoration:none; box-shadow:0 12px 28px rgba(40,0,6,.28); transition:transform .15s}
-.am-pill:active,.am-cerca:active,.am-tabs a:active{transform:scale(.97)}
-.am-pill-t{display:flex; flex-direction:column; gap:4px; min-width:0}
+/* Todos los botones: superficie blanca, texto e iconos en vino.
+   El icono va en una pastilla rosa clara (se reconoce de un vistazo) y la flecha indica que avanza.
+   Al tocar: se hunde un poco y toma un tono rosado (respuesta inmediata, como en una app nativa). */
+.am-pill{display:flex; align-items:center; gap:14px; min-height:78px; padding:12px 12px 12px 14px; border-radius:var(--r-xl); background:#fff; color:var(--vino); text-decoration:none;
+  box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 10px 26px rgba(40,0,6,.26); transition:transform .15s ease, background-color .15s ease, box-shadow .15s ease; -webkit-tap-highlight-color:transparent}
+.am-pill,.am-cerca,.am-tabs a,.am-chips button,.am-mini,.am-redes a,.am-volver,.am-lang{touch-action:manipulation}
+.am-pill:active,.am-cerca:active,.am-tabs a:active,.am-chips button:active,.am-mini:active,.am-redes a:active,.am-loc-cab:active{transform:scale(.975); background-color:#FBEDED}
+.app-m a:focus-visible,.app-m button:focus-visible{outline:3px solid #fff; outline-offset:3px}
+.am-pill-1{min-height:88px; box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 14px 34px rgba(40,0,6,.34)}
+.am-ic{width:52px; height:52px; flex:none; display:grid; place-items:center; border-radius:16px; background:var(--rosa-cc); color:var(--vino)}
+.am-ic svg{width:26px; height:26px}
+.am-pill-t{flex:1}
+.am-pill-t{display:flex; flex-direction:column; gap:5px; min-width:0}
 .am-pill-t b{font:400 clamp(26px,7.4vw,32px)/1 var(--deco); text-transform:uppercase; -webkit-text-stroke:0}
-.am-pill-t small{font:600 14px/1 var(--cond); letter-spacing:.14em; text-transform:uppercase; -webkit-text-stroke:var(--t-r) currentColor}
-.am-flecha{width:56px; height:56px; flex:none; display:grid; place-items:center; border-radius:50%; box-shadow:inset 0 0 0 2px var(--vino); color:var(--vino)}
-.am-flecha svg{width:26px; height:26px}
-.am-acc .am-flecha:empty{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2396041A' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E") center/26px no-repeat}
-.am-pill-c{justify-content:center; gap:14px; min-height:64px; padding:10px 24px}
-.am-pill-c b{font:400 26px/1 var(--deco); text-transform:uppercase; -webkit-text-stroke:0}
+.am-pill-t small{font:400 16px/1.15 var(--cond); letter-spacing:.02em; color:var(--suave); -webkit-text-stroke:var(--t-f) currentColor}
+.am-flecha{width:44px; height:44px; flex:none; display:grid; place-items:center; border-radius:50%; background:var(--vino); color:#fff; transition:transform .2s ease}
+.am-flecha svg{width:22px; height:22px}
+.am-pill:active .am-flecha{transform:translateX(3px)}
+.am-acc .am-flecha:empty{background:var(--vino) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E") center/22px no-repeat}
+/* Acción secundaria: más baja y centrada, para que no compita con pedir */
+.am-pill-c{justify-content:center; gap:12px; min-height:60px; padding:10px 24px; border-radius:999px; background:rgba(255,255,255,.94)}
+.am-pill-c b{font:400 24px/1 var(--deco); text-transform:uppercase; -webkit-text-stroke:0}
 
 /* Porción de pizza (icono de la carta) */
 .am-porcion{display:inline-block; width:30px; height:30px; flex:none; background:currentColor;
@@ -94,9 +110,10 @@ html.modo-app body>:not(.app-m):not(.toast){display:none!important}
 .am-sub{margin:8px 0 20px; font-size:19px}
 .am-tabs{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:24px}
 .am-tabs a{display:flex; flex-direction:column; justify-content:space-between; gap:18px; min-height:96px; padding:14px 12px 14px 14px; border-radius:var(--r-l); background:#fff; color:var(--vino); text-decoration:none; font:600 15px/1.05 var(--cond); letter-spacing:.03em; text-transform:uppercase; -webkit-text-stroke:var(--t-r) currentColor; box-shadow:0 8px 20px rgba(40,0,6,.2); transition:transform .15s, box-shadow .2s}
-.am-tabs a.on{box-shadow:inset 0 0 0 3px var(--vino),0 10px 24px rgba(40,0,6,.25)}
-.am-tabs svg{width:28px; height:28px; -webkit-text-stroke:0}
-.am-tabs .am-porcion{width:28px; height:28px}
+.am-tabs a.on{box-shadow:inset 0 0 0 2.5px var(--vino),0 12px 28px rgba(40,0,6,.3)}
+.am-tic{width:46px; height:46px; display:grid; place-items:center; border-radius:14px; background:var(--rosa-cc); transition:background-color .2s, color .2s}
+.am-tic svg,.am-tic .am-porcion{width:26px; height:26px; -webkit-text-stroke:0}
+.am-tabs a.on .am-tic{background:var(--vino); color:#fff}
 .am-txt{margin:0 0 16px; font-size:19px}
 
 /* Ubicaciones (desplegables) */
@@ -111,14 +128,14 @@ html.modo-app body>:not(.app-m):not(.toast){display:none!important}
 .am-loc-c{display:grid; gap:12px; padding:0 12px 14px; animation:am-in .3s ease both}
 .am-loc-c img{width:100%; aspect-ratio:16/10; object-fit:cover; border-radius:var(--r-l)}
 .am-loc-d{margin:2px 8px; font-size:17px; color:var(--suave)}
-.am-loc-c .am-pill{box-shadow:inset 0 0 0 2px var(--am-borde); min-height:68px}
-.am-loc-c .am-flecha{width:50px; height:50px}
+.am-loc-c .am-pill{background:var(--rosa-cc); box-shadow:none; min-height:64px; padding-left:22px}
+.am-loc-c .am-pill:active{background:#F4D2D2}
 .am-loc-acc{display:grid; grid-template-columns:1fr 1fr; gap:10px}
-.am-mini{display:grid; place-items:center; min-height:48px; padding:8px 10px; border-radius:999px; box-shadow:inset 0 0 0 2px var(--vino); color:var(--vino); text-decoration:none; text-align:center; font:600 15px/1.05 var(--cond); letter-spacing:.04em; text-transform:uppercase; -webkit-text-stroke:var(--t-r) currentColor}
+.am-mini{display:grid; place-items:center; min-height:48px; padding:8px 10px; border-radius:999px; box-shadow:inset 0 0 0 1.5px var(--am-borde); color:var(--vino); text-decoration:none; text-align:center; font:600 15px/1.05 var(--cond); letter-spacing:.04em; text-transform:uppercase; -webkit-text-stroke:var(--t-r) currentColor}
 
 /* Pedidos online */
 .am-rep{display:grid; gap:12px}
-.am-plat{min-height:96px; padding-left:28px}
+.am-plat{min-height:92px; padding-left:24px}
 .am-plat .am-pill-t{gap:10px}
 .am-plat img{height:auto; width:auto}
 .am-logo-glovo{max-height:40px; max-width:150px}
