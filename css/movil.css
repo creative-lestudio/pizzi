@@ -2,16 +2,18 @@
    PIZZI · App móvil (js/movil.js)
    Solo se ve en pantallas de menos de 900 px y en el inicio: tapa la web y funciona como una app.
    ========================================================= */
-/* Fondo vino también en <html> y <body>: si no, el rosa de la web asoma abajo (barra del navegador, zona segura) */
-html.modo-app,html.modo-app body{overflow:hidden; height:100%; background:#6A0F18}
+/* La app forma parte de la página (no es una capa fija): así su fondo llega hasta abajo del todo,
+   también bajo la barra del navegador del iPhone. <html> y <body> llevan el mismo vino que la app
+   para que el rebote al desplazar no muestre otro color. */
+html.modo-app,html.modo-app body{background:#8A0619; scrollbar-gutter:auto}
 html.modo-app body>:not(.app-m):not(.toast){display:none!important}
 
 .app-m{
   --am-rosa:#EBADAD; --am-borde:rgba(150,4,26,.18); --am-verde:#2E7D4F; --am-verde-bg:#DDF2E3;
-  position:fixed; inset:0; z-index:90; overflow-x:hidden; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
-  display:flex; flex-direction:column; color:#fff;
-  /* Fondo: baldosas rojas muy atenuadas con un velo vino, solo como textura */
-  background:linear-gradient(180deg,rgba(150,4,26,.86) 0%,rgba(130,4,24,.84) 55%,rgba(100,8,22,.92) 100%),#6A0F18 url(../assets/img/fondo-baldosas.webp) center/cover no-repeat}
+  position:relative; min-height:100vh; min-height:100dvh; overflow-x:clip; display:flex; flex-direction:column; color:#fff;
+  /* Fondo: baldosas rojas muy atenuadas bajo un velo vino uniforme, solo como textura.
+     Se repite hacia abajo para que no se deforme en las pantallas largas (lista de locales, carta) */
+  background:linear-gradient(rgba(138,5,25,.86),rgba(138,5,25,.86)),#8A0619 url(../assets/img/fondo-baldosas.webp) center top/100% auto repeat-y}
 @media (min-width:900px){.app-m{display:none!important}}
 .app-m [hidden]{display:none!important}
 
@@ -33,9 +35,9 @@ html.modo-app body>:not(.app-m):not(.toast){display:none!important}
 @keyframes am-in{from{opacity:0; transform:translateY(14px)}to{opacity:1; transform:none}}
 
 /* ---------- Inicio ---------- */
-/* Inicio: logo, saludo y botones forman un bloque centrado en la pantalla.
+/* Inicio y «Pide ahora»: logo y contenido forman un bloque centrado en la pantalla.
    Los márgenes automáticos centran; si el contenido no cabe, valen 0 y se desplaza con normalidad */
-.app-m:not(.en-pide) .am-top{margin-top:auto}
+.am-top{margin-top:auto}
 .am-hola{display:flex; flex-direction:column; gap:12px; padding-top:22px; margin-bottom:auto}
 /* Saludo arriba y acciones abajo: la caja de la foto queda a la vista en el hueco */
 .am-hola-tx{padding:0 6px 18px!important; text-align:center}
@@ -97,7 +99,7 @@ html.modo-app body>:not(.app-m):not(.toast){display:none!important}
 
 
 /* ---------- Pide ahora ---------- */
-.am-pide{flex:1 0 auto; padding-top:26px}
+.am-pide{padding-top:26px; margin-bottom:auto}
 .am-pide>.deco{font-size:clamp(40px,12vw,54px); color:#fff; text-shadow:0 3px 18px rgba(40,0,6,.5)}
 .am-sub{margin:8px 0 20px; font-size:19px}
 .am-tabs{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:24px}
