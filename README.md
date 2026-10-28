@@ -7,10 +7,13 @@ Es una web estática: no necesita servidor ni base de datos (GitHub Pages, Cloud
 
 En pantallas de menos de 900 px, el inicio se convierte en una app de flujo corto (`js/movil.js`, `css/movil.css`). En el ordenador la web no cambia.
 
-1. **«¡Hola! Es hora de Pizzi»**: pide permiso de ubicación y muestra el **Pizzi más cercano** con dos botones. Si no hay ubicación, se elige de la lista.
+1. **«¡Hola! Es hora de Pizzi»**: pide permiso de ubicación y muestra el **Pizzi más cercano**, con los botones **Pedir aquí**, **A domicilio** y **Ver carta**.
 2. **Pedir aquí**: lleva a la tienda **SkyTab** del local (`pedidoUrl`). Si el local aún no la tiene, abre la carta de esta web con ese local elegido.
-3. **A domicilio**: en zona céntrica ofrece **Uber Eats y Glovo**; en zonas alejadas solo **Uber Eats**, desde el local más cercano que lo tenga. Si está demasiado lejos, propone recoger.
-   La zona se configura en `CONFIG.reparto` (`centro`, `radioCentro`, `radioMax`) y los enlaces de cada local en `uber` y `glovo` (`js/data.js`).
+3. **Pide ahora**, con tres pestañas:
+   - **Ubicaciones**: locales del más cercano al más lejano. Cada uno se despliega con foto, dirección, *Pedir aquí*, *Cómo llegar* y *Llamar*.
+   - **Pedidos online**: en zona céntrica ofrece **Glovo y Uber Eats**; en zonas alejadas solo **Uber Eats**, desde el local más cercano que lo tenga. Si está demasiado lejos, propone recoger.
+     La zona se configura en `CONFIG.reparto` (`centro`, `radioCentro`, `radioMax`) y los enlaces de cada local en `uber` y `glovo` (`js/data.js`).
+   - **Carta**: la carta para consultar, con la descarga en PDF.
 
 ## Flujo (escritorio, y carta / pedido en el móvil)
 
