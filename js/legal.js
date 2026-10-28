@@ -28,6 +28,8 @@ const ALERG={
   "TARTUFINA":["gluten","leche"],
   "ITALIANÍSIMA":["gluten","leche","frutos de cáscara"],
   "MONTESA":["gluten","leche"],
+  "BARBACOA":["gluten","leche"],
+  "REINA":["gluten","leche"],
   "COCA-COLA":[],"COCA-COLA ZERO":[],"FANTA NARANJA":[],"FANTA LIMÓN":[],
   "CERVEZA TURIA":["gluten"],"AGUA":[],"AGUA CON GAS":[]
 };
