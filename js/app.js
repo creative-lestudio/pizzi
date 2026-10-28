@@ -264,7 +264,7 @@ $("chipLocal").onclick=()=>abrirLocal();
 /* ---------- Geolocalización ----------
    Pide la ubicación precisa (GPS), escucha unos segundos y se queda con la lectura más exacta.
    Si la precisión es mala (ubicación por IP o wifi), no elige local automáticamente y lo avisa. */
-let ORDEN=LOCALES.map((_,i)=>i),DIST={},PREC=null;
+let ORDEN=LOCALES.map((_,i)=>i),DIST={},PREC=null,YO=null;
 const km=(a,b,c,d)=>{const r=x=>x*Math.PI/180,h=Math.sin(r(c-a)/2)**2+Math.cos(r(a))*Math.cos(r(c))*Math.sin(r(d-b)/2)**2;return 12742*Math.asin(Math.sqrt(h))};
 const fmtKm=k=>k<1?Math.max(50,Math.round(k*20)*50)+" m":(LANG==="en"?k.toFixed(1):k.toFixed(1).replace(".",","))+" km";
 const PREC_OK=40,PREC_MALA=1000,ESPERA=8000;
@@ -273,7 +273,7 @@ function ubicar(fin){
   let mejor=null,hecho=false,wid=null,to=null;
   const acabar=motivo=>{if(hecho)return;hecho=true;clearTimeout(to);if(wid!==null)navigator.geolocation.clearWatch(wid);
     if(!mejor){fin(motivo||"err");return;}
-    const {latitude:a,longitude:o,accuracy:pr}=mejor.coords;PREC=pr;
+    const {latitude:a,longitude:o,accuracy:pr}=mejor.coords;PREC=pr;YO={lat:a,lng:o};
     DIST={};LOCALES.forEach((l,i)=>DIST[i]=km(a,o,l.lat,l.lng));
     ORDEN=LOCALES.map((_,i)=>i).sort((x,y)=>DIST[x]-DIST[y]);
     fin(pr>PREC_MALA?"aprox":"ok");};

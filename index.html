@@ -20,6 +20,7 @@
 <link rel="preload" href="fonts/Cervo-Thin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/fonts.css">
 <link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="css/movil.css">
 </head>
 <body>
 <a class="saltar" href="#app" data-i="skip">Saltar al contenido</a>
@@ -323,11 +324,78 @@
   <div class="hoja-pie"><button class="btn btn-vino full" type="button" id="hlOk" data-i="save">Guardar</button></div>
 </div>
 
+<!-- ============ APP MÓVIL ============
+     En pantallas de móvil (< 900 px) el inicio se sustituye por este flujo corto:
+     hola → local más cercano → «Pedir aquí» (SkyTab) o «A domicilio» (Uber Eats / Glovo). -->
+<div class="app-m" id="appM" hidden>
+  <div class="am-top">
+    <button class="ico-btn am-volver" id="amVolver" type="button" aria-label="Volver" data-ia="back" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <img class="am-logo" src="assets/img/logo-rosa.png" alt="PIZZI" width="1231" height="673">
+    <button type="button" class="ico-btn am-lang" id="amLang" aria-label="Idioma" data-ia="lang_label"><span id="amLangCode">ES</span></button>
+  </div>
+
+  <!-- Pantalla 1: hola + local más cercano -->
+  <section class="am-p" id="am-hola">
+    <div class="am-hero">
+      <p class="saludo" id="amSaludo"></p>
+      <h1 class="deco" data-ih="app_hi">¡Hola! <span>Es hora de Pizzi</span></h1>
+    </div>
+    <div class="am-hoja">
+      <div class="am-buscando" id="amBuscando" hidden>
+        <span class="am-pulso" aria-hidden="true"></span>
+        <p data-i="app_locating">Buscando tu Pizzi más cercano…</p>
+      </div>
+      <div id="amLocal"></div>
+      <div class="am-acc" id="amAcc" hidden>
+        <a class="am-op am-op-vino" id="amAqui">
+          <span class="am-op-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 11.1a2 2 0 0 1-2 1.9H8.2a2 2 0 0 1-2-1.9z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></span>
+          <span class="am-op-t"><b data-i="order_here">Pedir aquí</b><small data-i="app_here_p">Recógela en el local</small></span>
+        </a>
+        <a class="am-op" href="#domicilio">
+          <span class="am-op-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M9 17h6l-3-8H8M15 6h3l3 11"/></svg></span>
+          <span class="am-op-t"><b data-i="app_delivery">A domicilio</b><small data-i="app_delivery_p">Te la llevamos a casa</small></span>
+        </a>
+      </div>
+      <p class="am-msg" id="amMsg" role="status" aria-live="polite"></p>
+      <div class="am-lista" id="amLista"></div>
+      <div class="am-links">
+        <a href="#elegir" id="amOtro" data-i="app_other">Elegir otro local</a>
+        <a href="#carta" data-i="see_menu">Ver la carta</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Elegir local -->
+  <section class="am-p" id="am-elegir" hidden>
+    <div class="am-hero am-hero-s"><h1 class="deco" data-i="choose_store">Elige tu Pizzi</h1></div>
+    <div class="am-hoja">
+      <button type="button" class="btn btn-linea full" id="amUbicar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.5" fill="currentColor"/></svg>
+        <span data-i="near_me">Cerca de mí</span>
+      </button>
+      <div class="am-lista" id="amElegir"></div>
+    </div>
+  </section>
+
+  <!-- A domicilio -->
+  <section class="am-p" id="am-domicilio" hidden>
+    <div class="am-hero am-hero-s"><h1 class="deco" data-i="app_deliv_h">¿Quién te la lleva?</h1></div>
+    <div class="am-hoja">
+      <p class="am-txt" id="amRepTxt"></p>
+      <div class="am-rep" id="amRep"></div>
+      <div class="am-links"><a href="#hola" data-i="app_pickup_instead">Prefiero recogerla</a></div>
+    </div>
+  </section>
+</div>
+
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="js/i18n.js"></script>
 <script src="js/data.js"></script>
 <script src="js/legal.js"></script>
 <script src="js/app.js"></script>
+<script src="js/movil.js"></script>
 </body>
 </html>

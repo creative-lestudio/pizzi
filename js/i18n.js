@@ -171,3 +171,22 @@ const DESC={"MARGHERITA":["Salsa de tomate, mozzarella fior di latte y albahaca 
 "AGUA CON GAS":["Agua con gas, botella 33 cl","Sparkling water, 33 cl bottle","Acqua frizzante, bottiglia 33 cl","Eau gazeuse, bouteille 33 cl","Sprudelwasser, 33-cl-Flasche"]};
 const NOM={"FANTA NARANJA":["FANTA NARANJA","FANTA ORANGE","FANTA ARANCIA","FANTA ORANGE","FANTA ORANGE"],"FANTA LIMÓN":["FANTA LIMÓN","FANTA LEMON","FANTA LIMONE","FANTA CITRON","FANTA ZITRONE"],"CERVEZA TURIA":["CERVEZA TURIA","TURIA BEER","BIRRA TURIA","BIÈRE TURIA","TURIA BIER"],"AGUA":["AGUA","WATER","ACQUA","EAU","WASSER"],"AGUA CON GAS":["AGUA CON GAS","SPARKLING WATER","ACQUA FRIZZANTE","EAU GAZEUSE","SPRUDELWASSER"]};
 const ALG={"gluten":["gluten","gluten","glutine","gluten","Gluten"],"leche":["leche","milk","latte","lait","Milch"],"pescado":["pescado","fish","pesce","poisson","Fisch"],"frutos de cáscara":["frutos de cáscara","tree nuts","frutta a guscio","fruits à coque","Schalenfrüchte"]};
+
+/* App móvil (js/movil.js) */
+Object.assign(I,{
+"app_hi":["¡Hola! <span>Es hora de Pizzi</span>","Hi! <span>It's Pizzi time</span>","Ciao! <span>È l'ora di Pizzi</span>","Salut ! <span>C'est l'heure de Pizzi</span>","Hallo! <span>Zeit für Pizzi</span>"],
+"app_locating":["Buscando tu Pizzi más cercano…","Finding your nearest Pizzi…","Cerchiamo la Pizzi più vicina…","Recherche de ton Pizzi le plus proche…","Wir suchen deine nächste Pizzi…"],
+"app_nearest":["Tu Pizzi más cercano","Your nearest Pizzi","La Pizzi più vicina","Ton Pizzi le plus proche","Deine nächste Pizzi"],
+"app_yours":["Tu Pizzi","Your Pizzi","La tua Pizzi","Ton Pizzi","Deine Pizzi"],
+"app_approx":["Tu ubicación es aproximada: comprueba que este es tu local.","Your location is approximate: check this is your store.","La tua posizione è approssimativa: verifica che sia il tuo locale.","Ta position est approximative : vérifie que c'est bien ton restaurant.","Dein Standort ist ungenau: prüfe, ob das deine Filiale ist."],
+"app_here_p":["Recógela en el local","Pick it up at the store","Ritirala nel locale","Récupère-la au restaurant","Hol sie im Laden ab"],
+"app_delivery":["A domicilio","Delivery","A domicilio","Livraison","Lieferung"],
+"app_delivery_p":["Te la llevamos a casa","We bring it to your door","Te la portiamo a casa","On te la livre à la maison","Wir bringen sie zu dir"],
+"app_other":["Elegir otro local","Choose another store","Scegli un altro locale","Choisir un autre restaurant","Andere Filiale wählen"],
+"app_deliv_h":["¿Quién te la lleva?","Who brings it?","Chi te la porta?","Qui te la livre ?","Wer bringt sie dir?"],
+"app_deliv_p":["Elige tu app de reparto. Te la preparamos en Pizzi {n}.","Choose your delivery app. We'll make it at Pizzi {n}.","Scegli la tua app di consegna. La prepariamo da Pizzi {n}.","Choisis ton appli de livraison. On la prépare chez Pizzi {n}.","Wähle deine Liefer-App. Wir backen sie bei Pizzi {n}."],
+"app_deliv_far":["En tu zona repartimos con Uber Eats desde Pizzi {n}.","In your area we deliver with Uber Eats from Pizzi {n}.","Nella tua zona consegniamo con Uber Eats da Pizzi {n}.","Dans ta zone, on livre avec Uber Eats depuis Pizzi {n}.","In deiner Gegend liefern wir mit Uber Eats von Pizzi {n}."],
+"app_deliv_none":["Todavía no llegamos a domicilio a tu zona. ¿Te la preparamos para recoger?","We don't deliver to your area yet. Shall we make it for pickup?","Non consegniamo ancora nella tua zona. Te la prepariamo da ritirare?","On ne livre pas encore dans ta zone. On te la prépare à emporter ?","Wir liefern noch nicht in deine Gegend. Sollen wir sie zum Abholen backen?"],
+"app_pickup_instead":["Prefiero recogerla","I'd rather pick it up","Preferisco ritirarla","Je préfère la récupérer","Lieber selbst abholen"],
+"app_open_with":["Pedir con {p}","Order with {p}","Ordina con {p}","Commander avec {p}","Mit {p} bestellen"]
+});
