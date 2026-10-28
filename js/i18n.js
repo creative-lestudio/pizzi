@@ -202,6 +202,5 @@ Object.assign(I,{
 "app_nearest_badge":["Más cercano","Nearest","Più vicino","Le plus proche","Am nächsten"],
 "app_open":["Abierto","Open","Aperto","Ouvert","Geöffnet"],
 "app_closed":["Cerrado","Closed","Chiuso","Fermé","Geschlossen"],
-"app_order_in":["Pedir en","Order on","Ordina su","Commander sur","Bestellen bei"],
 "app_open_with":["Pedir con {p}","Order with {p}","Ordina con {p}","Commander avec {p}","Mit {p} bestellen"]
 });

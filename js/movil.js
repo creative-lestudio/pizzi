@@ -99,7 +99,7 @@ function pintarDomicilio(){
   const i=ops.length?r[ops[0]].i:S.local;
   $("amRepTxt").textContent=!ops.length?t("app_deliv_none"):!r.centrica?t("app_deliv_far",{n:LOCALES[i].n}):t("app_deliv_p");
   $("amRep").innerHTML=ops.map(p=>`<a class="am-pill am-plat" href="${esc(r[p].u)}" rel="noopener" aria-label="${esc(t("app_open_with",{p:PLAT[p]}))}">
-    <span class="am-pill-t"><small>${esc(t("app_order_in"))}</small><img src="assets/img/${p}.webp" alt="${PLAT[p]}" class="am-logo-${p}"></span>
+    <span class="am-pill-t"><img src="assets/img/${p}.webp" alt="${PLAT[p]}" class="am-logo-${p}"></span>
     <span class="am-flecha">${FLECHA}</span></a>`).join("")||pillPedir("#ubicaciones",t("app_pickup_instead"));
 }
 

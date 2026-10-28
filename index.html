@@ -329,7 +329,6 @@
      hola → local más cercano → «Pedir aquí» (SkyTab) o «A domicilio» (Uber Eats / Glovo).
      Desde «Pide ahora» se ven los locales, el reparto y la carta en pestañas. -->
 <div class="app-m" id="appM" hidden>
-  <div class="am-recorte" aria-hidden="true"><div class="am-fondo"><img src="assets/img/fondo-caja.webp" alt="" width="900" height="1200"></div></div>
   <div class="am-top">
     <button class="ico-btn am-volver" id="amVolver" type="button" aria-label="Volver" data-ia="back" hidden>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
@@ -348,14 +347,14 @@
       <h1 class="deco" data-ih="app_hi">¡Hola! <span>Es hora de Pizzi</span></h1>
     </div>
     <a class="am-cerca" id="amCerca" href="#ubicaciones">
-      <span class="am-cerca-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg></span>
+      <span class="am-cerca-ic"><img src="assets/img/ic-ubicacion.webp" alt="" width="240" height="240"></span>
       <span class="am-cerca-t" id="amCercaT"></span>
     </a>
     <p class="am-msg" id="amMsg" role="status" aria-live="polite"></p>
     <div class="am-acc">
-      <a class="am-pill am-pill-1" id="amAqui"><span class="am-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 11.1a2 2 0 0 1-2 1.9H8.2a2 2 0 0 1-2-1.9z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></span><span class="am-pill-t"><b data-i="order_here">Pedir aquí</b><small data-i="app_here_p">Recógela en el local</small></span><span class="am-flecha" aria-hidden="true"></span></a>
-      <a class="am-pill" href="#domicilio"><span class="am-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M9 17h6l-3-8H8M15 6h3l3 11"/></svg></span><span class="am-pill-t"><b data-i="app_delivery">A domicilio</b><small data-i="app_delivery_p">Te la llevamos a casa</small></span><span class="am-flecha" aria-hidden="true"></span></a>
-      <a class="am-pill am-pill-c" href="#lacarta"><span class="am-porcion" aria-hidden="true"></span><b data-i="app_menu">Ver carta</b></a>
+      <a class="am-pill am-pill-1" id="amAqui"><span class="am-ic" aria-hidden="true"><img src="assets/img/ic-chef.webp" alt="" width="240" height="240"></span><span class="am-pill-t"><b data-i="order_here">Pedir aquí</b><small data-i="app_here_p">Recógela en el local</small></span><span class="am-flecha" aria-hidden="true"></span></a>
+      <a class="am-pill" href="#domicilio"><span class="am-ic am-ic-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M9 17h6l-3-8H8M15 6h3l3 11"/></svg></span><span class="am-pill-t"><b data-i="app_delivery">A domicilio</b><small data-i="app_delivery_p">Te la llevamos a casa</small></span><span class="am-flecha" aria-hidden="true"></span></a>
+      <a class="am-pill am-pill-c" href="#lacarta"><img class="am-ic-s" src="assets/img/ic-porcion.webp" alt="" width="240" height="240"><b data-i="app_menu">Ver carta</b></a>
     </div>
   </section>
 
@@ -364,9 +363,9 @@
     <h1 class="deco" data-i="app_pide_h">Pide ahora</h1>
     <p class="am-sub" data-i="app_pide_p">Elige cómo quieres pedir.</p>
     <nav class="am-tabs" aria-label="Pide ahora">
-      <a href="#ubicaciones" data-am-tab="ubicaciones"><span class="am-tic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg></span><span data-i="app_t_locs">Ubicaciones</span></a>
-      <a href="#domicilio" data-am-tab="domicilio"><span class="am-tic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 11.1a2 2 0 0 1-2 1.9H8.2a2 2 0 0 1-2-1.9z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></span><span data-i="app_t_online">Pedidos online</span></a>
-      <a href="#lacarta" data-am-tab="lacarta"><span class="am-tic" aria-hidden="true"><span class="am-porcion" aria-hidden="true"></span></span><span data-i="app_t_menu">Carta</span></a>
+      <a href="#ubicaciones" data-am-tab="ubicaciones"><span class="am-tic" aria-hidden="true"><img src="assets/img/ic-ubicacion.webp" alt="" width="240" height="240"></span><span data-i="app_t_locs">Ubicaciones</span></a>
+      <a href="#domicilio" data-am-tab="domicilio"><span class="am-tic am-ic-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 11.1a2 2 0 0 1-2 1.9H8.2a2 2 0 0 1-2-1.9z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></span><span data-i="app_t_online">Pedidos online</span></a>
+      <a href="#lacarta" data-am-tab="lacarta"><span class="am-tic" aria-hidden="true"><img src="assets/img/ic-porcion.webp" alt="" width="240" height="240"></span><span data-i="app_t_menu">Carta</span></a>
     </nav>
 
     <div class="am-tab" id="amt-ubicaciones">
