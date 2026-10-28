@@ -3,7 +3,16 @@
 Web principal de Pizzi (Valencia) diseñada por **LE STUDIO**. Funciona como una app (al estilo de Honest Greens): pestañas abajo en el móvil, hojas que suben desde abajo, carrito siempre a mano y un flujo corto pensado para convertir.
 Es una web estática: no necesita servidor ni base de datos (GitHub Pages, Cloudflare Pages…).
 
-## Flujo
+## En el móvil: modo app
+
+En pantallas de menos de 900 px, el inicio se convierte en una app de flujo corto (`js/movil.js`, `css/movil.css`). En el ordenador la web no cambia.
+
+1. **«¡Hola! Es hora de Pizzi»**: pide permiso de ubicación y muestra el **Pizzi más cercano** con dos botones. Si no hay ubicación, se elige de la lista.
+2. **Pedir aquí**: lleva a la tienda **SkyTab** del local (`pedidoUrl`). Si el local aún no la tiene, abre la carta de esta web con ese local elegido.
+3. **A domicilio**: en zona céntrica ofrece **Uber Eats y Glovo**; en zonas alejadas solo **Uber Eats**, desde el local más cercano que lo tenga. Si está demasiado lejos, propone recoger.
+   La zona se configura en `CONFIG.reparto` (`centro`, `radioCentro`, `radioMax`) y los enlaces de cada local en `uber` y `glovo` (`js/data.js`).
+
+## Flujo (escritorio, y carta / pedido en el móvil)
 
 1. **Inicio**: saludo, el eslogan de la caja («Llévame a casa que estoy caliente») y una tarjeta con **Dónde** (local) y **Cuándo** (hora) + botón *Empezar pedido*. Debajo: *Repite tu último pedido*, *Las más pedidas* con botón **+** para añadir sin abrir la ficha, *Así de fácil* y los locales con su estado en tiempo real.
 2. **Selector de local y hora** (hoja inferior): locales con foto, estado abierto/cerrado y franjas de 15 min. Si el local está cerrado se programa el pedido.
@@ -41,6 +50,7 @@ Idiomas: español, inglés, italiano, francés y alemán. Se puede instalar en l
 | `js/i18n.js` | Textos en 5 idiomas |
 | `js/legal.js` | Datos de empresa, alérgenos y páginas legales |
 | `js/app.js` | Lógica (navegación, carrito, horarios, WhatsApp) |
+| `js/movil.js`, `css/movil.css` | Modo app en el móvil (hola → pedir aquí / a domicilio) |
 | `assets/img/` | Imágenes optimizadas para web (`-s` = miniatura, `-m` = media pizza de la carta) |
 | `assets/carta-pizzi.pdf` | Carta impresa descargable |
 
@@ -66,5 +76,6 @@ Se pide la ubicación precisa (GPS) y durante unos segundos se toma la lectura m
 ## Pendiente para la versión final
 
 - WhatsApp de pedidos de cada local.
+- Enlaces de SkyTab (`pedidoUrl`), Uber Eats (`uber`) y Glovo (`glovo`) de cada local. Mientras falten, el reparto usa `uberTodos` / `glovoTodos`.
 - Datos de empresa y validación de la tabla de alérgenos.
 - Envío 100 % automático (sin que el cliente pulse enviar en WhatsApp): requiere la API de WhatsApp Business o una herramienta de automatización.

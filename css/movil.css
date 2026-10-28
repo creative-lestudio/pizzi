@@ -1,0 +1,92 @@
+/* =========================================================
+   PIZZI · App móvil (js/movil.js)
+   Solo se ve en pantallas de menos de 900 px y en el inicio: tapa la web y funciona como una app.
+   ========================================================= */
+html.modo-app,html.modo-app body{overflow:hidden; height:100%}
+html.modo-app body>:not(.app-m):not(.toast){display:none!important}
+
+.app-m{position:fixed; inset:0; z-index:90; display:flex; flex-direction:column; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
+  background:var(--vino) url(../assets/img/hero.webp) center top/100% auto no-repeat; color:var(--rosa)}
+.app-m::before{content:""; position:fixed; inset:0; z-index:-1; pointer-events:none; background:linear-gradient(180deg,rgba(111,1,21,.25) 0%,rgba(111,1,21,.6) 30%,var(--vino) 52%)}
+@media (min-width:900px){.app-m{display:none!important}}
+
+/* Barra superior */
+.am-top{position:sticky; top:0; z-index:2; display:grid; grid-template-columns:48px 1fr 48px; align-items:center; padding:calc(var(--sat) + 8px) 12px 8px}
+.am-logo{grid-column:2; justify-self:center; width:96px; filter:drop-shadow(0 2px 10px rgba(60,0,10,.35))}
+.am-volver,.am-lang{width:44px; height:44px; background:rgba(58,10,18,.35); color:#fff; -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px)}
+.am-volver{grid-column:1}
+.am-volver svg{width:24px; height:24px}
+.am-lang{grid-column:3; justify-self:end; font:700 15px/1 var(--cond); letter-spacing:.06em; -webkit-text-stroke:var(--t-m) currentColor}
+
+/* Pantallas */
+.am-p{flex:1; display:flex; flex-direction:column; animation:am-in .35s ease both}
+@keyframes am-in{from{opacity:0; transform:translateY(14px)}to{opacity:1; transform:none}}
+.am-hero{flex:1; display:flex; flex-direction:column; justify-content:flex-end; min-height:150px; padding:24px 22px 26px}
+.am-hero-s{flex:none; min-height:0; padding-top:30px}
+.am-hero .deco{font-size:clamp(46px,14vw,64px); color:#fff; text-shadow:0 4px 22px rgba(60,0,10,.4)}
+.am-hero .deco span{display:block; color:var(--rosa)}
+.am-hero-s .deco{font-size:clamp(38px,11vw,50px)}
+.am-hero .saludo{margin-bottom:12px}
+
+/* Hoja inferior */
+.am-hoja{background:var(--rosa-c); color:var(--tinta); border-radius:var(--r-xl) var(--r-xl) 0 0; padding:24px 18px calc(24px + var(--sab)); box-shadow:0 -12px 40px rgba(60,0,10,.28); display:flex; flex-direction:column; gap:14px}
+.am-hero-s + .am-hoja{flex:1}
+
+/* Buscando */
+.am-buscando{display:flex; align-items:center; gap:14px; padding:14px 6px}
+.am-buscando p{margin:0; font:600 18px/1.2 var(--cond); -webkit-text-stroke:var(--t-m) currentColor}
+.am-pulso{position:relative; width:18px; height:18px; flex:none; border-radius:50%; background:var(--vino)}
+.am-pulso::after{content:""; position:absolute; inset:0; border-radius:50%; background:var(--vino); animation:am-pulso 1.3s ease-out infinite}
+@keyframes am-pulso{to{transform:scale(3); opacity:0}}
+
+/* Tarjeta de local */
+.am-loc{display:flex; gap:14px; align-items:center; text-align:left}
+.am-loc img{width:76px; height:76px; flex:none; object-fit:cover; border-radius:var(--r-m)}
+.am-loc-t{display:flex; flex-direction:column; gap:3px; min-width:0}
+.am-loc-t small{font:700 14px/1 var(--cond); letter-spacing:.1em; text-transform:uppercase; color:var(--vino); -webkit-text-stroke:var(--t-m) currentColor}
+.am-loc-t b{font:400 26px/1 var(--deco); text-transform:uppercase; color:var(--vino); -webkit-text-stroke:0}
+.am-loc-d{font-size:16px; color:var(--suave); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.am-loc-e{font-size:15px; color:var(--suave)}
+.am-loc-e i{display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px; vertical-align:1px}
+.am-loc-e i.ab{background:var(--ok)}
+.am-loc-e i.ce{background:var(--vino)}
+#amLocal .am-loc img{width:88px; height:88px}
+
+/* Las dos opciones */
+.am-acc{display:grid; gap:12px; margin-top:4px}
+.am-op{display:flex; align-items:center; gap:16px; min-height:76px; padding:14px 18px; border-radius:var(--r-l); background:#fff; color:var(--vino); text-decoration:none; box-shadow:var(--sombra); transition:transform .15s}
+.am-op:active,.am-plat:active,.am-fila:active{transform:scale(.97)}
+.am-op-vino{background:var(--vino); color:#fff; box-shadow:0 10px 24px rgba(150,4,26,.32)}
+.am-op-ic{width:46px; height:46px; flex:none; display:grid; place-items:center; border-radius:50%; background:var(--rosa-cc)}
+.am-op-vino .am-op-ic{background:rgba(255,255,255,.16)}
+.am-op-ic svg{width:24px; height:24px}
+.am-op-t{display:flex; flex-direction:column; gap:4px}
+.am-op-t b{font:600 21px/1 var(--cond); letter-spacing:.04em; text-transform:uppercase; -webkit-text-stroke:var(--t-m) currentColor}
+.am-op-t small{font-size:16px; opacity:.85}
+
+.am-msg:empty{display:none}
+.am-msg,.am-txt{margin:0; font-size:17px; color:var(--suave)}
+
+/* Lista de locales */
+.am-lista{display:grid; gap:10px}
+.am-lista:empty{display:none}
+.am-fila{display:block; width:100%; padding:10px; border:0; border-radius:var(--r-l); background:var(--rosa-cc); cursor:pointer; transition:transform .15s; box-shadow:inset 0 0 0 2px transparent}
+.am-fila.on{background:#fff; box-shadow:inset 0 0 0 2px var(--vino)}
+.am-fila .am-loc img{width:64px; height:64px}
+.am-fila .am-loc-t b{font-size:22px}
+
+/* Reparto */
+.am-rep{display:grid; gap:12px}
+.am-plat{display:flex; align-items:center; gap:14px; min-height:76px; padding:14px 18px; border-radius:var(--r-l); text-decoration:none; transition:transform .15s; box-shadow:var(--sombra)}
+.am-plat b{flex:1; font:600 19px/1.1 var(--cond); letter-spacing:.04em; text-transform:uppercase; -webkit-text-stroke:var(--t-m) currentColor}
+.am-plat .cv{width:22px; height:22px; flex:none}
+.am-plat-m{flex:none; min-width:92px; padding:10px 12px; border-radius:var(--r-s); text-align:center; font:800 17px/1 system-ui,sans-serif; letter-spacing:-.01em; -webkit-text-stroke:0}
+.am-uber{background:#000; color:#fff}
+.am-uber .am-plat-m{background:#fff; color:#000}
+.am-glovo{background:#FFC244; color:#1D1D1B}
+.am-glovo .am-plat-m{background:#00A082; color:#fff}
+
+/* Enlaces */
+.am-links{display:flex; justify-content:center; gap:22px; flex-wrap:wrap; padding-top:4px}
+.am-links a{color:var(--vino); font:600 17px/1 var(--cond); letter-spacing:.04em; text-transform:uppercase; -webkit-text-stroke:var(--t-m) currentColor; padding:10px 2px}
+.am-links a[hidden]{display:none}

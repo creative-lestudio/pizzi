@@ -7,12 +7,27 @@
 */
 const CONFIG={
   demo:true,
-  whatsappDemo:"584241859724"
+  whatsappDemo:"584241859724",
+  /* REPARTO A DOMICILIO (app móvil)
+     - centro / radioCentro (km): dentro de este círculo es «zona céntrica» y se ofrecen Uber Eats y Glovo.
+       Fuera de él solo se ofrece Uber Eats (desde el local más cercano que lo tenga).
+     - radioMax (km): más lejos de esto de cualquier local no repartimos; se ofrece recoger.
+     - uberTodos / glovoTodos: enlace que se usa si un local aún no tiene el suyo (uber / glovo en LOCALES). */
+  reparto:{
+    centro:{lat:39.4699,lng:-0.3763},
+    radioCentro:3,
+    radioMax:7,
+    uberTodos:"https://www.ubereats.com/es/search?diningMode=DELIVERY&q=Pizzi%20Valencia",
+    glovoTodos:"https://glovoapp.com/es/es/valencia/"
+  }
 };
 
 /* LOCALES
    whatsapp: número del local en formato internacional sin + ni espacios (ej. 34612345678).
-   pedidoUrl: si el local pide y cobra en una tienda online propia, el botón de pago lleva allí.
+   pedidoUrl: tienda online del local (SkyTab). En el móvil, «Pedir aquí» lleva directamente allí;
+   si un local no la tiene, se pide desde la carta de esta web (WhatsApp).
+   uber / glovo: enlace a la ficha del local en Uber Eats / Glovo (vacío = no reparte con esa app;
+   mientras estén todos vacíos se usan CONFIG.reparto.uberTodos y glovoTodos).
    lat/lng: coordenadas EXACTAS de la puerta del local (con 4 decimales ≈ 10 m). Se usan para saber cuál
    es el Pizzi más cercano. Para sacarlas: Google Maps → clic derecho sobre el local → copiar las coordenadas.
    Revisadas en oct. 2026: Peris y Valero (estaba ~900 m desviado), Abastos (~500 m) y Mercado Central.
@@ -21,15 +36,15 @@ const CONFIG={
    Si cierra después de medianoche usa horas >24 (ej. "25:00" = 01:00). [] = cerrado. */
 const T=(a,c)=>[[a,c]];
 const LOCALES=[
-  {id:"mercado",lat:39.4737,lng:-0.3789,n:"Mercado Central",d:"C/ de les Carabasses, 3, Ciutat Vella, 46001 València",tel:"+34 744 78 47 37",whatsapp:"",maps:"https://maps.app.goo.gl/rAKcLgmbYJYk6TSh9",
+  {id:"mercado",uber:"",glovo:"",lat:39.4737,lng:-0.3789,n:"Mercado Central",d:"C/ de les Carabasses, 3, Ciutat Vella, 46001 València",tel:"+34 744 78 47 37",whatsapp:"",maps:"https://maps.app.goo.gl/rAKcLgmbYJYk6TSh9",
    h:[[["12:00","15:00"],["19:00","24:00"]],[["12:00","15:00"],["19:00","24:00"]],[["12:00","15:00"],["19:00","24:00"]],[["12:00","15:00"],["19:00","24:00"]],T("12:00","24:00"),T("12:00","24:00"),T("12:00","24:00")]},
-  {id:"abastos",lat:39.4664,lng:-0.3851,n:"Abastos",d:"C/ de Sant Francesc de Borja, 20, Extramurs, 46007 València",tel:"+34 673 16 14 66",whatsapp:"",maps:"https://maps.app.goo.gl/iob1fPZKLdyD8FNF9",
+  {id:"abastos",uber:"",glovo:"",lat:39.4664,lng:-0.3851,n:"Abastos",d:"C/ de Sant Francesc de Borja, 20, Extramurs, 46007 València",tel:"+34 673 16 14 66",whatsapp:"",maps:"https://maps.app.goo.gl/iob1fPZKLdyD8FNF9",
    h:[[],T("18:30","23:30"),T("18:30","23:30"),T("18:30","23:30"),T("18:30","24:00"),T("18:30","24:00"),T("18:30","23:30")]},
-  {id:"russafa",lat:39.4631,lng:-0.3739,n:"Ruzafa",d:"C. de Ruzafa, 58, L'Eixample, 46004 València",tel:"+34 744 78 47 37",whatsapp:"",maps:"https://maps.app.goo.gl/VfqsVDEDcRsKXxyu9",
+  {id:"russafa",uber:"",glovo:"",lat:39.4631,lng:-0.3739,n:"Ruzafa",d:"C. de Ruzafa, 58, L'Eixample, 46004 València",tel:"+34 744 78 47 37",whatsapp:"",maps:"https://maps.app.goo.gl/VfqsVDEDcRsKXxyu9",
    h:[T("18:30","23:30"),T("18:30","23:30"),T("18:30","23:30"),T("18:30","23:30"),T("18:30","24:00"),T("18:30","24:00"),T("18:30","23:30")]},
-  {id:"canovas",lat:39.465,lng:-0.3676,n:"Cánovas",d:"C. de Joaquín Costa, 12, L'Eixample, 46005 València",tel:"+34 604 81 24 26",whatsapp:"",maps:"https://maps.app.goo.gl/L3ei1jMcgYXmEefz7",
+  {id:"canovas",uber:"",glovo:"",lat:39.465,lng:-0.3676,n:"Cánovas",d:"C. de Joaquín Costa, 12, L'Eixample, 46005 València",tel:"+34 604 81 24 26",whatsapp:"",maps:"https://maps.app.goo.gl/L3ei1jMcgYXmEefz7",
    h:[T("18:00","23:30"),T("18:00","23:30"),T("18:00","23:30"),T("18:00","23:30"),T("18:00","25:00"),T("18:00","25:00"),T("18:00","23:30")]},
-  {id:"peris",lat:39.4624,lng:-0.3633,pedidoUrl:"https://online.skytab.com/ca7f91bfeed306f50f4147d0dd13b011",n:"Peris y Valero",d:"Av. de Peris i Valero, 189, L'Eixample, 46005 València",tel:"+34 744 78 47 37",whatsapp:"",maps:"https://maps.app.goo.gl/iMcQYmXb9bt8SR686",
+  {id:"peris",uber:"",glovo:"",lat:39.4624,lng:-0.3633,pedidoUrl:"https://online.skytab.com/ca7f91bfeed306f50f4147d0dd13b011",n:"Peris y Valero",d:"Av. de Peris i Valero, 189, L'Eixample, 46005 València",tel:"+34 744 78 47 37",whatsapp:"",maps:"https://maps.app.goo.gl/iMcQYmXb9bt8SR686",
    h:[T("18:30","23:30"),T("18:30","23:30"),T("18:30","23:30"),T("18:30","23:30"),T("18:30","24:00"),T("18:30","24:00"),T("18:30","23:30")]}
 ];
 const FOTO_LOCAL={mercado:"l-mercado",abastos:"l-abastos",russafa:"l-russafa",canovas:"l-canovas",peris:"l-peris"};
