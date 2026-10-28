@@ -125,7 +125,7 @@ html.modo-app body>:not(.app-m):not(.toast){display:none!important}
 .am-chips::-webkit-scrollbar{display:none}
 .am-chips button{flex:none; min-height:44px; padding:8px 22px; border:0; border-radius:999px; background:var(--am-rosa); color:var(--vino); cursor:pointer; font:600 17px/1 var(--cond); letter-spacing:.06em; text-transform:uppercase; -webkit-text-stroke:var(--t-r) currentColor}
 .am-cat{margin-bottom:34px}
-.am-cat h3{font-size:clamp(30px,9vw,40px); color:#fff; text-align:right; margin-bottom:20px}
+.am-cat>h3{font-size:clamp(30px,9vw,40px); color:#fff; text-align:right; margin-bottom:20px}
 .am-cat .pz{cursor:default}
 .am-cat .bb-t{cursor:default}
 

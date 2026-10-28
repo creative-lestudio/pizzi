@@ -63,6 +63,8 @@ const P=[
   ["ITALIANÍSIMA","pizza","Salsa de tomate, mozzarella, tomate cherry, crema de burrata, rúcula y salsa pesto.","Tomato sauce, mozzarella, cherry tomatoes, burrata cream, arugula and pesto.",9.9,"fresh","p-italianisima"],
   ["DI PARMA","pizza","Salsa de tomate, mozzarella, prosciutto crudo, parmigiano y rúcula.","Tomato sauce, mozzarella, prosciutto crudo, parmesan and arugula.",9.9,"","p-di-parma"],
   ["CAPRICCIOSA","pizza","Salsa de tomate, mozzarella, jamón cocido, champiñones, alcachofas y olivas negras.","Tomato sauce, mozzarella, cooked ham, mushrooms, artichokes and black olives.",9.9,"","p-capricciosa"],
+  ["BARBACOA","pizza","Salsa barbacoa, mozzarella, pollo, bacon y cebolla morada.","BBQ sauce, mozzarella, chicken, bacon and red onion.",9.9,"","p-barbacoa"],
+  ["REINA","pizza","Salsa de tomate, mozzarella, jamón cocido y champiñones.","Tomato sauce, mozzarella, cooked ham and mushrooms.",8.9,"","p-reina"],
   ["AGUA","bebida","Font d’Or, botella 33 cl","Still water, 33 cl bottle",1.5,"","b-agua"],
   ["AGUA CON GAS","bebida","Agua con gas, botella 33 cl","Sparkling water, 33 cl bottle",1.5,"","b-agua"],
   ["COCA-COLA","bebida","Sabor original, lata 33 cl","Original taste, can 33 cl",2.5,"","b-coca-cola"],
