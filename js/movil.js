@@ -163,11 +163,22 @@ $("appM").addEventListener("click",e=>{
   if(c){const s=$("amc-"+c.dataset.amCat),m=$("appM");m.scrollTo({top:s.getBoundingClientRect().top+m.scrollTop-80,behavior:"smooth"});}
 });
 $("amVolver").onclick=()=>{if(APP.desdeHola)history.back();else location.replace("#hola");};
-$("amLang").onclick=()=>{
-  LANG=LANGS[(LANGS.indexOf(LANG)+1)%LANGS.length];
-  try{localStorage.setItem("pizzi-lang",LANG);}catch(x){}
-  aplicarIdioma();refrescar();actCarro();pintarApp();
+/* Selector de idioma: lista desplegable */
+const amLangL=$("amLangL");
+function cerrarLangApp(){amLangL.hidden=true;$("amLang").setAttribute("aria-expanded","false");}
+$("amLang").onclick=e=>{
+  e.stopPropagation();
+  if(!amLangL.hidden){cerrarLangApp();return;}
+  amLangL.innerHTML=LANGS.map(l=>`<li><button type="button" role="option" aria-selected="${l===LANG}" data-am-l="${l}"><span>${LNAME[l]}</span><b>${l.toUpperCase()}</b></button></li>`).join("");
+  amLangL.hidden=false;$("amLang").setAttribute("aria-expanded","true");
 };
+amLangL.onclick=e=>{
+  const b=e.target.closest("[data-am-l]");if(!b)return;
+  LANG=b.dataset.amL;
+  try{localStorage.setItem("pizzi-lang",LANG);}catch(x){}
+  cerrarLangApp();aplicarIdioma();refrescar();actCarro();pintarApp();
+};
+document.addEventListener("click",e=>{if(!e.target.closest(".am-lang-w"))cerrarLangApp();});
 /* Las horas (abierto / cerrado) cambian con el tiempo */
 setInterval(()=>{if(enApp())pintarApp();},60000);
 
