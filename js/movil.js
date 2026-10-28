@@ -39,14 +39,17 @@ function buscar(){
 function reparto(){
   const R=CONFIG.reparto,pos=conPos();
   const centrica=!pos||km(YO.lat,YO.lng,R.centro.lat,R.centro.lng)<=R.radioCentro;
-  const cand=[S.local,...ORDEN].filter((x,k,a)=>x!==null&&a.indexOf(x)===k);
+  // Con ubicación se recorren los locales del más cercano al más lejano; sin ella, primero el elegido
+  const cand=(pos?ORDEN:[S.local,...ORDEN]).filter((x,k,a)=>x!==null&&a.indexOf(x)===k);
   const elegir=p=>{
+    // Solo algunos locales están en cada app: se usa el más cercano que la tenga
     for(const i of cand){
       if(pos&&DIST[i]>R.radioMax)continue;
-      const u=LOCALES[i][p]||R[p+"Todos"];
-      if(u)return{u,i};
+      if(LOCALES[i][p])return{u:LOCALES[i][p],i};
     }
-    return null;
+    // Enlace de reserva (CONFIG.reparto.uberTodos / glovoTodos) si ningún local tiene el suyo
+    const i=cand.find(x=>!pos||DIST[x]<=R.radioMax);
+    return R[p+"Todos"]&&i!==undefined?{u:R[p+"Todos"],i}:null;
   };
   return{glovo:centrica?elegir("glovo"):null,uber:elegir("uber"),centrica};
 }
@@ -97,7 +100,7 @@ function pintarUbicaciones(){
 function pintarDomicilio(){
   const r=reparto(),ops=["glovo","uber"].filter(p=>r[p]);
   const i=ops.length?r[ops[0]].i:S.local;
-  $("amRepTxt").textContent=!ops.length?t("app_deliv_none"):!r.centrica?t("app_deliv_far",{n:LOCALES[i].n}):t("app_deliv_p");
+  $("amRepTxt").textContent=!ops.length?t("app_deliv_none"):!r.centrica?t("app_deliv_far",{n:LOCALES[i].n}):t("app_deliv_p",{n:LOCALES[i].n});
   $("amRep").innerHTML=ops.map(p=>`<a class="am-pill am-plat" href="${esc(r[p].u)}" rel="noopener" aria-label="${esc(t("app_open_with",{p:PLAT[p]}))}">
     <span class="am-pill-t"><img src="assets/img/${p}.webp" alt="${PLAT[p]}" class="am-logo-${p}"></span>
     <span class="am-flecha">${FLECHA}</span></a>`).join("")||pillPedir("#ubicaciones",t("app_pickup_instead"));

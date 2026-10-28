@@ -46,8 +46,9 @@ html.modo-app body>:not(.app-m):not(.toast){display:none!important}
 
 /* Tarjeta del local más cercano */
 .am-cerca{display:flex; align-items:center; gap:16px; padding:18px; border-radius:var(--r-xl); background:#fff; color:var(--vino); text-decoration:none; box-shadow:0 14px 34px rgba(40,0,6,.3)}
-.am-cerca-ic{width:60px; height:60px; flex:none; border-radius:18px; overflow:hidden}
-.am-cerca-ic img,.am-ic img,.am-tic img{width:100%; height:100%; object-fit:cover}
+/* Iconos de marca en vino, sin fondo */
+.am-cerca-ic{width:56px; height:56px; flex:none; display:grid; place-items:center}
+.am-cerca-ic img,.am-ic img,.am-tic img{width:100%; height:100%; object-fit:contain}
 .am-cerca-t{display:flex; flex-direction:column; gap:6px; min-width:0}
 .am-cerca-t small{font:600 14px/1 var(--cond); letter-spacing:.12em; text-transform:uppercase; -webkit-text-stroke:var(--t-r) currentColor}
 .am-cerca-t b{font:400 clamp(26px,7.6vw,32px)/1 var(--deco); text-transform:uppercase; -webkit-text-stroke:0}
@@ -77,11 +78,11 @@ html.modo-app body>:not(.app-m):not(.toast){display:none!important}
 .am-pill:active,.am-cerca:active,.am-tabs a:active,.am-chips button:active,.am-mini:active,.am-redes a:active,.am-loc-cab:active{transform:scale(.975); background-color:#FBEDED}
 .app-m a:focus-visible,.app-m button:focus-visible{outline:3px solid #fff; outline-offset:3px}
 .am-pill-1{min-height:88px; box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 14px 34px rgba(40,0,6,.34)}
-.am-ic{width:56px; height:56px; flex:none; display:grid; place-items:center; border-radius:16px; overflow:hidden; background:var(--vino); color:var(--am-rosa)}
-.am-ic svg{width:28px; height:28px}
-/* Iconos dibujados (moto, bolsa) con el mismo estilo que los de marca: rosa sobre vino */
+.am-ic{width:56px; height:56px; flex:none; display:grid; place-items:center; color:var(--vino)}
+.am-ic svg{width:40px; height:40px}
+/* Iconos dibujados (moto, bolsa) con el mismo estilo que los de marca: vino, sin fondo */
 .am-ic-svg svg{stroke-width:2.2}
-.am-ic-s{width:34px; height:34px; border-radius:10px}
+.am-ic-s{width:32px; height:32px; object-fit:contain}
 .am-pill-t{flex:1}
 .am-pill-t{display:flex; flex-direction:column; gap:5px; min-width:0}
 .am-pill-t b{font:400 clamp(26px,7.4vw,32px)/1 var(--deco); text-transform:uppercase; -webkit-text-stroke:0}
@@ -102,8 +103,8 @@ html.modo-app body>:not(.app-m):not(.toast){display:none!important}
 .am-tabs{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:24px}
 .am-tabs a{display:flex; flex-direction:column; justify-content:space-between; gap:18px; min-height:96px; padding:14px 12px 14px 14px; border-radius:var(--r-l); background:#fff; color:var(--vino); text-decoration:none; font:600 15px/1.05 var(--cond); letter-spacing:.03em; text-transform:uppercase; -webkit-text-stroke:var(--t-r) currentColor; box-shadow:0 8px 20px rgba(40,0,6,.2); transition:transform .15s, box-shadow .2s}
 .am-tabs a.on{box-shadow:inset 0 0 0 2.5px var(--vino),0 12px 28px rgba(40,0,6,.3)}
-.am-tic{width:48px; height:48px; display:grid; place-items:center; border-radius:14px; overflow:hidden; background:var(--vino); color:var(--am-rosa)}
-.am-tic svg{width:26px; height:26px; -webkit-text-stroke:0}
+.am-tic{width:48px; height:48px; display:grid; place-items:center; color:var(--vino)}
+.am-tic svg{width:36px; height:36px; -webkit-text-stroke:0}
 .am-txt{margin:0 0 16px; font-size:19px}
 
 /* Ubicaciones (desplegables) */
