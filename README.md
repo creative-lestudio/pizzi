@@ -15,6 +15,16 @@ En pantallas de menos de 900 px, el inicio se convierte en una app de flujo cort
      La zona se configura en `CONFIG.reparto` (`centro`, `radioCentro`, `radioMax`) y los enlaces de cada local en `uber` y `glovo` (`js/data.js`).
    - **Carta**: la carta para consultar, con la descarga en PDF.
 
+## Pedidos web conectados al TPV (en pruebas)
+
+Pedido completo dentro de la web, con su diseño, usando la **carta real de cada local en Shift4 (SkyTab / Shift4 Dine)**. En el móvil sigue el estilo de app: carta → ficha de producto → cesta → pago → seguimiento («recibido → en el horno → lista») con **vía rápida**. En el ordenador usa la carta, el panel lateral y el pedido de siempre.
+
+- **`js/conector.js`** es la única pieza que habla con Shift4 (`TPV.carta`, `TPV.franjas`, `TPV.enviar`, `TPV.estado`). El día que Shift4 apruebe la integración oficial (Marketplace API) solo cambia este archivo; el resto de la web no se toca.
+- **`functions/api/skytab/`** es un puente de **solo lectura** (Cloudflare Pages Function) que lee la carta, los precios, las imágenes y las franjas de recogida de la tienda online de Shift4 de cada local. No crea pedidos ni toca pagos. El código de cada tienda se saca de `pedidoUrl` en `LOCALES`.
+- **Envío del pedido**: `CONFIG.conector.envio` en `js/data.js`. Hoy es `"demo"`: el pedido se simula y **no se cobra ni llega al local**. `"shift4"` queda preparado para cuando Shift4 dé acceso.
+- **Solo se ve en pruebas**, para que nadie pida por un canal que aún no llega al local: en cualquier dirección distinta de la publicada (vistas previas de Cloudflare, `localhost`) o abriendo la web con `?pedidos=web` (se recuerda en ese dispositivo; `?pedidos=off` lo quita). En la web publicada todo sigue igual mientras `CONFIG.conector.pedidosWeb` sea `false`.
+- Las Pages Functions se publican solas si Cloudflare Pages está conectado al repositorio de GitHub. Si la web se sube a mano, hay que publicar también la carpeta `functions/`.
+
 ## Flujo (escritorio, y carta / pedido en el móvil)
 
 1. **Inicio**: saludo, el eslogan de la caja («Llévame a casa que estoy caliente») y una tarjeta con **Dónde** (local) y **Cuándo** (hora) + botón *Empezar pedido*. Debajo: *Repite tu último pedido*, *Las más pedidas* con botón **+** para añadir sin abrir la ficha, *Así de fácil* y los locales con su estado en tiempo real.
@@ -54,6 +64,9 @@ Idiomas: español, inglés, italiano, francés y alemán. Se puede instalar en l
 | `js/legal.js` | Datos de empresa, alérgenos y páginas legales |
 | `js/app.js` | Lógica (navegación, carrito, horarios, WhatsApp) |
 | `js/movil.js`, `css/movil.css` | Modo app en el móvil (hola → pedir aquí / a domicilio) |
+| `js/pedir.js` | Pedir desde la app móvil: carta, cesta y seguimiento (pedidos web) |
+| `js/conector.js` | Conector con el TPV de Shift4 (carta, franjas, envío y estado del pedido) |
+| `functions/api/skytab/` | Puente de solo lectura con la tienda online de Shift4 (Cloudflare Pages Function) |
 | `assets/img/` | Imágenes optimizadas para web (`-s` = miniatura, `-m` = media pizza de la carta) |
 | `assets/carta-pizzi.pdf` | Carta impresa descargable |
 

@@ -204,3 +204,28 @@ Object.assign(I,{
 "app_closed":["Cerrado","Closed","Chiuso","Fermé","Geschlossen"],
 "app_open_with":["Pedir con {p}","Order with {p}","Ordina con {p}","Commander avec {p}","Mit {p} bestellen"]
 });
+
+/* Pedidos web (js/pedir.js, js/conector.js) */
+Object.assign(I,{
+"app_pickup_at":["Recoger en","Pick up at","Ritiro a","Retrait à","Abholen in"],
+"app_loading_menu":["Cargando la carta del local…","Loading the store's menu…","Caricamento del menù…","Chargement de la carte…","Speisekarte wird geladen…"],
+"app_no_slots":["Ahora no hay horas de recogida disponibles en este local. Prueba con otro o más tarde.","No pickup times are available at this store right now. Try another store or later.","Al momento non ci sono orari di ritiro disponibili. Prova un altro locale o più tardi.","Aucun créneau de retrait disponible pour le moment. Essaie un autre restaurant ou plus tard.","Gerade sind keine Abholzeiten frei. Versuche eine andere Filiale oder später."],
+"app_email":["Email (para el recibo)","Email (for your receipt)","Email (per la ricevuta)","Email (pour le reçu)","E-Mail (für die Quittung)"],
+"app_pay":["Pagar","Pay","Paga","Payer","Bezahlen"],
+"pay_web":["Pago seguro con Shift4","Secure payment with Shift4","Pagamento sicuro con Shift4","Paiement sécurisé avec Shift4","Sichere Zahlung mit Shift4"],
+"pay_web_p":["Versión de prueba: este pedido no se cobra ni llega al local. Cuando Shift4 active la conexión, aquí pagarás con tarjeta, Apple Pay o Google Pay.","Test version: this order is not charged or sent to the store. Once Shift4 enables the connection, you'll pay here by card, Apple Pay or Google Pay.","Versione di prova: l'ordine non viene addebitato né inviato al locale. Quando Shift4 attiverà la connessione, qui pagherai con carta, Apple Pay o Google Pay.","Version de test : la commande n'est ni débitée ni envoyée au restaurant. Quand Shift4 activera la connexion, tu paieras ici par carte, Apple Pay ou Google Pay.","Testversion: Die Bestellung wird weder belastet noch an die Filiale gesendet. Sobald Shift4 die Verbindung freischaltet, zahlst du hier mit Karte, Apple Pay oder Google Pay."],
+"app_sending":["Enviando…","Sending…","Invio…","Envoi…","Wird gesendet…"],
+"app_err_send":["No se ha podido enviar el pedido. Inténtalo de nuevo en unos segundos.","The order couldn't be sent. Please try again in a few seconds.","Non è stato possibile inviare l'ordine. Riprova tra qualche secondo.","La commande n'a pas pu être envoyée. Réessaie dans quelques secondes.","Die Bestellung konnte nicht gesendet werden. Bitte versuche es gleich noch einmal."],
+"app_err_mail":["Revisa el email.","Check the email address.","Controlla l'email.","Vérifie l'email.","Prüfe die E-Mail-Adresse."],
+"st_0":["Recibido","Received","Ricevuto","Reçue","Eingegangen"],
+"st_0p":["El local ya tiene tu pedido.","The store has your order.","Il locale ha ricevuto il tuo ordine.","Le restaurant a reçu ta commande.","Die Filiale hat deine Bestellung."],
+"st_1":["En el horno","In the oven","In forno","Au four","Im Ofen"],
+"st_1p":["Estamos preparando tu pizza.","We're making your pizza.","Stiamo preparando la tua pizza.","On prépare ta pizza.","Wir backen deine Pizza."],
+"st_2":["Lista para recoger","Ready for pickup","Pronta da ritirare","Prête à emporter","Abholbereit"],
+"st_2p":["Pasa a por ella: te está esperando.","Come and get it: it's waiting for you.","Passa a prenderla: ti aspetta.","Viens la chercher : elle t'attend.","Hol sie ab: sie wartet auf dich."],
+"speed_h":["Vía rápida","Fast lane","Corsia veloce","Voie rapide","Schnellspur"],
+"speed_p":["Al llegar, enseña este número en caja y recoge sin hacer cola.","When you arrive, show this number at the counter and skip the queue.","Quando arrivi, mostra questo numero alla cassa e salta la fila.","En arrivant, montre ce numéro à la caisse et évite la file.","Zeig diese Nummer an der Kasse und spar dir die Schlange."],
+"app_order_more":["Volver al inicio","Back to home","Torna all'inizio","Retour à l'accueil","Zur Startseite"],
+"demo_web":["DEMO · Los pedidos web no se cobran ni llegan al local","DEMO · Web orders are not charged or sent to the store","DEMO · Gli ordini web non vengono addebitati né inviati al locale","DÉMO · Les commandes web ne sont ni débitées ni envoyées au restaurant","DEMO · Web-Bestellungen werden weder belastet noch an die Filiale gesendet"],
+"app_demo_badge":["DEMO · No se ha cobrado ni enviado al local","DEMO · Not charged or sent to the store","DEMO · Non addebitato né inviato al locale","DÉMO · Ni débitée ni envoyée au restaurant","DEMO · Weder belastet noch an die Filiale gesendet"]
+});

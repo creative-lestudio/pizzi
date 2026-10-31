@@ -199,7 +199,7 @@
           <h2 class="caja-t" data-i="payment">Pago</h2>
           <div class="pago">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10h18M5 6h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/><path d="M7 15h4"/></svg>
-            <div><b data-i="pay_local">Pago en el local</b><span data-i="pay_local_p"></span></div>
+            <div><b data-i="pay_local" id="pagoT">Pago en el local</b><span data-i="pay_local_p" id="pagoP"></span></div>
           </div>
         </div>
       </div>
@@ -238,6 +238,7 @@
         <span data-i="wa_send">Enviar pedido por WhatsApp</span>
       </a>
     </div>
+    <div class="ok-estado" id="okEstado" hidden></div>
     <article class="ticket" id="ticket" aria-label="Resumen del pedido" data-ia="order_summary"></article>
     <div class="ok-acc">
       <a class="btn btn-linea" id="okMaps" target="_blank" rel="noopener" data-i="how_get">Cómo llegar</a>
@@ -389,6 +390,74 @@
       <a href="https://www.tiktok.com/@pizzi_valencia" target="_blank" rel="noopener" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg></a>
     </div>
   </section>
+  <!-- Pedir (pedidos web, js/pedir.js): carta, cesta y seguimiento -->
+  <section class="am-p ap-pant" id="am-pedir" hidden>
+    <div class="ap-cab">
+      <a class="ap-chip" href="#ubicaciones"><span class="ap-chip-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg></span><span class="ap-chip-t"><small data-i="app_pickup_at">Recoger en</small><b id="apLocal"></b></span></a>
+      <button type="button" class="ap-chip" id="apHoraBtn"><span class="ap-chip-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><span class="ap-chip-t"><small data-i="when">Cuándo</small><b id="apHora"></b></span></button>
+    </div>
+    <div class="ap-franjas" id="apFranjasCab" hidden></div>
+    <nav class="ap-cats" id="apCats" aria-label="Categorías"></nav>
+    <p class="ap-aviso" id="apAviso" hidden></p>
+    <div id="apCarta"></div>
+  </section>
+
+  <section class="am-p ap-pant" id="am-cesta" hidden>
+    <h1 class="deco" data-i="your_order">Tu pedido</h1>
+    <div class="ap-caja" id="apLineas"></div>
+    <div class="ap-caja" id="apUpsellBox">
+      <h2 data-i="upsell_h">¿Algo para beber?</h2>
+      <div class="ap-carril" id="apUpsell"></div>
+    </div>
+    <div class="ap-caja">
+      <h2 data-i="pickup">Recogida</h2>
+      <a class="ap-fila" href="#ubicaciones"><span class="ap-chip-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg></span><span class="ap-chip-t"><b id="apCestaLocal"></b><small id="apCestaDir"></small></span><span class="ap-cambiar" data-i="change">Cambiar</span></a>
+      <div class="ap-franjas" id="apFranjas" role="radiogroup"></div>
+    </div>
+    <div class="ap-caja">
+      <h2 data-i="your_data">Tus datos</h2>
+      <label class="ap-campo"><span data-i="name">Nombre</span><input id="apNom" autocomplete="given-name" data-iph="name_ph"></label>
+      <label class="ap-campo"><span>WhatsApp</span><input id="apTel" type="tel" inputmode="tel" autocomplete="tel" data-iph="wa_ph"></label>
+      <label class="ap-campo"><span data-i="app_email">Email</span><input id="apMail" type="email" inputmode="email" autocomplete="email" placeholder="tu@email.com"></label>
+    </div>
+    <div class="ap-caja ap-pago">
+      <h2 data-i="payment">Pago</h2>
+      <div class="ap-pago-m"><span>VISA</span><span>Mastercard</span><span>Apple Pay</span><span>Google Pay</span></div>
+      <p><b data-i="pay_web">Pago seguro con Shift4</b><br><span data-i="pay_web_p"></span></p>
+    </div>
+    <label class="ap-check"><input type="checkbox" id="apAcepto"><span data-ih="accept_txt"></span></label>
+    <p class="ap-error" id="apError" role="alert" hidden></p>
+  </section>
+
+  <section class="am-p ap-pant" id="am-estado" hidden>
+    <div class="ap-ok" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+    <h1 class="deco" data-i="ok_neon">¡Marchando!</h1>
+    <div class="ap-caja ap-num">
+      <small data-i="order_no">Nº de pedido</small><b id="apNum"></b>
+      <span id="apNumSub"></span>
+    </div>
+    <div class="ap-caja" id="apPasos"></div>
+    <div class="ap-caja ap-rapida">
+      <h2 data-i="speed_h">Vía rápida</h2>
+      <p data-i="speed_p"></p>
+    </div>
+    <div class="am-loc-acc ap-acc">
+      <a class="am-mini" id="apMaps" target="_blank" rel="noopener" data-i="how_get">Cómo llegar</a>
+      <a class="am-mini" id="apTelL" data-i="call_store">Llamar al local</a>
+    </div>
+    <a class="am-pill am-pill-c" href="#hola"><b data-i="app_order_more">Volver al inicio</b></a>
+  </section>
+
+  <div class="ap-barra" id="apBarra" hidden><button type="button" id="apBarraBtn"></button></div>
+  <div class="ap-velo" id="apVelo" hidden></div>
+  <div class="ap-hoja" id="apHoja" role="dialog" aria-modal="true" aria-labelledby="apHojaT" hidden>
+    <button type="button" class="ap-x" id="apHojaX" data-ia="close" aria-label="Cerrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <div class="ap-hoja-c" id="apHojaC"></div>
+    <div class="ap-hoja-pie">
+      <div class="ap-cant"><button type="button" id="apMenos" data-ia="less" aria-label="Una menos">−</button><b id="apCant">1</b><button type="button" id="apMas" data-ia="more" aria-label="Una más">+</button></div>
+      <button type="button" class="ap-add" id="apAdd"><span data-i="add">Añadir</span><span id="apAddT"></span></button>
+    </div>
+  </div>
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -396,7 +465,9 @@
 <script src="js/i18n.js"></script>
 <script src="js/data.js"></script>
 <script src="js/legal.js"></script>
+<script src="js/conector.js"></script>
 <script src="js/app.js"></script>
+<script src="js/pedir.js"></script>
 <script src="js/movil.js"></script>
 </body>
 </html>

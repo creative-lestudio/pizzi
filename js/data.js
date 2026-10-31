@@ -8,6 +8,16 @@
 const CONFIG={
   demo:true,
   whatsappDemo:"584241859724",
+  /* CONECTOR CON EL TPV (js/conector.js)
+     - envio: "demo" simula el pedido (no llega al local ni se cobra). "shift4" cuando Shift4 lo apruebe.
+     - pedidosWeb: true activa el nuevo pedido web para todos. Mientras sea false solo se ve en pruebas
+       (vistas previas, o abriendo la web con ?pedidos=web).
+     - dominios: direcciones publicadas, donde por defecto se mantiene el flujo actual. */
+  conector:{
+    envio:"demo",
+    pedidosWeb:false,
+    dominios:["pizzi.pages.dev","www.pizzi.es","pizzi.es"]
+  },
   /* REPARTO A DOMICILIO (app móvil)
      - centro / radioCentro (km): dentro de este círculo es «zona céntrica» y se ofrecen Uber Eats y Glovo.
        Fuera de él solo se ofrece Uber Eats (desde el local más cercano que lo tenga).

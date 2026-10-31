@@ -552,3 +552,20 @@ mark.pend{background:#FFE066; color:var(--tinta); padding:0 4px; border-radius:4
 /* Desplazamientos dentro de hojas y carriles sin arrastrar la página */
 .hoja .scroll,.lat-cuerpo{overscroll-behavior:contain}
 .carril,.cats{overscroll-behavior-x:contain}
+
+/* ---------- Seguimiento del pedido web (escritorio y app) ---------- */
+.ok-estado{margin:0 0 20px; padding:18px 20px; border-radius:var(--r-l); background:#fff; box-shadow:var(--sombra)}
+.demo-sello{margin:0 0 12px; padding:8px 12px; border-radius:10px; background:var(--tinta); color:var(--rosa); font:600 13px/1.2 var(--cond); letter-spacing:.06em; text-align:center; -webkit-text-stroke:var(--t-m) currentColor}
+.pasos-e{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:0}
+.pasos-e li{position:relative; display:grid; grid-template-columns:28px 1fr; column-gap:12px; padding:0 0 18px; color:var(--suave)}
+.pasos-e li:last-child{padding-bottom:0}
+.pasos-e li::before{content:""; position:absolute; left:13px; top:26px; bottom:0; width:2px; background:var(--linea)}
+.pasos-e li:last-child::before{display:none}
+.pasos-e .pe-p{grid-row:span 2; width:28px; height:28px; border-radius:50%; border:2px solid var(--linea); background:#fff}
+.pasos-e b{font:600 18px/28px var(--cond); letter-spacing:.04em; text-transform:uppercase; -webkit-text-stroke:var(--t-r) currentColor}
+.pasos-e small{font-size:15px}
+.pasos-e li.hecho,.pasos-e li.ahora{color:var(--vino)}
+.pasos-e li.hecho .pe-p{border-color:var(--vino); background:var(--vino) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center/16px no-repeat}
+.pasos-e li.hecho::before{background:var(--vino)}
+.pasos-e li.ahora .pe-p{border-color:var(--vino); box-shadow:0 0 0 5px rgba(150,4,26,.15); animation:pe-latido 1.6s ease-in-out infinite}
+@keyframes pe-latido{50%{box-shadow:0 0 0 9px rgba(150,4,26,.05)}}
