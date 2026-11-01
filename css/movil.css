@@ -1,6 +1,7 @@
 /* =========================================================
    PIZZI · App móvil (js/movil.js)
-   Solo se ve en pantallas de menos de 900 px y en el inicio: tapa la web y funciona como una app.
+   Se ve en el inicio (móvil y ordenador): tapa la web y funciona como una app.
+   En pantallas anchas el contenido se centra en una columna, como Honest Greens.
    ========================================================= */
 /* La app forma parte de la página (no es una capa fija): así su fondo llega hasta abajo del todo,
    también bajo la barra del navegador del iPhone. <html> y <body> llevan el mismo vino que la app
@@ -14,7 +15,6 @@ html.modo-app body>:not(.app-m):not(.toast){display:none!important}
   /* Fondo: baldosas rojas muy atenuadas bajo un velo vino uniforme, solo como textura.
      Se repite hacia abajo para que no se deforme en las pantallas largas (lista de locales, carta) */
   background:linear-gradient(rgba(138,5,25,.86),rgba(138,5,25,.86)),#8A0619 url(../assets/img/fondo-baldosas.webp) center top/100% auto repeat-y}
-@media (min-width:900px){.app-m{display:none!important}}
 .app-m [hidden]{display:none!important}
 
 /* Barra superior */
@@ -383,3 +383,35 @@ html.con-barra .toast{bottom:calc(96px + var(--sab))}
 .am-aviso-b button{min-height:56px; border:0; border-radius:999px; cursor:pointer; font:600 18px/1 var(--cond); letter-spacing:.04em; text-transform:uppercase; -webkit-text-stroke:var(--t-m) currentColor}
 #amAvisoNo{background:#fff; color:var(--vino); box-shadow:inset 0 0 0 2px var(--vino)}
 #amAvisoSi{background:var(--vino); color:#fff}
+
+/* =========================================================
+   Ordenador: la misma app, centrada en una columna sobre la foto (como Honest Greens)
+   ========================================================= */
+@media (min-width:700px){
+  .app-m{--ancho:620px}
+  .am-top{padding-left:32px; padding-right:32px}
+  .am-p{width:100%; max-width:var(--ancho); margin-left:auto; margin-right:auto}
+  .am-hola{max-width:none; padding-left:0; padding-right:0}
+  .ah-hero{width:100%; max-width:1100px; margin:0 auto; padding:40px 40px 34px}
+  .ah-hero .deco{font-size:clamp(68px,9vw,128px)}
+  .ah-hero .deco span{display:inline}
+  .ah-nov{font-size:23px}
+  .ah-foto{height:78dvh; background-position:center 40%}
+  .ah-hoja{width:100%; max-width:var(--ancho); margin:0 auto; padding:34px 40px calc(30px + var(--sab))}
+  .am-pide{max-width:720px}
+  .am-tabs a{min-height:110px}
+  .am-loc-c img{aspect-ratio:auto; height:280px}
+  .ap-pant{max-width:var(--ancho)}
+  .ap-cats,.ap-franjas{margin-left:0; margin-right:0; padding-left:0; padding-right:0}
+  .ap-barra{left:50%; right:auto; width:min(100%,var(--ancho)); transform:translateX(-50%)}
+  .ap-hoja{left:50%; right:auto; bottom:auto; top:50%; width:min(100% - 48px,600px); max-height:88dvh; border-radius:var(--r-xl); transform:translate(-50%,-46%); opacity:0; transition:transform .28s cubic-bezier(.2,.8,.2,1),opacity .2s}
+  .ap-hoja.on{transform:translate(-50%,-50%); opacity:1}
+  .ap-hoja-pie{padding-bottom:16px}
+  .am-aviso{align-items:center; justify-content:center}
+  .am-aviso-c{max-width:520px; border-radius:var(--r-xl); padding-bottom:28px}
+  .am-mapa-p{max-width:640px; margin:0 auto; grid-template-columns:44px 1fr 44px; gap:10px; padding-bottom:24px}
+  .am-mapa-fl{width:44px; height:44px}
+}
+@media (min-width:1100px){
+  .ah-hoja{max-width:760px}
+}

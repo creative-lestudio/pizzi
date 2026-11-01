@@ -5,7 +5,7 @@ Es una web estática: no necesita servidor ni base de datos (GitHub Pages, Cloud
 
 ## En el móvil: modo app
 
-En pantallas de menos de 900 px, el inicio se convierte en una app de flujo corto (`js/movil.js`, `css/movil.css`). En el ordenador la web no cambia.
+El inicio es una app de flujo corto (`js/movil.js`, `css/movil.css`), al estilo de Honest Greens. En el ordenador se ve la misma app, centrada en una columna sobre la foto. La web anterior (carta, pedido, locales y páginas legales) sigue disponible en sus direcciones (`#carta`, `#pedido`…).
 
 1. **«¡Hola! Es hora de Pizzi»**: pide permiso de ubicación y muestra el **Pizzi más cercano**, con los botones **Pedir aquí**, **A domicilio** y **Ver carta**.
 2. **Pedir aquí**: lleva a la tienda **SkyTab** del local (`pedidoUrl`). Si el local aún no la tiene, abre la carta de esta web con ese local elegido.

@@ -9,11 +9,10 @@
         Pedidos online → Uber Eats y Glovo en zona céntrica; fuera de ella, solo Uber Eats
                          del local más cercano que lo tenga (ver CONFIG.reparto en data.js).
         Carta          → la carta para consultar.
-   En el ordenador no cambia nada. Necesita app.js (usa sus datos y utilidades).
+   En el ordenador se ve la misma app, centrada (como Honest Greens). Necesita app.js (usa sus datos y utilidades).
    ========================================================= */
 "use strict";
 
-const MOVIL=matchMedia("(max-width:899px)");
 const TABS=["ubicaciones","domicilio","lacarta"];
 const PANT_APP=["","inicio","hola",...TABS,...PANT_PEDIR];
 /* estado: null (sin buscar) · buscando · ok · aprox · denied · err · none
@@ -23,7 +22,7 @@ const APP={estado:null,manual:false,abierto:null,desdeHola:false,pant:null,carta
 const PLAT={glovo:"Glovo",uber:"Uber Eats"};
 
 const hashApp=()=>location.hash.replace("#","");
-const enApp=()=>MOVIL.matches&&PANT_APP.includes(hashApp());
+const enApp=()=>PANT_APP.includes(hashApp());
 const pantallaApp=()=>TABS.includes(hashApp())||PANT_PEDIR.includes(hashApp())?hashApp():"hola";
 const conPos=()=>!!YO&&(APP.estado==="ok"||APP.estado==="aprox");
 
@@ -261,7 +260,6 @@ function alEntrar(){
   if(APP.estado===null)buscar();
 }
 window.addEventListener("hashchange",alEntrar);
-MOVIL.addEventListener("change",alEntrar);
 
 $("appM").addEventListener("click",e=>{
   // Las pestañas sustituyen la entrada del historial: «atrás» vuelve al inicio, no a la pestaña anterior
