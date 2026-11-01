@@ -422,6 +422,13 @@
       <div class="ap-franjas" id="apFranjas" role="radiogroup"></div>
     </div>
     <div class="ap-caja">
+      <h2 data-i="aler_h">¿Alguna alergia?</h2>
+      <p class="ap-nota" data-i="aler_p">Márcalas y avisamos a cocina. Las pizzas pueden contener trazas.</p>
+      <div class="ap-alerg" id="apAlerg" role="group" data-ia="aler_h"></div>
+      <a class="ap-link" href="#alergenos" data-i="aler_more">Ver información de alérgenos</a>
+      <label class="ap-campo"><span data-i="coment_h">¿Algo más que añadir?</span><textarea id="apComent" rows="2" maxlength="100" data-iph="coment_ph"></textarea><small class="ap-cuenta" id="apComentN">0 / 100</small></label>
+    </div>
+    <div class="ap-caja">
       <h2 data-i="your_data">Tus datos</h2>
       <label class="ap-campo"><span data-i="name">Nombre</span><input id="apNom" autocomplete="given-name" data-iph="name_ph"></label>
       <label class="ap-campo"><span>WhatsApp</span><input id="apTel" type="tel" inputmode="tel" autocomplete="tel" data-iph="wa_ph"></label>
@@ -475,6 +482,18 @@
   </div>
   <div class="ap-barra" id="apBarra" hidden><button type="button" id="apBarraBtn"></button></div>
   <div class="ap-velo" id="apVelo" hidden></div>
+  <!-- Sugerencia antes de la cesta: «¿Algo para beber?» -->
+  <div class="ap-hoja ap-sug" id="apSug" role="dialog" aria-modal="true" aria-labelledby="apSugT" hidden>
+    <button type="button" class="ap-x" id="apSugX" data-ia="close" aria-label="Cerrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <div class="ap-hoja-c">
+      <div class="ap-hoja-d">
+        <h2 class="deco" id="apSugT" data-i="sug_h">¿Algo para beber?</h2>
+        <p data-i="sug_p">Una bebida bien fría para acompañar.</p>
+        <div class="ap-carril" id="apSugL"></div>
+      </div>
+    </div>
+    <div class="ap-hoja-pie"><button type="button" class="ap-add" id="apSugOk"><span data-i="sug_ok">Revisar pedido</span><span id="apSugT2"></span></button></div>
+  </div>
   <div class="ap-hoja" id="apHoja" role="dialog" aria-modal="true" aria-labelledby="apHojaT" hidden>
     <button type="button" class="ap-x" id="apHojaX" data-ia="close" aria-label="Cerrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     <div class="ap-hoja-c" id="apHojaC"></div>

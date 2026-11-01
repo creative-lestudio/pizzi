@@ -254,3 +254,30 @@ Object.assign(I,{
 "via_off":["Cerrada","Closed","Chiusa","Fermée","Geschlossen"],
 "via_p":["Paga en la app y, al llegar, enseña tu número en caja: sin hacer cola.","Pay in the app and show your number at the counter when you arrive: no queue.","Paga con l'app e all'arrivo mostra il numero alla cassa: senza fila.","Paie dans l'app et montre ton numéro à la caisse en arrivant : sans attendre.","Bezahl in der App und zeig bei Ankunft deine Nummer an der Kasse: ohne Schlange."]
 });
+
+/* Extras, sugerencia de bebidas, alergias y comentario (js/pedir.js) */
+Object.assign(I,{
+"ext_req":["Obligatorio","Required","Obbligatorio","Obligatoire","Pflicht"],
+"ext_max":["Hasta {n}","Up to {n}","Fino a {n}","Jusqu'à {n}","Bis zu {n}"],
+"sug_h":["¿Algo para beber?","Something to drink?","Qualcosa da bere?","Quelque chose à boire ?","Etwas zu trinken?"],
+"sug_p":["Una bebida bien fría para acompañar tu pizza.","An ice-cold drink to go with your pizza.","Una bibita fresca per accompagnare la pizza.","Une boisson bien fraîche avec ta pizza.","Ein kühles Getränk zur Pizza."],
+"sug_ok":["Revisar pedido","Review order","Rivedi l'ordine","Voir la commande","Bestellung prüfen"],
+"aler_h":["¿Alguna alergia?","Any allergies?","Qualche allergia?","Des allergies ?","Allergien?"],
+"aler_p":["Márcalas y avisamos a cocina. Las pizzas pueden contener trazas.","Tick them and we'll tell the kitchen. Pizzas may contain traces.","Segnalale e avvisiamo la cucina. Le pizze possono contenere tracce.","Coche-les et on prévient la cuisine. Les pizzas peuvent contenir des traces.","Markier sie, wir sagen der Küche Bescheid. Pizzen können Spuren enthalten."],
+"coment_h":["¿Algo más que añadir?","Anything else?","Altro da aggiungere?","Autre chose ?","Sonst noch etwas?"],
+"coment_ph":["Escribe aquí tu comentario (las alergias, arriba).","Write your comment here (allergies above).","Scrivi qui il tuo commento (le allergie, sopra).","Écris ton commentaire ici (allergies au-dessus).","Dein Kommentar (Allergien bitte oben)."],
+"al_gluten":["Gluten","Gluten","Glutine","Gluten","Gluten"],
+"al_crustaceos":["Crustáceos","Crustaceans","Crostacei","Crustacés","Krebstiere"],
+"al_huevo":["Huevo","Egg","Uova","Œuf","Ei"],
+"al_pescado":["Pescado","Fish","Pesce","Poisson","Fisch"],
+"al_cacahuetes":["Cacahuetes","Peanuts","Arachidi","Arachides","Erdnüsse"],
+"al_soja":["Soja","Soy","Soia","Soja","Soja"],
+"al_leche":["Leche","Milk","Latte","Lait","Milch"],
+"al_frutos":["Frutos de cáscara","Tree nuts","Frutta a guscio","Fruits à coque","Schalenfrüchte"],
+"al_apio":["Apio","Celery","Sedano","Céleri","Sellerie"],
+"al_mostaza":["Mostaza","Mustard","Senape","Moutarde","Senf"],
+"al_sesamo":["Sésamo","Sesame","Sesamo","Sésame","Sesam"],
+"al_sulfitos":["Sulfitos","Sulphites","Solfiti","Sulfites","Sulfite"],
+"al_altramuces":["Altramuces","Lupin","Lupini","Lupin","Lupinen"],
+"al_moluscos":["Moluscos","Molluscs","Molluschi","Mollusques","Weichtiere"]
+});

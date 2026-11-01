@@ -104,7 +104,7 @@ function horaCorta(l,v){
 
 /* ---------- Estado ---------- */
 const S={local:null,hora:null,carro:[],pedido:null,perfil:{}};
-try{const g=JSON.parse(localStorage.getItem("pizzi-carro-v2")||"[]");if(Array.isArray(g))S.carro=g.filter(c=>c&&porNombre(c.n)&&c.q>0).map(c=>{const it=porNombre(c.n);return{k:c.k,i:it.i,n:it.n,q:c.q,u:it.p,nota:c.nota||""};});}catch(e){}
+try{const g=JSON.parse(localStorage.getItem("pizzi-carro-v2")||"[]");if(Array.isArray(g))S.carro=g.filter(c=>c&&porNombre(c.n)&&c.q>0).map(c=>{const it=porNombre(c.n);const mods=Array.isArray(c.mods)?c.mods:[];return{k:c.k,i:it.i,n:it.n,q:c.q,u:it.p+mods.reduce((a,x)=>a+(x.p||0),0),nota:c.nota||"",mods};});}catch(e){}
 try{S.perfil=JSON.parse(localStorage.getItem("pizzi-perfil")||"{}")||{};}catch(e){S.perfil={};}
 {const i=LOCALES.findIndex(l=>l.id===S.perfil.local);if(i>=0)S.local=i;}
 const guardar=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}};
@@ -152,7 +152,7 @@ async function cargarCartaTPV(l){
   }
   cartaTPV=c?l.id:null;cartaLista=l?l.id:null;
   S.carro=S.carro.filter(x=>P[x.i]&&P[x.i].n===x.n&&!P[x.i].oculto);
-  S.carro.forEach(x=>{x.u=P[x.i].p;});
+  S.carro.forEach(x=>{x.u=P[x.i].p+precioMods(x.mods);});
   if(c)try{await TPV.franjas(l);}catch(e){}
   asegurarHora();refrescar();actCarro();
   document.dispatchEvent(new Event("pizzi:carta"));
@@ -161,12 +161,14 @@ async function cargarCartaTPV(l){
 /* ---------- Carrito ---------- */
 const total=()=>S.carro.reduce((a,c)=>a+c.u*c.q,0);
 const nItems=()=>S.carro.reduce((a,c)=>a+c.q,0);
-function sumar(i,q,nota){
-  const it=P[i];nota=(nota||"").trim();
-  const k=it.n+"|"+nota,ya=S.carro.find(c=>c.k===k);
-  if(ya)ya.q+=q;else S.carro.push({k,i,n:it.n,q,u:it.p,nota});
+/* mods: extras elegidos en la ficha ([{ref,set,n,p}] con p en €); suben el precio por unidad */
+const precioMods=m=>(m||[]).reduce((a,x)=>a+(x.p||0),0);
+function sumar(i,q,nota,mods){
+  const it=P[i];nota=(nota||"").trim();mods=mods||[];
+  const k=it.n+"|"+nota+"|"+mods.map(x=>x.ref).sort().join(","),ya=S.carro.find(c=>c.k===k);
+  if(ya)ya.q+=q;else S.carro.push({k,i,n:it.n,q,u:it.p+precioMods(mods),nota,mods});
 }
-function addCarro(i,q=1,nota=""){sumar(i,q,nota);actCarro(true);toast(t("added"));}
+function addCarro(i,q=1,nota="",mods){sumar(i,q,nota,mods);actCarro(true);toast(t("added"));}
 function cambiarQ(k,d){
   const c=S.carro.find(x=>x.k===k);if(!c)return;
   c.q+=d;if(c.q<=0)S.carro=S.carro.filter(x=>x!==c);
@@ -501,7 +503,8 @@ async function enviarWeb(boton,alFallar,destino="hecho"){
   boton.disabled=true;boton.innerHTML=`<span>${esc(t("app_sending"))}</span>`;
   try{
     const s=slots(o.local).find(x=>x.v===o.horaVal)||{v:o.horaVal};
-    const r=await TPV.enviar({local:o.local,items:o.items.map(c=>({ref:P[c.i]&&P[c.i].ref,n:c.n,q:c.q,u:c.u,nota:c.nota})),
+    const r=await TPV.enviar({local:o.local,items:o.items.map(c=>({ref:P[c.i]&&P[c.i].ref,n:c.n,q:c.q,u:c.u,nota:c.nota,mods:c.mods||[]})),
+      alergias:o.alergias||[],comentario:o.comentario||"",
       hora:s,tipo:o.tipo||"recoger",cliente:{nom:o.nom,tel:o.tel,email:o.email},total:o.total});
     o.web=true;o.num=r.ref;o.demo=r.demo;
     pintarHecho();location.hash=destino;S.carro=[];actCarro();

@@ -209,6 +209,8 @@ html.modo-app body>:not(.app-m):not(.toast){display:none!important}
 .ap-barra span{flex:1; text-align:left}
 .ap-barra button span:only-child{text-align:center}
 .ap-barra b{font-variant-numeric:tabular-nums}
+/* En la app el aviso sale abajo, encima de la barra; top:auto evita que se estire entre top y bottom */
+html.modo-app .toast{top:auto; bottom:calc(24px + var(--sab)); z-index:95}
 html.con-barra .toast{bottom:calc(96px + var(--sab))}
 
 /* Ficha de producto (hoja inferior) */
@@ -415,3 +417,26 @@ html.con-barra .toast{bottom:calc(96px + var(--sab))}
 @media (min-width:1100px){
   .ah-hoja{max-width:760px}
 }
+
+/* ---------- Extras, sugerencia de bebidas y alergias (js/pedir.js) ---------- */
+.ap-ext{margin:6px 0 0; padding:14px 0 4px; border:0; border-top:1px solid var(--linea)}
+/* La leyenda flota para que el borde superior del grupo no se corte a su lado */
+.ap-ext legend{float:left; width:100%; display:flex; flex-direction:column; gap:3px; padding:0; margin-bottom:8px}
+.ap-op{clear:both}
+.ap-ext legend b{font:400 24px/1 var(--deco); color:var(--vino); text-transform:uppercase; -webkit-text-stroke:0}
+.ap-ext legend small{font-size:14px; color:var(--suave)}
+.ap-ext.error legend small{color:var(--error); font-weight:600}
+.ap-op{display:flex; align-items:center; gap:12px; min-height:48px; padding:6px 2px; border-bottom:1px solid var(--linea); cursor:pointer; font-size:17px}
+.ap-op input{width:22px; height:22px; flex:none; accent-color:var(--vino)}
+.ap-op span{flex:1}
+.ap-op em{font-style:normal; color:var(--vino); font-weight:600}
+.ap-sug .ap-hoja-d{padding-top:30px}
+.ap-sug .ap-hoja-d h2{padding-right:44px}
+.ap-sug .ap-carril{margin:4px -18px 0; padding:2px 18px 8px}
+.ap-sug .ap-up{width:132px; background:var(--rosa-cc)}
+.ap-nota{margin:0 0 10px; font-size:15px; color:var(--suave)}
+.ap-alerg{display:flex; flex-wrap:wrap; gap:8px}
+.ap-alerg button{min-height:40px; padding:8px 14px; border:0; border-radius:999px; background:var(--rosa-cc); color:var(--vino); cursor:pointer; font:600 15px/1 var(--cond); -webkit-text-stroke:var(--t-f) currentColor}
+.ap-alerg button[aria-pressed="true"]{background:var(--vino); color:#fff}
+.ap-link{display:inline-block; margin:12px 0 2px; color:var(--vino); font-size:15px}
+.ap-cuenta{align-self:flex-end; font-size:13px; color:var(--suave)}

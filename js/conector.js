@@ -60,6 +60,22 @@ const TPV=(()=>{
     return c.carta;
   }
 
+  /* ---------- Extras de un producto ----------
+     Grupos de opciones (modifierSets) de la tienda de Shift4: [{ref,nombre,min,max,obligatorio,ops:[{ref,nombre,precio(€)}]}].
+     Se piden al abrir la ficha; un producto sin extras devuelve []. */
+  async function extras(l,refProd){
+    const ref=refDe(l);if(!ref||!refProd)return [];
+    const c=cache[ref]||(cache[ref]={});c.extras=c.extras||{};
+    if(c.extras[refProd])return c.extras[refProd];
+    const it=(await pedir(`/producto/${ref}/${refProd}`)).item||{};
+    const sets=(it.modifierSets||[]).map(s=>{
+      const min=+(s.minModifiersPerSet??s.min??0)||0,max=+(s.maxModifiersPerSet??s.max??0)||0;
+      return{ref:s.ref||s.id,nombre:s.name||"",min,max:s.oneOnly?1:max,obligatorio:!!s.isRequired||min>0,
+        ops:(s.modifiers||s.items||[]).filter(m=>m&&(m.ref||m.id)).map(m=>({ref:m.ref||m.id,nombre:m.name||"",precio:(+m.price||0)/100}))};
+    }).filter(s=>s.ops.length);
+    return c.extras[refProd]=sets;
+  }
+
   /* ---------- Franjas de recogida ----------
      Las de Shift4 vienen en hora UTC; se pasan al formato de la web: {v:"asap"|"día|minuto", off, m} */
   const enMadrid=iso=>{
@@ -78,7 +94,7 @@ const TPV=(()=>{
   const franjasGuardadas=l=>{const c=cache[refDe(l)];return c&&c.franjas&&Date.now()-c.tf<120e3?c.franjas:null;};
 
   /* ---------- Envío del pedido ----------
-     pedido: {local, items:[{ref,n,q,u,nota}], hora:{v,iso}, tipo:"local"|"recoger", cliente:{nom,tel,email}, total} */
+     pedido: {local, items:[{ref,n,q,u,nota,mods}], hora:{v,iso}, tipo:"local"|"recoger", alergias:[...], comentario, cliente:{nom,tel,email}, total} */
   const GUARDA="pizzi-pedidos-web";
   const leer=()=>{try{return JSON.parse(localStorage.getItem(GUARDA)||"{}")||{};}catch(e){return{};}};
   const escribir=o=>{try{localStorage.setItem(GUARDA,JSON.stringify(o));}catch(e){}};
@@ -110,7 +126,9 @@ const TPV=(()=>{
       expectedTime:pedido.hora.v==="asap"?null:pedido.hora.iso,
       // Comer aquí: si la tienda no tiene un tipo propio para sala, va como para llevar con la nota «COMER EN LOCAL»
       dineIn:pedido.tipo==="local",
-      items:pedido.items.map(x=>({ref:x.ref,quantity:x.q,instructions:x.nota||null,modifiers:[]})),
+      items:pedido.items.map(x=>({ref:x.ref,quantity:x.q,instructions:x.nota||null,modifiers:(x.mods||[]).map(m=>({modifierSetRef:m.set,modifierRef:m.ref,quantity:1}))})),
+      // Alergias y comentario van como petición especial del pedido, delante para que cocina las vea
+      specialRequest:[(pedido.alergias||[]).length?"ALERGIAS: "+pedido.alergias.join(", "):"",pedido.comentario||""].filter(Boolean).join(" · ")||null,
       customer:{name:pedido.cliente.nom,phone:pedido.cliente.tel,email:pedido.cliente.email||null}};
   }
   /* Pendiente: cuando Shift4 certifique la integración (Marketplace API), aquí se llama al servidor
@@ -120,5 +138,5 @@ const TPV=(()=>{
     throw new Error("La conexión directa con Shift4 está pendiente de su aprobación.");
   }
 
-  return{refDe,carta,franjas,franjasGuardadas,enviar,estado,formatoShift4};
+  return{refDe,carta,extras,franjas,franjasGuardadas,enviar,estado,formatoShift4};
 })();
