@@ -1,6 +1,7 @@
 /* =========================================================
    PIZZI · App móvil (js/movil.js)
-   Solo se ve en pantallas de menos de 900 px y en el inicio: tapa la web y funciona como una app.
+   Se ve en el inicio (móvil y ordenador): tapa la web y funciona como una app.
+   En pantallas anchas el contenido se centra en una columna, como Honest Greens.
    ========================================================= */
 /* La app forma parte de la página (no es una capa fija): así su fondo llega hasta abajo del todo,
    también bajo la barra del navegador del iPhone. <html> y <body> llevan el mismo vino que la app
@@ -9,12 +10,11 @@ html.modo-app,html.modo-app body{background:#8A0619; scrollbar-gutter:auto}
 html.modo-app body>:not(.app-m):not(.toast){display:none!important}
 
 .app-m{
-  --am-rosa:#EBADAD; --am-borde:rgba(150,4,26,.18); --am-verde:#2E7D4F; --am-verde-bg:#DDF2E3;
+  --am-rosa:#E2B0AE; --am-borde:rgba(150,4,30,.18); --am-verde:#2E7D4F; --am-verde-bg:#DDF2E3;
   position:relative; min-height:100vh; min-height:100dvh; overflow-x:clip; display:flex; flex-direction:column; color:#fff;
   /* Fondo: baldosas rojas muy atenuadas bajo un velo vino uniforme, solo como textura.
      Se repite hacia abajo para que no se deforme en las pantallas largas (lista de locales, carta) */
   background:linear-gradient(rgba(138,5,25,.86),rgba(138,5,25,.86)),#8A0619 url(../assets/img/fondo-baldosas.webp) center top/100% auto repeat-y}
-@media (min-width:900px){.app-m{display:none!important}}
 .app-m [hidden]{display:none!important}
 
 /* Barra superior */
@@ -149,3 +149,269 @@ html.modo-app body>:not(.app-m):not(.toast){display:none!important}
 .am-redes{display:flex; justify-content:center; gap:14px; padding:30px 0 6px}
 .am-redes a{width:52px; height:52px; display:grid; place-items:center; border-radius:50%; background:#fff; color:var(--vino); box-shadow:0 8px 20px rgba(40,0,6,.25)}
 .am-redes svg{width:24px; height:24px}
+
+/* =========================================================
+   Pedir desde la app (js/pedir.js): carta, cesta y seguimiento
+   Tarjetas blancas sobre el fondo vino, como el resto de la app.
+   ========================================================= */
+.ap-pant{padding-top:18px; margin-bottom:0; padding-bottom:calc(120px + var(--sab))}
+.ap-pant>.deco{font-size:clamp(38px,11vw,50px); color:#fff; margin:6px 0 16px}
+
+/* Cabecera de la carta: local y hora */
+.ap-cab{display:grid; grid-template-columns:1.25fr 1fr; gap:10px}
+.ap-chip,.ap-fila{display:flex; align-items:center; gap:10px; min-height:62px; padding:10px 12px; border:0; border-radius:var(--r-l); background:#fff; color:var(--vino); text-decoration:none; text-align:left; cursor:pointer; box-shadow:0 8px 20px rgba(40,0,6,.22); font:inherit}
+.ap-chip-ic{width:34px; height:34px; flex:none; display:grid; place-items:center; border-radius:10px; background:var(--rosa-cc)}
+.ap-chip-ic svg{width:20px; height:20px}
+.ap-chip-t{display:flex; flex-direction:column; gap:3px; min-width:0}
+.ap-chip-t small{font:600 12px/1 var(--cond); letter-spacing:.12em; text-transform:uppercase; color:var(--suave); -webkit-text-stroke:var(--t-f) currentColor}
+.ap-chip-t b{font:600 16px/1.1 var(--cond); letter-spacing:.02em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; -webkit-text-stroke:var(--t-r) currentColor}
+
+/* Franjas de recogida (chips) */
+.ap-franjas{display:flex; gap:8px; overflow-x:auto; margin:12px -16px 0; padding:2px 16px 6px; scrollbar-width:none}
+.ap-franjas::-webkit-scrollbar{display:none}
+.ap-caja .ap-franjas{margin:12px -14px 0; padding:2px 14px 4px}
+.ap-franjas button{flex:none; display:flex; flex-direction:column; align-items:center; gap:2px; min-height:48px; padding:8px 14px; border:0; border-radius:14px; background:#fff; color:var(--vino); box-shadow:inset 0 0 0 1.5px var(--am-borde); cursor:pointer; font:600 15px/1 var(--cond); -webkit-text-stroke:var(--t-r) currentColor}
+.ap-caja .ap-franjas button{background:var(--rosa-cc); box-shadow:none}
+.ap-franjas button small{font-size:12px; opacity:.75}
+.ap-franjas button[aria-checked="true"]{background:var(--vino); color:#fff}
+.ap-nada{margin:0; color:var(--suave); font-size:16px}
+
+/* Categorías fijas al desplazar */
+.ap-cats{position:sticky; top:0; z-index:5; display:flex; gap:8px; overflow-x:auto; margin:14px -16px 6px; padding:10px 16px; scrollbar-width:none; background:linear-gradient(rgba(138,5,25,.97),rgba(138,5,25,.97))}
+.ap-cats::-webkit-scrollbar{display:none}
+.ap-cats button{flex:none; min-height:40px; padding:8px 18px; border:0; border-radius:999px; background:#fff; color:var(--vino); cursor:pointer; font:600 15px/1 var(--cond); letter-spacing:.06em; text-transform:uppercase; -webkit-text-stroke:var(--t-r) currentColor}
+.ap-aviso{margin:8px 0; padding:12px 14px; border-radius:var(--r-m); background:rgba(60,0,10,.45); color:#fff; font-size:16px}
+
+/* Productos */
+.ap-sec{scroll-margin-top:70px}
+.ap-sec>h2{font-size:clamp(28px,8vw,36px); color:#fff; margin:20px 2px 12px}
+.ap-prod{display:flex; gap:12px; align-items:stretch; padding:12px; margin-bottom:10px; border-radius:var(--r-l); background:#fff; color:var(--tinta); cursor:pointer; box-shadow:0 8px 20px rgba(40,0,6,.18); transition:transform .15s; -webkit-tap-highlight-color:transparent}
+.ap-prod:active{transform:scale(.98)}
+.ap-prod-t{flex:1; min-width:0; display:flex; flex-direction:column; gap:5px; padding:2px 0 2px 4px}
+.ap-prod-t b{font:400 22px/1 var(--deco); color:var(--vino); text-transform:uppercase; -webkit-text-stroke:0}
+.ap-prod-t p{margin:0; font-size:15px; line-height:1.25; color:var(--suave); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden}
+.ap-precio{margin-top:auto; font:600 17px/1 var(--cond); color:var(--vino); -webkit-text-stroke:var(--t-m) currentColor}
+.ap-precio i{font-style:normal; margin-left:6px; padding:3px 8px; border-radius:999px; background:var(--rosa-cc); font-size:12px; letter-spacing:.06em; text-transform:uppercase}
+.ap-prod-f{position:relative; width:96px; height:96px; flex:none}
+.ap-prod-f img{width:100%; height:100%; object-fit:cover; border-radius:16px; background:var(--rosa-cc)}
+.ap-mas{position:absolute; right:-4px; bottom:-4px; width:38px; height:38px; display:grid; place-items:center; border:0; border-radius:50%; background:var(--vino); color:#fff; cursor:pointer; box-shadow:0 4px 12px rgba(40,0,6,.3); font:700 16px/1 var(--cond)}
+.ap-mas svg{width:18px; height:18px}
+.ap-mas.con{background:#fff; color:var(--vino); box-shadow:inset 0 0 0 2px var(--vino),0 4px 12px rgba(40,0,6,.25)}
+.ap-mas.pop,.ap-up.pop{animation:ap-pop .35s ease}
+@keyframes ap-pop{50%{transform:scale(1.2)}}
+
+/* Barra inferior: «Ver mi pedido» / «Pagar» */
+.ap-barra{position:fixed; left:0; right:0; bottom:0; z-index:30; padding:12px 16px calc(12px + var(--sab)); background:linear-gradient(rgba(106,15,24,0),rgba(106,15,24,.9) 40%)}
+.ap-barra button{display:flex; align-items:center; gap:12px; width:100%; min-height:62px; padding:10px 22px; border:0; border-radius:999px; background:#fff; color:var(--vino); cursor:pointer; box-shadow:0 14px 34px rgba(40,0,6,.45); font:600 19px/1 var(--cond); letter-spacing:.04em; text-transform:uppercase; -webkit-text-stroke:var(--t-m) currentColor}
+.ap-barra button:active{transform:scale(.98)}
+.ap-barra button[disabled]{opacity:.7}
+.ap-barra i{width:32px; height:32px; display:grid; place-items:center; border-radius:50%; background:var(--vino); color:#fff; font-style:normal; font-size:16px}
+.ap-barra span{flex:1; text-align:left}
+.ap-barra button span:only-child{text-align:center}
+.ap-barra b{font-variant-numeric:tabular-nums}
+html.con-barra .toast{bottom:calc(96px + var(--sab))}
+
+/* Ficha de producto (hoja inferior) */
+.ap-velo{position:fixed; inset:0; z-index:40; background:rgba(30,0,6,.55); opacity:0; transition:opacity .3s}
+.ap-velo.on{opacity:1}
+.ap-hoja{position:fixed; left:0; right:0; bottom:0; z-index:41; max-height:92dvh; display:flex; flex-direction:column; border-radius:var(--r-xl) var(--r-xl) 0 0; background:#fff; color:var(--tinta); transform:translateY(100%); transition:transform .32s cubic-bezier(.2,.8,.2,1); overflow:hidden}
+.ap-hoja.on{transform:none}
+.ap-x{position:absolute; top:12px; right:12px; z-index:2; width:40px; height:40px; display:grid; place-items:center; border:0; border-radius:50%; background:#fff; color:var(--vino); box-shadow:0 4px 14px rgba(40,0,6,.25); cursor:pointer}
+.ap-x svg{width:20px; height:20px}
+.ap-hoja-c{overflow-y:auto; overscroll-behavior:contain}
+.ap-hoja-f{background:var(--rosa-cc)}
+.ap-hoja-f img{width:100%; aspect-ratio:4/3; object-fit:cover}
+.ap-hoja-d{padding:18px 18px 8px; display:flex; flex-direction:column; gap:10px}
+.ap-hoja-d h2{font-size:34px; color:var(--vino)}
+.ap-hoja-d p{margin:0; font-size:17px; color:var(--suave)}
+.ap-tags{display:flex; flex-wrap:wrap; gap:6px}
+.ap-tags span{padding:6px 10px; border-radius:999px; background:var(--rosa-cc); color:var(--vino); font-size:14px}
+.ap-hoja-pie{display:flex; gap:10px; align-items:center; padding:12px 16px calc(12px + var(--sab)); border-top:1px solid var(--linea)}
+.ap-cant{display:flex; align-items:center; gap:4px; border-radius:999px; background:var(--rosa-cc)}
+.ap-cant button{width:44px; height:48px; border:0; background:none; color:var(--vino); cursor:pointer; font:700 22px/1 var(--cond)}
+.ap-cant button[disabled]{opacity:.35}
+.ap-cant b{min-width:22px; text-align:center; color:var(--vino); font:700 18px/1 var(--cond)}
+.ap-add{flex:1; display:flex; justify-content:space-between; align-items:center; min-height:52px; padding:10px 20px; border:0; border-radius:999px; background:var(--vino); color:#fff; cursor:pointer; font:600 18px/1 var(--cond); letter-spacing:.04em; text-transform:uppercase; -webkit-text-stroke:var(--t-m) currentColor}
+
+/* Campos */
+.ap-campo{display:flex; flex-direction:column; gap:6px; margin-top:10px}
+.ap-campo>span{font:600 14px/1 var(--cond); letter-spacing:.08em; text-transform:uppercase; color:var(--suave); -webkit-text-stroke:var(--t-f) currentColor}
+.ap-campo input,.ap-campo textarea{width:100%; min-height:50px; padding:12px 14px; border:1.5px solid var(--linea); border-radius:14px; background:#fff; color:var(--tinta); font:400 18px/1.3 var(--txt); -webkit-text-stroke:var(--t-f) currentColor}
+.ap-campo input:focus,.ap-campo textarea:focus{outline:none; border-color:var(--vino)}
+
+/* Cesta */
+.ap-caja{margin-bottom:12px; padding:16px 14px; border-radius:var(--r-l); background:#fff; color:var(--tinta); box-shadow:0 8px 20px rgba(40,0,6,.18)}
+.ap-caja>h2{margin:0 0 10px; font:600 15px/1 var(--cond); letter-spacing:.12em; text-transform:uppercase; color:var(--vino); -webkit-text-stroke:var(--t-r) currentColor}
+.ap-linea{display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid var(--linea)}
+.ap-linea img{width:54px; height:54px; flex:none; object-fit:cover; border-radius:12px; background:var(--rosa-cc)}
+.ap-linea-t{flex:1; min-width:0; display:flex; flex-direction:column; gap:3px}
+.ap-linea-t b{font:600 17px/1.1 var(--cond); color:var(--vino); -webkit-text-stroke:var(--t-r) currentColor}
+.ap-linea-t small{color:var(--suave); font-size:14px}
+.ap-linea-t span{font:600 15px/1 var(--cond); color:var(--tinta)}
+.ap-cant-s button{width:36px; height:40px; font-size:20px}
+.ap-total{display:flex; justify-content:space-between; align-items:center; padding-top:12px; font:600 19px/1 var(--cond); color:var(--vino); text-transform:uppercase; letter-spacing:.06em; -webkit-text-stroke:var(--t-m) currentColor}
+.ap-carril{display:flex; gap:10px; overflow-x:auto; margin:0 -14px; padding:2px 14px 4px; scrollbar-width:none}
+.ap-carril::-webkit-scrollbar{display:none}
+.ap-up{position:relative; flex:none; width:112px; display:flex; flex-direction:column; gap:4px; padding:8px; border:0; border-radius:16px; background:var(--rosa-cc); color:var(--vino); text-align:left; cursor:pointer; font:inherit}
+.ap-up img{width:100%; aspect-ratio:1; object-fit:contain}
+.ap-up b{font:600 14px/1.1 var(--cond); -webkit-text-stroke:var(--t-f) currentColor}
+.ap-up span{font-size:14px}
+.ap-up i{position:absolute; top:6px; right:6px; width:28px; height:28px; display:grid; place-items:center; border-radius:50%; background:var(--vino); color:#fff}
+.ap-up i svg{width:14px; height:14px}
+.ap-fila{box-shadow:inset 0 0 0 1.5px var(--am-borde)}
+.ap-fila .ap-chip-t{flex:1}
+.ap-fila .ap-chip-t small{text-transform:none; letter-spacing:0; font:400 14px/1.2 var(--txt); -webkit-text-stroke:0}
+.ap-cambiar{font:600 13px/1 var(--cond); letter-spacing:.08em; text-transform:uppercase; -webkit-text-stroke:var(--t-r) currentColor}
+.ap-pago-m{display:flex; gap:6px; margin-bottom:10px}
+.ap-pago-m span{padding:6px 10px; border-radius:8px; background:var(--rosa-cc); color:var(--vino); font:700 13px/1 system-ui,sans-serif}
+.ap-pago p{margin:0; font-size:15px; color:var(--suave)}
+.ap-pago p b{color:var(--tinta)}
+.ap-check{display:flex; gap:10px; align-items:flex-start; padding:4px 4px 10px; font-size:15px; color:#fff}
+.ap-check input{width:22px; height:22px; flex:none; margin-top:1px; accent-color:#fff}
+.ap-check a{color:#fff}
+.ap-error{margin:0 0 12px; padding:12px 14px; border-radius:var(--r-m); background:#fff; color:var(--error); font-weight:600}
+
+/* Seguimiento */
+.am-estado,.ap-pant#am-estado{text-align:center}
+.ap-ok{width:72px; height:72px; margin:4px auto 6px; display:grid; place-items:center; border-radius:50%; background:#fff; color:var(--vino)}
+.ap-ok svg{width:38px; height:38px}
+.ap-num{display:flex; flex-direction:column; gap:6px; align-items:center}
+.ap-num small{font:600 13px/1 var(--cond); letter-spacing:.14em; text-transform:uppercase; color:var(--suave)}
+.ap-num b{font:400 54px/1 var(--deco); color:var(--vino); letter-spacing:.02em}
+.ap-num span{font-size:15px; color:var(--suave)}
+.ap-rapida{background:var(--rosa-cc)}
+.ap-rapida p{margin:0; font-size:16px}
+.ap-acc{margin-bottom:12px}
+.ap-acc .am-mini{background:#fff}
+#apPasos{text-align:left}
+
+/* =========================================================
+   Inicio estilo app: foto del local, saludo y hoja «Pide ahora»
+   Paleta: vino #96041E · rosa #E2B0AE · blanco · rosa intenso #FB72A5 (solo para destacar)
+   ========================================================= */
+.app-m{--acento:#FB72A5}
+.ah-foto{position:absolute; top:0; left:0; right:0; height:min(66dvh,600px); z-index:0; pointer-events:none;
+  background:linear-gradient(180deg,rgba(40,0,8,.62) 0%,rgba(50,0,10,.55) 20%,rgba(70,0,14,.72) 46%,rgba(110,2,22,.88) 72%,#8A0619 100%),url(../assets/img/hero.webp) center 35%/cover no-repeat}
+.en-pide .ah-foto{display:none}
+.app-m:not(.en-pide) .am-top{margin-top:0}
+.am-hola{flex:1 0 auto; display:flex; flex-direction:column; justify-content:flex-end; gap:0; padding-top:0; padding-bottom:0; margin-bottom:0; min-height:calc(100dvh - var(--sat) - 72px)}
+.ah-hero{padding:24px 6px 22px; color:#fff; text-shadow:0 3px 18px rgba(40,0,6,.55)}
+.ah-hero .saludo{margin:0 0 10px}
+.ah-hero .deco{font-size:clamp(48px,14.5vw,68px); line-height:.9; color:#fff}
+.ah-hero .deco span{display:block; color:var(--am-rosa)}
+.ah-nov{margin:12px 0 0; font-size:19px; color:#fff}
+
+.ah-hoja{margin:0 -16px; padding:26px 20px calc(26px + var(--sab)); border-radius:var(--r-xl) var(--r-xl) 0 0; background:#fff; color:var(--tinta); box-shadow:0 -14px 40px rgba(40,0,6,.3); display:flex; flex-direction:column; gap:14px}
+.ah-hoja>h2{font-size:clamp(36px,10.5vw,44px); color:var(--vino)}
+.ah-local{display:flex; align-items:center; gap:10px; width:100%; margin-top:-6px; padding:6px 0; border:0; background:none; color:var(--vino); text-align:left; cursor:pointer; font:inherit}
+.ah-local>img{width:26px; height:26px; flex:none}
+.ah-local>span{flex:1; min-width:0; display:flex; flex-direction:column; gap:3px}
+.ah-local b{font:600 19px/1.15 var(--cond); letter-spacing:.02em; -webkit-text-stroke:var(--t-r) currentColor}
+.ah-local b span{font-weight:400; color:var(--suave)}
+.ah-local small{font-size:15px; color:var(--suave)}
+.ah-local small i,.am-mc-h i{display:inline-block; width:8px; height:8px; margin-right:6px; border-radius:50%; vertical-align:1px}
+.ah-local i.ab,.am-mc-h i.ab{background:var(--am-verde)}
+.ah-local i.ce,.am-mc-h i.ce{background:var(--vino)}
+.ah-local>svg{width:20px; height:20px; flex:none; transform:rotate(-90deg)}
+.ah-local .am-pulso{margin:4px 0 0 2px}
+
+.ah-tipos{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:4px}
+.ah-tipos button{position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; min-height:108px; padding:12px 6px; border:0; border-radius:18px; background:#fff; color:var(--vino); cursor:pointer; box-shadow:inset 0 0 0 1.5px var(--am-borde); transition:transform .15s, background-color .15s, box-shadow .15s; font:inherit; -webkit-tap-highlight-color:transparent}
+.ah-tipos button:active{transform:scale(.96)}
+.ah-tipos img,.ah-ic{width:48px; height:48px; display:grid; place-items:center}
+.ah-ic svg{width:40px; height:40px}
+.ah-tipos b{font:600 16px/1.05 var(--cond); letter-spacing:.03em; text-transform:uppercase; text-align:center; -webkit-text-stroke:var(--t-r) currentColor}
+.ah-tipos button[aria-checked="true"]{background:var(--rosa-cc); box-shadow:inset 0 0 0 2px var(--vino)}
+.ah-ok{position:absolute; top:-9px; right:-9px; width:28px; height:28px; display:none; place-items:center; border-radius:50%; background:var(--acento); color:#fff; box-shadow:0 0 0 3px #fff}
+.ah-ok svg{width:16px; height:16px}
+.ah-tipos button[aria-checked="true"] .ah-ok{display:grid; animation:ap-pop .3s ease}
+.ah-desc{margin:0; min-height:2.6em; font-size:17px; line-height:1.3; color:var(--suave)}
+
+.ah-cta{display:flex; align-items:center; justify-content:space-between; gap:12px; min-height:66px; padding:10px 10px 10px 26px; border-radius:999px; background:var(--vino); color:#fff; text-decoration:none; box-shadow:0 12px 28px rgba(150,4,30,.35); transition:transform .15s; font:600 22px/1 var(--cond); letter-spacing:.04em; text-transform:uppercase; -webkit-text-stroke:var(--t-m) currentColor}
+.ah-cta:active{transform:scale(.98)}
+.ah-cta-f{width:48px; height:48px; flex:none; display:grid; place-items:center; border-radius:50%; background:#fff; color:var(--vino)}
+.ah-cta-f svg{width:22px; height:22px}
+.ah-sec{display:flex; align-items:center; justify-content:center; gap:10px; min-height:48px; padding:6px; border:0; background:none; color:var(--vino); text-decoration:none; cursor:pointer; font:600 16px/1 var(--cond); letter-spacing:.06em; text-transform:uppercase; -webkit-text-stroke:var(--t-r) currentColor}
+.ah-sec svg,.ah-sec img{width:24px; height:24px}
+.ah-sec[hidden]{display:none}
+.ah-hoja .am-msg{background:var(--rosa-cc); color:var(--tinta)}
+
+/* ---------- Mapa de locales ---------- */
+.am-mapa{position:fixed; inset:0; z-index:60; background:var(--rosa-cc)}
+.am-mapa-m{position:absolute; inset:0}
+.am-mapa-m.sin{background:var(--rosa-cc) url(../assets/img/fondo-baldosas.webp) center/cover; opacity:.35}
+.am-mapa-b{position:absolute; right:16px; z-index:500; width:46px; height:46px; display:grid; place-items:center; border:0; border-radius:50%; background:#fff; color:var(--vino); box-shadow:0 6px 18px rgba(40,0,6,.25); cursor:pointer}
+.am-mapa-b svg{width:20px; height:20px}
+.am-mapa-x{top:calc(var(--sat) + 16px)}
+.am-mapa-yo{top:calc(var(--sat) + 72px)}
+.am-mapa-p{position:absolute; left:0; right:0; bottom:0; z-index:500; display:grid; grid-template-columns:34px 1fr 34px; align-items:center; gap:4px; padding:0 6px calc(14px + var(--sab))}
+.am-mapa-fl{width:34px; height:34px; display:grid; place-items:center; border:0; border-radius:50%; background:#fff; color:var(--vino); box-shadow:0 4px 12px rgba(40,0,6,.2); cursor:pointer}
+.am-mapa-fl svg{width:18px; height:18px}
+.am-mapa-fl[disabled]{opacity:.35; cursor:default}
+.am-mapa-card{position:relative; display:flex; flex-direction:column; gap:10px; padding:24px 18px 18px; border-radius:var(--r-xl); background:#fff; color:var(--tinta); box-shadow:0 14px 40px rgba(40,0,6,.3); animation:am-in .25s ease both}
+.am-mc-d{position:absolute; top:-14px; left:16px; padding:6px 12px; border-radius:999px; background:#fff; color:var(--vino); box-shadow:0 4px 12px rgba(40,0,6,.2); font:600 14px/1 var(--cond); letter-spacing:.04em; -webkit-text-stroke:var(--t-r) currentColor}
+.am-mapa-card>b.deco{font-size:30px; color:var(--vino)}
+.am-mc-h{font-size:15px; color:var(--suave)}
+.am-mc-f{display:flex; gap:12px; align-items:flex-start; padding-right:64px}
+.am-mc-ic{width:34px; height:34px; flex:none; display:grid; place-items:center; border-radius:10px; background:var(--rosa-cc); color:var(--vino)}
+.am-mc-ic svg{width:18px; height:18px}
+.am-mc-f b{font:600 16px/1.2 var(--cond); color:var(--vino); -webkit-text-stroke:var(--t-r) currentColor}
+.am-mc-f b span.ab{color:var(--am-verde)}
+.am-mc-f small{display:block; margin-top:2px; font-size:14px; line-height:1.3; color:var(--suave)}
+.am-mc-acc{display:flex; gap:18px; padding-right:64px}
+.am-mc-acc a{color:var(--vino); font:600 14px/1 var(--cond); letter-spacing:.06em; text-transform:uppercase; -webkit-text-stroke:var(--t-r) currentColor}
+.am-mc-ok{position:absolute; right:16px; bottom:16px; width:58px; height:58px; display:grid; place-items:center; border:0; border-radius:50%; background:var(--vino); color:#fff; box-shadow:0 8px 20px rgba(150,4,30,.35); cursor:pointer}
+.am-mc-ok svg{width:24px; height:24px}
+.am-mc-ok:active{transform:scale(.94)}
+.am-pin{background:none; border:0}
+.am-pin img{width:40px; height:40px; filter:drop-shadow(0 3px 6px rgba(40,0,6,.35)); transition:transform .2s}
+.am-pin.on img{transform:scale(1.35) translateY(-4px)}
+.am-yo{background:none; border:0}
+.am-yo span{display:block; width:18px; height:18px; margin:2px; border-radius:50%; background:var(--acento); border:3px solid #fff; box-shadow:0 0 0 10px rgba(251,114,165,.25)}
+/* Mapa de OpenStreetMap en tonos suaves para que encaje con la marca */
+.am-mapa .leaflet-tile-pane{filter:grayscale(.85) sepia(.25) hue-rotate(-20deg) brightness(1.04) contrast(.92)}
+.am-mapa .leaflet-control-attribution{font-size:10px; margin-bottom:calc(var(--sab) + 2px)}
+
+/* ---------- Aviso de distancia ---------- */
+.am-aviso{position:fixed; inset:0; z-index:70; display:flex; align-items:flex-end; background:rgba(30,0,6,.55)}
+.am-aviso-c{width:100%; padding:30px 22px calc(24px + var(--sab)); border-radius:var(--r-xl) var(--r-xl) 0 0; background:#fff; color:var(--tinta); text-align:center; animation:am-in .25s ease both}
+.am-aviso-ic{display:inline-grid; width:44px; height:44px; place-items:center; color:var(--vino)}
+.am-aviso-ic svg{width:36px; height:36px}
+.am-aviso-c p{margin:12px 0 22px; font-size:19px; line-height:1.35}
+.am-aviso-c p b{color:var(--vino)}
+.am-aviso-b{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+.am-aviso-b button{min-height:56px; border:0; border-radius:999px; cursor:pointer; font:600 18px/1 var(--cond); letter-spacing:.04em; text-transform:uppercase; -webkit-text-stroke:var(--t-m) currentColor}
+#amAvisoNo{background:#fff; color:var(--vino); box-shadow:inset 0 0 0 2px var(--vino)}
+#amAvisoSi{background:var(--vino); color:#fff}
+
+/* =========================================================
+   Ordenador: la misma app, centrada en una columna sobre la foto (como Honest Greens)
+   ========================================================= */
+@media (min-width:700px){
+  .app-m{--ancho:620px}
+  .am-top{padding-left:32px; padding-right:32px}
+  .am-p{width:100%; max-width:var(--ancho); margin-left:auto; margin-right:auto}
+  .am-hola{max-width:none; padding-left:0; padding-right:0}
+  .ah-hero{width:100%; max-width:1100px; margin:0 auto; padding:40px 40px 34px}
+  .ah-hero .deco{font-size:clamp(68px,9vw,128px)}
+  .ah-hero .deco span{display:inline}
+  .ah-nov{font-size:23px}
+  .ah-foto{height:78dvh; background-position:center 40%}
+  .ah-hoja{width:100%; max-width:var(--ancho); margin:0 auto; padding:34px 40px calc(30px + var(--sab))}
+  .am-pide{max-width:720px}
+  .am-tabs a{min-height:110px}
+  .am-loc-c img{aspect-ratio:auto; height:280px}
+  .ap-pant{max-width:var(--ancho)}
+  .ap-cats,.ap-franjas{margin-left:0; margin-right:0; padding-left:0; padding-right:0}
+  .ap-barra{left:50%; right:auto; width:min(100%,var(--ancho)); transform:translateX(-50%)}
+  .ap-hoja{left:50%; right:auto; bottom:auto; top:50%; width:min(100% - 48px,600px); max-height:88dvh; border-radius:var(--r-xl); transform:translate(-50%,-46%); opacity:0; transition:transform .28s cubic-bezier(.2,.8,.2,1),opacity .2s}
+  .ap-hoja.on{transform:translate(-50%,-50%); opacity:1}
+  .ap-hoja-pie{padding-bottom:16px}
+  .am-aviso{align-items:center; justify-content:center}
+  .am-aviso-c{max-width:520px; border-radius:var(--r-xl); padding-bottom:28px}
+  .am-mapa-p{max-width:640px; margin:0 auto; grid-template-columns:44px 1fr 44px; gap:10px; padding-bottom:24px}
+  .am-mapa-fl{width:44px; height:44px}
+}
+@media (min-width:1100px){
+  .ah-hoja{max-width:760px}
+}

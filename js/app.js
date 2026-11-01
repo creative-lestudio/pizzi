@@ -30,8 +30,10 @@ const ICO={
   bolsa:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 11.1a2 2 0 0 1-2 1.9H8.2a2 2 0 0 1-2-1.9z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>'
 };
 const IMG="assets/img/";
+/* Imagen del producto: las de la carta vienen de assets/img; las que solo existen en Shift4, de su web */
+const imgDe=(it,suf)=>!it.img?IMG+"ic-porcion.webp":/^https?:/.test(it.img)?it.img:IMG+it.img+suf+".webp";
 function foto(it,small=true){
-  return `<img src="${IMG}${it.img}${small?"-s":""}.webp" alt="${esc(cap(nm(it.n).toLowerCase()))}"${it.t==="bebida"?' class="beb"':""} loading="lazy" decoding="async">`;
+  return `<img src="${imgDe(it,small?"-s":"")}" alt="${esc(cap(nm(it.n).toLowerCase()))}"${it.t==="bebida"?' class="beb"':""} loading="lazy" decoding="async">`;
 }
 /* Tarjeta de pizza con el estilo de la carta impresa: media pizza sobre la etiqueta rosa */
 /* Precio como en la carta impresa: pizzas "6,90€", bebidas "2,5€" */
@@ -39,7 +41,7 @@ const eurCarta=(v,corto)=>{const s=corto?String(+v.toFixed(2)):v.toFixed(2);retu
 function pizzaCarta(it){
   const n=nm(it.n);
   return `<div class="pz" role="button" tabindex="0" data-prod="${it.i}" data-pi="${it.i}" aria-label="${esc(n)}, ${eur(it.p)}">
-    <div class="pz-img"><img src="${IMG}${it.img}-m.webp" alt="${esc(cap(n.toLowerCase()))}" loading="lazy" decoding="async" width="520" height="278"></div>
+    <div class="pz-img"><img src="${imgDe(it,"-m")}" alt="${esc(cap(n.toLowerCase()))}" loading="lazy" decoding="async" width="520" height="278"></div>
     <div class="pz-pill"><h3 class="${n.length>11?"largo":""}">${esc(n)}</h3><span class="pz-precio">${eurCarta(it.p)}</span></div>
     <p>${esc(desc(it))}</p>
     ${it.badge?`<span class="tag">${t(it.badge==="top"?"tag_top":"tag_fresh")}</span>`:""}
@@ -79,6 +81,9 @@ const estado=(l,cls="")=>abierto(l)?`<span class="st ab ${cls}">${t("open_now")}
 /* Franjas de recogida cada 15 min dentro del horario */
 function slots(l){
   if(!l)return [];
+  // Pedidos web: las franjas de la tienda de Shift4 del local, si están cargadas
+  const f=PEDIDOS_WEB&&TPV.franjasGuardadas(l);
+  if(f&&f.length)return f.map(x=>({...x,t:x.v==="asap"?t("asap",{h:hhmm(x.m)}):(x.off===0?t("today")+" ":x.off===1?t("tomorrow")+" ":cap(DIAS[(hoyIdx()+x.off)%7])+" ")+hhmm(x.m)}));
   const n=ahora(),d=hoyIdx(),out=[];
   const add=(off,a,c,desde)=>{for(let m=Math.max(a+15,Math.ceil(desde/15)*15);m<=c-10;m+=15)
     out.push({v:off+"|"+m,off,m,t:(off===0?t("today")+" ":off===1?t("tomorrow")+" ":cap(DIAS[(d+off)%7])+" ")+hhmm(m)});};
@@ -112,7 +117,45 @@ function asegurarHora(){
   const s=slots(l);if(!s.some(x=>x.v===S.hora))S.hora=s.length?s[0].v:null;
 }
 function elegirLocal(i){
+  const cambia=S.local!==i;
   S.local=i;S.perfil.local=LOCALES[i].id;guardarPerfil();asegurarHora();
+  if(cambia)cargarCartaTPV(LOCALES[i]);
+}
+
+/* ---------- Carta real del TPV (solo pedidos web) ----------
+   Pone a cada producto de la carta el precio y el código que tiene en la tienda de Shift4 del local,
+   oculta lo que ese local no vende y añade lo que solo existe allí. Sin tienda, o si Shift4 no
+   responde, se queda la carta de js/data.js. */
+P.forEach(x=>{x.p0=x.p;});
+const norm=s=>String(s).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/\bde\b/g,"").replace(/[^a-z0-9]/g,"");
+let cartaTPV=null,cargaTPV=0,cartaLista=null;  // cartaLista: último local cuya carga terminó (bien o mal)
+async function cargarCartaTPV(l){
+  if(!PEDIDOS_WEB)return;
+  const n=++cargaTPV;let c=null;
+  try{c=l&&await TPV.carta(l);}catch(e){c=null;}
+  if(n!==cargaTPV)return;  // mientras tanto se eligió otro local
+  for(let k=P.length-1;k>=0;k--)if(P[k].extra)P.splice(k,1);
+  P.forEach(x=>{x.p=x.p0;x.oculto=false;delete x.ref;});
+  if(c){
+    const libres=Object.values(c.items);
+    P.forEach(x=>{
+      const nx=norm(x.n);
+      let k=libres.findIndex(y=>norm(y.nombre)===nx);
+      if(k<0)k=libres.findIndex(y=>{const ny=norm(y.nombre);return nx.startsWith(ny)||ny.startsWith(nx);});
+      if(k<0){x.oculto=true;return;}
+      const y=libres.splice(k,1)[0];x.p=y.precio;x.ref=y.ref;x.oculto=y.agotado;
+    });
+    libres.filter(y=>!y.agotado).forEach(y=>{
+      const cat=c.cats.find(k=>k.items.includes(y.ref)),beb=cat&&/bebida|cerveza|refresco|drink/i.test(cat.nombre);
+      P.push({i:P.length,n:y.nombre.toUpperCase(),t:beb?"bebida":"pizza",es:y.desc,en:y.desc,p:y.precio,p0:y.precio,badge:"",img:y.img,ref:y.ref,extra:true});
+    });
+  }
+  cartaTPV=c?l.id:null;cartaLista=l?l.id:null;
+  S.carro=S.carro.filter(x=>P[x.i]&&P[x.i].n===x.n&&!P[x.i].oculto);
+  S.carro.forEach(x=>{x.u=P[x.i].p;});
+  if(c)try{await TPV.franjas(l);}catch(e){}
+  asegurarHora();refrescar();actCarro();
+  document.dispatchEvent(new Event("pizzi:carta"));
 }
 
 /* ---------- Carrito ---------- */
@@ -140,6 +183,7 @@ function actCarro(bump){
   pintarLateral();
   marcarEnCarro();
   if(VISTA==="pedido"&&location.hash==="#pedido"){if(!S.carro.length){location.replace("#carta");return;}pintarPedido();}
+  document.dispatchEvent(new Event("pizzi:carro"));
 }
 function actMiniBarra(){$("miniBarra").hidden=!(nItems()&&(VISTA==="inicio"||VISTA==="carta"));}
 function marcarEnCarro(){
@@ -323,7 +367,7 @@ function pintarInicio(){conCarriles(pintarInicioYa);}
 function pintarInicioYa(){
   const h=ahora();$("saludo").textContent=t(h<720&&h>=360?"hi_m":h<1230&&h>=720?"hi_a":"hi_n");
   // Destacadas
-  $("topList").innerHTML=TOP.map(porNombre).filter(Boolean).map(pizzaCarta).join("");
+  $("topList").innerHTML=TOP.map(porNombre).filter(x=>x&&!x.oculto).map(pizzaCarta).join("");
   // Repetir último pedido
   const ult=(S.perfil.ultimo||[]).filter(x=>porNombre(x.n));
   const r=$("repetir");
@@ -365,8 +409,8 @@ function pintarCarta(){
   $("cartaCuerpo").innerHTML=CATS.map(([id,k,tipo])=>`
     <section class="cat-sec" id="cat-${id}" data-sec="${id}">
       <div class="cat-cab"><img src="assets/img/logo-rosa.png" alt="PIZZI" width="1231" height="673"><h2 class="deco">${tipo==="pizza"?t("cat_pizzas_31"):t(k)}</h2></div>
-      ${tipo==="pizza"?`<div class="carta-pz">${P.filter(x=>x.t===tipo).map(pizzaCarta).join("")}</div>`
-        :`<ul class="bebidas">${P.filter(x=>x.t===tipo).map(bebidaCarta).join("")}</ul>`}
+      ${tipo==="pizza"?`<div class="carta-pz">${P.filter(x=>x.t===tipo&&!x.oculto).map(pizzaCarta).join("")}</div>`
+        :`<ul class="bebidas">${P.filter(x=>x.t===tipo&&!x.oculto).map(bebidaCarta).join("")}</ul>`}
     </section>`).join("");
   marcarEnCarro();
   pintarAvisoCarta();
@@ -408,7 +452,7 @@ function pintarPedido(){
   const l=localSel();
   $("coLineas").innerHTML=S.carro.map(lineaHTML).join("");
   // Bebidas sugeridas que aún no están en el pedido
-  const beb=P.filter(x=>x.t==="bebida"&&!S.carro.some(c=>c.i===x.i));
+  const beb=P.filter(x=>x.t==="bebida"&&!x.oculto&&!S.carro.some(c=>c.i===x.i));
   $("upsell").hidden=!beb.length||!S.carro.some(c=>P[c.i].t==="pizza");
   $("upsellList").innerHTML=beb.map(it=>`<button type="button" class="up" data-add="${it.i}" aria-label="${esc(t("quick_add",{n:nm(it.n)}))}">${foto(it)}<b>${esc(nm(it.n))}</b><span>${eur(it.p)}</span><span class="mas" aria-hidden="true">${ICO.mas}</span></button>`).join("");
   $("coLocal").textContent=l?"Pizzi "+l.n:t("pick_store");
@@ -417,10 +461,11 @@ function pintarPedido(){
   $("coHora").textContent=l?horaCorta(l,S.hora):t("first_store");
   $("coTot").textContent=eur(total());$("confTot").textContent=eur(total());
   // Local con tienda online propia
-  const online=!!(l&&l.pedidoUrl);
+  const online=!PEDIDOS_WEB&&!!(l&&l.pedidoUrl);
   $("avisoOnline").hidden=!online;$("bloqueAcepto").hidden=online;$("ctaConfirmar").hidden=online;$("waNota").hidden=online;$("cajaDatos").hidden=online;
   if(online){$("irOnline").href=l.pedidoUrl;$("avisoTxt").innerHTML=t("online_note",{n:esc(l.n)});}
   $("privFirst").textContent=t("priv_first",{r:EMPRESA.razon});
+  if(PEDIDOS_WEB){$("waNota").hidden=true;$("pagoT").textContent=t("pay_web");$("pagoP").textContent=t("pay_web_p");}
 }
 // Datos recordados
 if(S.perfil.nom)$("cNombre").value=S.perfil.nom;
@@ -444,10 +489,25 @@ $("confirmar").onclick=()=>{
   S.perfil.rec=rec;S.perfil.ultimo=S.carro.map(c=>({n:c.n,q:c.q,nota:c.nota}));
   if(rec){S.perfil.nom=nom;S.perfil.tel=tel;}else{delete S.perfil.nom;delete S.perfil.tel;}
   guardarPerfil();
+  if(PEDIDOS_WEB){enviarWeb($("confirmar"),()=>errorEn("eDatos",t("app_err_send")));return;}
   pintarHecho();
   window.open(S.pedido.wa,"_blank","noopener");
   location.hash="hecho";S.carro=[];actCarro();
 };
+/* Pedido web: lo envía el conector (js/conector.js) y se pasa al seguimiento.
+   Lo usan el escritorio y la app móvil. */
+async function enviarWeb(boton,alFallar,destino="hecho"){
+  const o=S.pedido,txt=boton.innerHTML;
+  boton.disabled=true;boton.innerHTML=`<span>${esc(t("app_sending"))}</span>`;
+  try{
+    const s=slots(o.local).find(x=>x.v===o.horaVal)||{v:o.horaVal};
+    const r=await TPV.enviar({local:o.local,items:o.items.map(c=>({ref:P[c.i]&&P[c.i].ref,n:c.n,q:c.q,u:c.u,nota:c.nota})),
+      hora:s,tipo:o.tipo||"recoger",cliente:{nom:o.nom,tel:o.tel,email:o.email},total:o.total});
+    o.web=true;o.num=r.ref;o.demo=r.demo;
+    pintarHecho();location.hash=destino;S.carro=[];actCarro();
+  }catch(e){alFallar(e);}
+  finally{boton.disabled=false;boton.innerHTML=txt;}
+}
 
 /* ---------- CONFIRMACIÓN ---------- */
 function horaCortaDe(o){if(o.horaVal==="asap")return hhmm(o.t0+15);const[of,m]=o.horaVal.split("|").map(Number);return (of===0?"":nombreDia(of)+", ")+hhmm(m);}
@@ -460,6 +520,9 @@ function pintarHecho(){
     <div class="tk-items">${o.items.map(c=>`<div class="it"><span>${c.q}× ${esc(nm(c.n))}${c.nota?`<small>“${esc(c.nota)}”</small>`:""}</span><span>${eur(c.u*c.q)}</span></div>`).join("")}</div>
     <div class="tk-tot"><span>${t("total")}</span><span>${eur(o.total)}</span></div>
     <span class="sello">${t("pay_stamp")}</span>`;
+  document.querySelector("#v-hecho .ok-paso").hidden=!!o.web;
+  $("okEstado").hidden=!o.web;
+  if(o.web)pintarEstadoWeb($("okEstado"),o);
   $("okMaps").href=o.local.maps;
   $("okTel").href="tel:"+o.local.tel.replace(/\s/g,"");
   // Comanda para WhatsApp (siempre en español, para el local)
@@ -479,6 +542,14 @@ function pintarHecho(){
   const a=$("ics");a.href=URL.createObjectURL(new Blob([ics],{type:"text/calendar"}));a.download="pedido-pizzi-"+o.num+".ics";
 }
 $("nuevo").onclick=()=>{S.pedido=null;};
+
+/* Seguimiento del pedido web: recibido → en el horno → listo para recoger */
+function pintarEstadoWeb(el,o){
+  const e=TPV.estado(o.num)||{paso:0},pasos=["st_0","st_1","st_2"];
+  el.innerHTML=`${o.demo?`<p class="demo-sello">${esc(t("app_demo_badge"))}</p>`:""}
+    <ol class="pasos-e">${pasos.map((k,n)=>`<li class="${n<e.paso?"hecho":n===e.paso?"ahora":""}"><span class="pe-p"></span><b>${esc(t(k))}</b>${n===e.paso?`<small>${esc(t(k+"p"))}</small>`:""}</li>`).join("")}</ol>`;
+}
+setInterval(()=>{if(S.pedido&&S.pedido.web){if(VISTA==="hecho"&&!$("okEstado").hidden)pintarEstadoWeb($("okEstado"),S.pedido);document.dispatchEvent(new Event("pizzi:estado"));}},4000);
 
 /* ---------- Router ---------- */
 const VISTAS=["inicio","carta","locales","pedido","hecho","legal"];
@@ -555,8 +626,12 @@ document.addEventListener("focusout",e=>{if(esCampo(e.target))setTimeout(()=>{if
 
 /* ---------- Arranque ---------- */
 if(CONFIG.demo)$("demo").hidden=false;
+if(PEDIDOS_WEB)$("demo").textContent=t("demo_web");
 asegurarHora();
 aplicarIdioma();pintarPie();ir();actCarro();
+if(S.local!==null)cargarCartaTPV(LOCALES[S.local]);
+/* Las franjas de recogida del TPV se renuevan cada minuto */
+setInterval(()=>{const l=localSel();if(PEDIDOS_WEB&&l&&TPV.refDe(l))TPV.franjas(l).then(()=>{asegurarHora();refrescarCab();}).catch(()=>{});},60000);
 /* Cada minuto actualiza solo lo que depende de la hora (abierto/cerrado, franjas), sin repintar la carta */
 let firmaHora="";
 const firma=()=>LOCALES.map(l=>abierto(l)+"|"+hrTexto(l)).join()+"|"+horaCorta(localSel(),S.hora)+"|"+t(ahora()<720&&ahora()>=360?"hi_m":ahora()<1230&&ahora()>=720?"hi_a":"hi_n");
