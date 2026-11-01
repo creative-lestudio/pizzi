@@ -94,7 +94,7 @@ const TPV=(()=>{
   const franjasGuardadas=l=>{const c=cache[refDe(l)];return c&&c.franjas&&Date.now()-c.tf<120e3?c.franjas:null;};
 
   /* ---------- Envío del pedido ----------
-     pedido: {local, items:[{ref,n,q,u,nota,mods}], hora:{v,iso}, tipo:"local"|"recoger", alergias:[...], comentario, cliente:{nom,tel,email}, total} */
+     pedido: {local, items:[{ref,n,q,u,nota,mods}], hora:{v,iso}, alergias:[...], comentario, cliente:{nom,tel,email}, total} */
   const GUARDA="pizzi-pedidos-web";
   const leer=()=>{try{return JSON.parse(localStorage.getItem(GUARDA)||"{}")||{};}catch(e){return{};}};
   const escribir=o=>{try{localStorage.setItem(GUARDA,JSON.stringify(o));}catch(e){}};
@@ -124,8 +124,6 @@ const TPV=(()=>{
     const c=await carta(pedido.local);if(!c)throw new Error("El local no tiene carta en Shift4");
     return{menuScheduleRef:c.schedule,orderTypeRef:c.orderType,
       expectedTime:pedido.hora.v==="asap"?null:pedido.hora.iso,
-      // Comer aquí: si la tienda no tiene un tipo propio para sala, va como para llevar con la nota «COMER EN LOCAL»
-      dineIn:pedido.tipo==="local",
       items:pedido.items.map(x=>({ref:x.ref,quantity:x.q,instructions:x.nota||null,modifiers:(x.mods||[]).map(m=>({modifierSetRef:m.set,modifierRef:m.ref,quantity:1}))})),
       // Alergias y comentario van como petición especial del pedido, delante para que cocina las vea
       specialRequest:[(pedido.alergias||[]).length?"ALERGIAS: "+pedido.alergias.join(", "):"",pedido.comentario||""].filter(Boolean).join(" · ")||null,

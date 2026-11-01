@@ -16,7 +16,7 @@ const CONFIG={
   conector:{
     envio:"demo",
     pedidosWeb:false,
-    dominios:["pizzi.pages.dev","www.pizzi.es","pizzi.es"]
+    dominios:["pizzi.pages.dev","creative-lestudio.github.io","www.pizzi.es","pizzi.es"]
   },
   /* REPARTO A DOMICILIO (app móvil)
      - centro / radioCentro (km): dentro de este círculo es «zona céntrica» y se ofrecen Uber Eats y Glovo.

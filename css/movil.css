@@ -303,10 +303,11 @@ html.con-barra .toast{bottom:calc(96px + var(--sab))}
 .ah-hero .deco span{display:block; color:var(--am-rosa)}
 .ah-nov{margin:12px 0 0; font-size:19px; color:#fff}
 
-.ah-hoja{margin:0 -16px; padding:26px 20px calc(26px + var(--sab)); border-radius:var(--r-xl) var(--r-xl) 0 0; background:#fff; color:var(--tinta); box-shadow:0 -14px 40px rgba(40,0,6,.3); display:flex; flex-direction:column; gap:14px}
+.ah-hoja{position:relative; margin:0 -16px; padding:30px 20px calc(30px + var(--sab)); border-radius:32px 32px 0 0; background:#fff; color:var(--tinta); box-shadow:0 -14px 40px rgba(40,0,6,.3); display:flex; flex-direction:column; gap:14px}
+.ah-hoja::before{content:""; position:absolute; top:10px; left:50%; width:44px; height:5px; margin-left:-22px; border-radius:3px; background:var(--rosa)}
 .ah-hoja>h2{font-size:clamp(36px,10.5vw,44px); color:var(--vino)}
-.ah-local{display:flex; align-items:center; gap:10px; width:100%; margin-top:-6px; padding:6px 0; border:0; background:none; color:var(--vino); text-align:left; cursor:pointer; font:inherit}
-.ah-local>img{width:26px; height:26px; flex:none}
+.ah-local{display:flex; align-items:center; gap:12px; width:100%; margin-top:-2px; padding:12px 14px; border:0; border-radius:18px; background:var(--rosa-cc); color:var(--vino); text-align:left; cursor:pointer; font:inherit}
+.ah-local>img{width:34px; height:34px; flex:none; padding:5px; border-radius:50%; background:#fff}
 .ah-local>span{flex:1; min-width:0; display:flex; flex-direction:column; gap:3px}
 .ah-local b{font:600 19px/1.15 var(--cond); letter-spacing:.02em; -webkit-text-stroke:var(--t-r) currentColor}
 .ah-local b span{font-weight:400; color:var(--suave)}
@@ -317,15 +318,19 @@ html.con-barra .toast{bottom:calc(96px + var(--sab))}
 .ah-local>svg{width:20px; height:20px; flex:none; transform:rotate(-90deg)}
 .ah-local .am-pulso{margin:4px 0 0 2px}
 
-.ah-tipos{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:4px}
-.ah-tipos button{position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; min-height:108px; padding:12px 6px; border:0; border-radius:18px; background:#fff; color:var(--vino); cursor:pointer; box-shadow:inset 0 0 0 1.5px var(--am-borde); transition:transform .15s, background-color .15s, box-shadow .15s; font:inherit; -webkit-tap-highlight-color:transparent}
-.ah-tipos button:active{transform:scale(.96)}
-.ah-tipos img,.ah-ic{width:48px; height:48px; display:grid; place-items:center}
-.ah-ic svg{width:40px; height:40px}
-.ah-tipos b{font:600 16px/1.05 var(--cond); letter-spacing:.03em; text-transform:uppercase; text-align:center; -webkit-text-stroke:var(--t-r) currentColor}
-.ah-tipos button[aria-checked="true"]{background:var(--rosa-cc); box-shadow:inset 0 0 0 2px var(--vino)}
-.ah-ok{position:absolute; top:-9px; right:-9px; width:28px; height:28px; display:none; place-items:center; border-radius:50%; background:var(--acento); color:#fff; box-shadow:0 0 0 3px #fff}
-.ah-ok svg{width:16px; height:16px}
+.ah-tipos{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:4px}
+.ah-tipos button{position:relative; display:flex; align-items:center; gap:12px; min-height:84px; padding:14px; border:0; border-radius:20px; background:#fff; color:var(--vino); cursor:pointer; text-align:left;
+  box-shadow:inset 0 0 0 1.5px var(--am-borde),0 6px 16px rgba(40,0,6,.06); transition:transform .15s, background-color .15s, box-shadow .15s; font:inherit; -webkit-tap-highlight-color:transparent}
+.ah-tipos button:active{transform:scale(.97)}
+.ah-ic{width:46px; height:46px; flex:none; display:grid; place-items:center; border-radius:14px; background:var(--rosa-cc); transition:background-color .15s, color .15s}
+.ah-ic svg{width:26px; height:26px}
+.ah-tt{display:flex; flex-direction:column; gap:4px; min-width:0}
+.ah-tt b{font:600 17px/1.05 var(--cond); letter-spacing:.03em; text-transform:uppercase; -webkit-text-stroke:var(--t-r) currentColor}
+.ah-tt small{font-size:14px; line-height:1.15; color:var(--suave)}
+.ah-tipos button[aria-checked="true"]{background:var(--rosa-cc); box-shadow:inset 0 0 0 2px var(--vino),0 10px 22px rgba(150,4,30,.14)}
+.ah-tipos button[aria-checked="true"] .ah-ic{background:var(--vino); color:#fff}
+.ah-ok{position:absolute; top:-8px; right:-8px; width:26px; height:26px; display:none; place-items:center; border-radius:50%; background:var(--acento); color:#fff; box-shadow:0 0 0 3px #fff}
+.ah-ok svg{width:15px; height:15px}
 .ah-tipos button[aria-checked="true"] .ah-ok{display:grid; animation:ap-pop .3s ease}
 .ah-desc{margin:0; min-height:2.6em; font-size:17px; line-height:1.3; color:var(--suave)}
 
@@ -340,8 +345,9 @@ html.con-barra .toast{bottom:calc(96px + var(--sab))}
 
 /* ---------- Mapa de locales ---------- */
 .am-mapa{position:fixed; inset:0; z-index:60; background:var(--rosa-cc)}
-.am-mapa-m{position:absolute; inset:0}
-.am-mapa-m.sin{background:var(--rosa-cc) url(../assets/img/fondo-baldosas.webp) center/cover; opacity:.35}
+/* Con id: la hoja de estilos de MapLibre pone position:relative a .maplibregl-map y el mapa quedaría sin alto */
+#amMapaM{position:absolute; inset:0}
+.am-mapa-m.sin{background:#FBF3F2}
 .am-mapa-b{position:absolute; right:16px; z-index:500; width:46px; height:46px; display:grid; place-items:center; border:0; border-radius:50%; background:#fff; color:var(--vino); box-shadow:0 6px 18px rgba(40,0,6,.25); cursor:pointer}
 .am-mapa-b svg{width:20px; height:20px}
 .am-mapa-x{top:calc(var(--sat) + 16px)}
@@ -350,7 +356,7 @@ html.con-barra .toast{bottom:calc(96px + var(--sab))}
 .am-mapa-fl{width:34px; height:34px; display:grid; place-items:center; border:0; border-radius:50%; background:#fff; color:var(--vino); box-shadow:0 4px 12px rgba(40,0,6,.2); cursor:pointer}
 .am-mapa-fl svg{width:18px; height:18px}
 .am-mapa-fl[disabled]{opacity:.35; cursor:default}
-.am-mapa-card{position:relative; display:flex; flex-direction:column; gap:10px; padding:24px 18px 18px; border-radius:var(--r-xl); background:#fff; color:var(--tinta); box-shadow:0 14px 40px rgba(40,0,6,.3); animation:am-in .25s ease both}
+.am-mapa-card{position:relative; min-width:0; display:flex; flex-direction:column; gap:10px; padding:24px 18px 18px; border-radius:28px; background:rgba(255,255,255,.97); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); color:var(--tinta); box-shadow:0 14px 40px rgba(40,0,6,.3); animation:am-in .25s ease both}
 .am-mc-d{position:absolute; top:-14px; left:16px; padding:6px 12px; border-radius:999px; background:#fff; color:var(--vino); box-shadow:0 4px 12px rgba(40,0,6,.2); font:600 14px/1 var(--cond); letter-spacing:.04em; -webkit-text-stroke:var(--t-r) currentColor}
 .am-mapa-card>b.deco{font-size:30px; color:var(--vino)}
 .am-mc-h{font-size:15px; color:var(--suave)}
@@ -365,26 +371,17 @@ html.con-barra .toast{bottom:calc(96px + var(--sab))}
 .am-mc-ok{position:absolute; right:16px; bottom:16px; width:58px; height:58px; display:grid; place-items:center; border:0; border-radius:50%; background:var(--vino); color:#fff; box-shadow:0 8px 20px rgba(150,4,30,.35); cursor:pointer}
 .am-mc-ok svg{width:24px; height:24px}
 .am-mc-ok:active{transform:scale(.94)}
-.am-pin{background:none; border:0}
-.am-pin img{width:40px; height:40px; filter:drop-shadow(0 3px 6px rgba(40,0,6,.35)); transition:transform .2s}
-.am-pin.on img{transform:scale(1.35) translateY(-4px)}
-.am-yo{background:none; border:0}
-.am-yo span{display:block; width:18px; height:18px; margin:2px; border-radius:50%; background:var(--acento); border:3px solid #fff; box-shadow:0 0 0 10px rgba(251,114,165,.25)}
-/* Mapa de OpenStreetMap en tonos suaves para que encaje con la marca */
-.am-mapa .leaflet-tile-pane{filter:grayscale(.85) sepia(.25) hue-rotate(-20deg) brightness(1.04) contrast(.92)}
-.am-mapa .leaflet-control-attribution{font-size:10px; margin-bottom:calc(var(--sab) + 2px)}
+/* Chinchetas: icono de Pizzi en una burbuja blanca; la del local elegido crece y se pone vino */
+.am-pin{padding:0; border:0; background:none; cursor:pointer}
+.am-pin span{display:grid; place-items:center; width:42px; height:42px; border-radius:50% 50% 50% 6px; transform:rotate(-45deg); background:#fff; box-shadow:0 6px 16px rgba(80,0,16,.28); transition:transform .25s cubic-bezier(.2,.8,.2,1), background-color .2s}
+.am-pin img{width:24px; height:24px; transform:rotate(45deg)}
+.am-pin.on{z-index:2}
+.am-pin.on span{background:var(--vino); transform:rotate(-45deg) scale(1.22)}
+.am-pin.on img{filter:brightness(0) invert(1)}
+.am-yo span{display:block; width:18px; height:18px; border-radius:50%; background:var(--acento); border:3px solid #fff; box-shadow:0 0 0 10px rgba(251,114,165,.22),0 2px 6px rgba(80,0,16,.3); animation:am-yo 2s ease-out infinite}
+@keyframes am-yo{50%{box-shadow:0 0 0 16px rgba(251,114,165,.08),0 2px 6px rgba(80,0,16,.3)}}
+.am-mapa .maplibregl-ctrl-attrib{font-size:10px; margin-bottom:calc(var(--sab) + 2px)!important}
 
-/* ---------- Aviso de distancia ---------- */
-.am-aviso{position:fixed; inset:0; z-index:70; display:flex; align-items:flex-end; background:rgba(30,0,6,.55)}
-.am-aviso-c{width:100%; padding:30px 22px calc(24px + var(--sab)); border-radius:var(--r-xl) var(--r-xl) 0 0; background:#fff; color:var(--tinta); text-align:center; animation:am-in .25s ease both}
-.am-aviso-ic{display:inline-grid; width:44px; height:44px; place-items:center; color:var(--vino)}
-.am-aviso-ic svg{width:36px; height:36px}
-.am-aviso-c p{margin:12px 0 22px; font-size:19px; line-height:1.35}
-.am-aviso-c p b{color:var(--vino)}
-.am-aviso-b{display:grid; grid-template-columns:1fr 1fr; gap:12px}
-.am-aviso-b button{min-height:56px; border:0; border-radius:999px; cursor:pointer; font:600 18px/1 var(--cond); letter-spacing:.04em; text-transform:uppercase; -webkit-text-stroke:var(--t-m) currentColor}
-#amAvisoNo{background:#fff; color:var(--vino); box-shadow:inset 0 0 0 2px var(--vino)}
-#amAvisoSi{background:var(--vino); color:#fff}
 
 /* =========================================================
    Ordenador: la misma app, centrada en una columna sobre la foto (como Honest Greens)
@@ -440,3 +437,20 @@ html.con-barra .toast{bottom:calc(96px + var(--sab))}
 .ap-alerg button[aria-pressed="true"]{background:var(--vino); color:#fff}
 .ap-link{display:inline-block; margin:12px 0 2px; color:var(--vino); font-size:15px}
 .ap-cuenta{align-self:flex-end; font-size:13px; color:var(--suave)}
+
+/* ---------- «Las más pedidas» en el inicio ---------- */
+.ah-top{margin:10px -20px 0; padding-top:18px; border-top:1px solid var(--linea)}
+.ah-top-cab{display:flex; align-items:baseline; justify-content:space-between; gap:12px; padding:0 20px 12px}
+.ah-top-cab h3{font-size:28px; color:var(--vino)}
+.ah-top-cab a{color:var(--vino); font:600 14px/1 var(--cond); letter-spacing:.08em; text-transform:uppercase; -webkit-text-stroke:var(--t-r) currentColor}
+.ah-carril{display:flex; gap:12px; overflow-x:auto; padding:2px 20px 10px; scroll-snap-type:x mandatory; scroll-padding:0 20px; scrollbar-width:none}
+.ah-carril::-webkit-scrollbar{display:none}
+.ah-pz{position:relative; flex:0 0 148px; scroll-snap-align:start; display:flex; flex-direction:column; gap:4px; padding:10px 10px 14px; border-radius:22px; background:var(--rosa-cc); color:var(--vino); text-decoration:none; transition:transform .15s}
+.ah-pz:active{transform:scale(.97)}
+.ah-pz-f{display:block; aspect-ratio:1; margin-bottom:6px}
+.ah-pz-f img{width:100%; height:100%; object-fit:contain; filter:drop-shadow(0 8px 12px rgba(80,0,16,.25)); transition:transform .3s}
+.ah-pz:hover .ah-pz-f img{transform:rotate(-8deg) scale(1.04)}
+.ah-pz i{position:absolute; top:10px; left:10px; padding:4px 9px; border-radius:999px; background:var(--acento); color:#fff; font:600 11px/1 var(--cond); font-style:normal; letter-spacing:.08em; text-transform:uppercase}
+.ah-pz b{font:400 20px/1 var(--deco); text-transform:uppercase; -webkit-text-stroke:0}
+.ah-pz span:last-child{font:600 15px/1 var(--cond); color:var(--tinta)}
+@media (min-width:700px){.ah-top{margin:10px -40px 0}.ah-top-cab{padding:0 40px 12px}.ah-carril{padding:2px 40px 10px; scroll-padding:0 40px}}
