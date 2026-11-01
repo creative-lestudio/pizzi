@@ -62,13 +62,19 @@ const hrefPedir=l=>PEDIDOS_WEB?"#pedir":l.pedidoUrl||"#carta";
 const pillPedir=(href,txt,extra="")=>`<a class="am-pill" href="${esc(href)}"${extra}><span class="am-pill-t"><b>${esc(txt)}</b></span><span class="am-flecha">${FLECHA}</span></a>`;
 
 /* ---------- Inicio ----------
-   Tipo de pedido: local (comer aquí) · recoger · domicilio. Se recuerda en el dispositivo. */
-const TIPOS=["local","recoger","domicilio"];
+   Tipo de pedido: recoger · domicilio (Pizzi solo trabaja para llevar y a domicilio). Se recuerda en el dispositivo. */
+const TIPOS=["recoger","domicilio"];
 if(!TIPOS.includes(S.perfil.tipo))S.perfil.tipo="recoger";
 const tipoPedido=()=>S.perfil.tipo;
-/* Para comer aquí, el cliente debería estar en el local: a más de 500 m se le pregunta */
-const LEJOS=0.5;
-const lejosDe=i=>tipoPedido()==="local"&&conPos()&&DIST[i]>LEJOS;
+
+/* «Las más pedidas»: tarjetas con la foto de la pizza; al tocar se abre la carta */
+function pintarTop(){
+  const its=TOP.map(porNombre).filter(x=>x&&!x.oculto);
+  $("amTop").innerHTML=its.map(it=>`<a class="ah-pz" href="${PEDIDOS_WEB?"#pedir":"#lacarta"}" data-am-top="${it.i}">
+    <span class="ah-pz-f"><img src="${imgDe(it,"-s")}" alt="" loading="lazy"></span>
+    ${it.badge?`<i>${esc(t(it.badge==="top"?"tag_top":"tag_fresh"))}</i>`:""}
+    <b>${esc(cap(nm(it.n).toLowerCase()))}</b><span>${eur(it.p)}</span></a>`).join("");
+}
 
 function pintarHola(){
   const h=ahora(),nom=(S.perfil.nom||"").trim().split(/\s+/)[0];
@@ -78,7 +84,7 @@ function pintarHola(){
   const fallo=["denied","err","none"].includes(e);
   $("amCercaT").innerHTML=busca?`<b>${esc(t("app_locating"))}</b><span class="am-pulso" aria-hidden="true"></span>`
     :!l?`<b>${esc(t("choose_store"))}</b>`
-    :`<b>${esc(l.n)}${DIST[S.local]!=null?` <span>(${esc(fmtKm(DIST[S.local]))})</span>`:""}</b><small><i class="${abierto(l)?"ab":"ce"}"></i>${esc(abierto(l)?t("app_open"):t("app_closed"))} · ${esc(hrTexto(l))}</small>`;
+    :`<b>${esc(l.n)}${DIST[S.local]!=null?` <span>· ${esc(fmtKm(DIST[S.local]))}</span>`:""}</b><small><i class="${abierto(l)?"ab":"ce"}"></i>${esc(abierto(l)?t("app_open"):t("app_closed"))} · ${esc(hrTexto(l))}</small>`;
   $("amMsg").textContent=fallo&&!l?t(e==="denied"?"near_denied":e==="none"?"near_none":"near_err"):e==="aprox"&&!APP.manual?t("app_approx"):"";
   document.querySelectorAll("[data-am-tipo]").forEach(b=>b.setAttribute("aria-checked",String(b.dataset.amTipo===tipo)));
   $("amTipoTxt").textContent=t("tipo_"+tipo+"_p");
@@ -89,59 +95,73 @@ function pintarHola(){
   // Repetir el último pedido (solo con pedidos web)
   const ult=(S.perfil.ultimo||[]).filter(x=>{const it=porNombre(x.n);return it&&!it.oculto;});
   $("amRepite").hidden=!(PEDIDOS_WEB&&ult.length&&tipo!=="domicilio"&&l);
-}
-
-/* ---------- Aviso de distancia ---------- */
-function avisoDistancia(i,seguir,cambiar){
-  $("amAvisoT").innerHTML=t("mapa_lejos",{d:esc(fmtKm(DIST[i]))});
-  $("amAviso").hidden=false;$("amAvisoSi").focus();
-  $("amAvisoSi").onclick=()=>{$("amAviso").hidden=true;seguir();};
-  $("amAvisoNo").onclick=()=>{$("amAviso").hidden=true;if(cambiar)cambiar();};
+  pintarTop();
 }
 
 /* ---------- Mapa de locales ----------
-   Leaflet (cdnjs) con el mapa de OpenStreetMap; se carga solo al abrir el mapa.
-   Si no carga, siguen funcionando las tarjetas de los locales. */
+   MapLibre (cdnjs) con el mapa vectorial de OpenFreeMap (gratis, sin clave), recoloreado con los
+   tonos de Pizzi. Se carga solo al abrir el mapa; si no carga, siguen funcionando las tarjetas. */
 const MAPA={m:null,marcas:[],yo:null,k:0};
-function cargarLeaflet(){
-  if(window.L)return Promise.resolve();
+const ESTILO_MAPA="https://tiles.openfreemap.org/styles/positron";
+function cargarMapLibre(){
+  if(window.maplibregl)return Promise.resolve();
   return new Promise((ok,ko)=>{
-    const c=document.createElement("link");c.rel="stylesheet";c.href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css";document.head.appendChild(c);
-    const j=document.createElement("script");j.src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js";j.onload=ok;j.onerror=ko;document.head.appendChild(j);
+    const c=document.createElement("link");c.rel="stylesheet";c.href="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.min.css";document.head.appendChild(c);
+    const j=document.createElement("script");j.src="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.min.js";j.onload=ok;j.onerror=ko;document.head.appendChild(j);
+  });
+}
+/* Colores de la marca sobre el estilo claro: agua rosa, parques rosa claro, calles blancas */
+function tintarMapa(m){
+  const st=m.getStyle();if(!st)return;
+  st.layers.forEach(ly=>{
+    const id=ly.id,set=(p,v)=>{try{m.setPaintProperty(id,p,v);}catch(e){}};
+    if(ly.type==="background")set("background-color","#FBF3F2");
+    else if(/water/.test(id)&&ly.type==="fill")set("fill-color","#F2C9C7");
+    else if(/park|landuse|landcover|grass|wood/.test(id)&&ly.type==="fill")set("fill-color","#F6E2E1");
+    else if(/building/.test(id)&&ly.type==="fill")set("fill-color","#F3E7E6");
+    else if(ly.type==="line"&&/road|street|highway|bridge|tunnel/.test(id))set("line-color","#FFFFFF");
+    else if(ly.type==="symbol"&&/label|name|place|poi/.test(id)){set("text-color","#8A5B5E");set("text-halo-color","#FBF3F2");}
   });
 }
 function abrirMapa(){
   MAPA.k=Math.max(0,ORDEN.indexOf(S.local??ORDEN[0]));
   $("amMapa").hidden=false;document.documentElement.classList.add("bloqueado");
   pintarCardMapa();
-  cargarLeaflet().then(iniciarMapa).catch(()=>$("amMapaM").classList.add("sin"));
+  cargarMapLibre().then(iniciarMapa).catch(()=>$("amMapaM").classList.add("sin"));
 }
 function cerrarMapa(){$("amMapa").hidden=true;document.documentElement.classList.remove("bloqueado");}
 function iniciarMapa(){
+  const l0=LOCALES[ORDEN[MAPA.k]];
   if(!MAPA.m){
-    MAPA.m=L.map("amMapaM",{zoomControl:false,attributionControl:true});
-    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'}).addTo(MAPA.m);
-    MAPA.marcas=LOCALES.map((l,i)=>L.marker([l.lat,l.lng],{title:"Pizzi "+l.n,icon:L.divIcon({className:"am-pin",html:'<img src="assets/img/ic-ubicacion.webp" alt="">',iconSize:[40,40],iconAnchor:[20,38]})})
-      .addTo(MAPA.m).on("click",()=>{MAPA.k=ORDEN.indexOf(i);pintarCardMapa();}));
-  }
-  MAPA.m.invalidateSize();
+    MAPA.m=new maplibregl.Map({container:"amMapaM",style:ESTILO_MAPA,center:[l0.lng,l0.lat],zoom:14.6,attributionControl:{compact:true}});
+    MAPA.m.on("styledata",()=>tintarMapa(MAPA.m));
+    // Créditos plegados (botón «i») para que no tapen la tarjeta
+    MAPA.m.once("load",()=>{const at=$("amMapaM").querySelector(".maplibregl-ctrl-attrib");if(at)at.classList.remove("maplibregl-compact-show");});
+    MAPA.marcas=LOCALES.map((l,i)=>{
+      const el=document.createElement("button");el.type="button";el.className="am-pin";el.setAttribute("aria-label","Pizzi "+l.n);
+      el.innerHTML='<span><img src="assets/img/ic-ubicacion.webp" alt=""></span>';
+      el.onclick=()=>{MAPA.k=ORDEN.indexOf(i);pintarCardMapa();};
+      return new maplibregl.Marker({element:el,anchor:"bottom"}).setLngLat([l.lng,l.lat]).addTo(MAPA.m);
+    });
+  }else MAPA.m.resize();
   if(conPos()){
-    if(!MAPA.yo)MAPA.yo=L.marker([YO.lat,YO.lng],{interactive:false,icon:L.divIcon({className:"am-yo",html:"<span></span>",iconSize:[22,22],iconAnchor:[11,11]})}).addTo(MAPA.m);
-    else MAPA.yo.setLatLng([YO.lat,YO.lng]);
+    if(!MAPA.yo){const el=document.createElement("div");el.className="am-yo";el.innerHTML="<span></span>";MAPA.yo=new maplibregl.Marker({element:el}).setLngLat([YO.lng,YO.lat]).addTo(MAPA.m);}
+    else MAPA.yo.setLngLat([YO.lng,YO.lat]);
   }
   centrarMapa(false);
 }
 function centrarMapa(animar=true){
   if(!MAPA.m)return;
   const i=ORDEN[MAPA.k],l=LOCALES[i];
-  MAPA.marcas.forEach((m,j)=>{const el=m.getElement();if(el)el.classList.toggle("on",j===i);});
-  MAPA.m.setView([l.lat-0.0025,l.lng],15,{animate:animar});
+  MAPA.marcas.forEach((m,j)=>m.getElement().classList.toggle("on",j===i));
+  // El centro sube un poco para que el local no quede debajo de la tarjeta
+  MAPA.m.easeTo({center:[l.lng,l.lat],zoom:innerWidth<700?14.2:14.8,padding:{bottom:Math.min(320,innerHeight*.4),top:40},duration:animar?700:0});
 }
 function pintarCardMapa(){
   const i=ORDEN[MAPA.k],l=LOCALES[i],ab=abierto(l),d=DIST[i];
   const hoy=turnos(l,hoyIdx());
   $("amMapaCard").innerHTML=`
-    ${d!=null?`<span class="am-mc-d">${esc(t(d>LEJOS?"mapa_lejos_b":"mapa_cerca_b"))} · ${esc(fmtKm(d))}</span>`:""}
+    ${d!=null?`<span class="am-mc-d">${esc(t(d>1?"mapa_lejos_b":"mapa_cerca_b"))} · ${esc(fmtKm(d))}</span>`:""}
     <b class="deco">${esc(l.n)}</b>
     <span class="am-mc-h"><i class="${ab?"ab":"ce"}"></i>${esc(hoy.length?fmtTurnos(hoy):t("closed"))} · València</span>
     <div class="am-mc-f"><span class="am-mc-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg></span>
@@ -155,24 +175,29 @@ function pintarCardMapa(){
   centrarMapa();
 }
 function elegirEnMapa(i){
-  const hecho=()=>{APP.manual=true;APP.abierto=null;elegirLocal(i);refrescar();cerrarMapa();pintarApp();};
-  if(lejosDe(i))avisoDistancia(i,hecho);else hecho();
+  APP.manual=true;APP.abierto=null;elegirLocal(i);refrescar();cerrarMapa();pintarApp();
 }
 $("amCerca").onclick=abrirMapa;
 $("appM").addEventListener("click",e=>{const m=e.target.closest("[data-am-mapa]");if(m){e.preventDefault();abrirMapa();}});
 $("amMapaX").onclick=cerrarMapa;
 $("amMapaAnt").onclick=()=>{if(MAPA.k>0){MAPA.k--;pintarCardMapa();}};
 $("amMapaSig").onclick=()=>{if(MAPA.k<ORDEN.length-1){MAPA.k++;pintarCardMapa();}};
-$("amMapaYo").onclick=()=>{if(conPos()&&MAPA.m)MAPA.m.setView([YO.lat,YO.lng],15);else buscar();};
+$("amMapaYo").onclick=()=>{if(conPos()&&MAPA.m)MAPA.m.easeTo({center:[YO.lng,YO.lat],zoom:15});else buscar();};
 $("amMapaCard").addEventListener("click",e=>{const b=e.target.closest("[data-am-elegir]");if(b)elegirEnMapa(+b.dataset.amElegir);});
-document.addEventListener("keydown",e=>{if(e.key==="Escape"){if(!$("amAviso").hidden)$("amAviso").hidden=true;else if(!$("amMapa").hidden)cerrarMapa();}});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("amMapa").hidden)cerrarMapa();});
 
 /* Tipo de pedido, botón principal y repetir pedido */
 document.querySelectorAll("[data-am-tipo]").forEach(b=>b.onclick=()=>{S.perfil.tipo=b.dataset.amTipo;guardarPerfil();pintarHola();});
 $("amAqui").addEventListener("click",e=>{
-  const tipo=tipoPedido();if(tipo==="domicilio")return;
-  if(S.local===null){e.preventDefault();abrirMapa();return;}
-  if(lejosDe(S.local)){e.preventDefault();const href=$("amAqui").href;avisoDistancia(S.local,()=>{location.href=href;},abrirMapa);}
+  if(tipoPedido()==="domicilio")return;
+  if(S.local===null){e.preventDefault();abrirMapa();}
+});
+/* Pizza destacada: con pedidos web abre su ficha en la carta del local */
+$("amTop").addEventListener("click",e=>{
+  const c=e.target.closest("[data-am-top]");if(!c||!PEDIDOS_WEB)return;
+  e.preventDefault();
+  if(S.local===null){abrirMapa();return;}
+  location.hash="pedir";setTimeout(()=>abrirProdApp(+c.dataset.amTop),350);
 });
 $("amRepite").onclick=()=>{
   (S.perfil.ultimo||[]).forEach(x=>{const it=porNombre(x.n);if(it&&!it.oculto)sumar(it.i,x.q,x.nota);});

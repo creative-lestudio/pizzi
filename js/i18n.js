@@ -237,6 +237,8 @@ Object.assign(I,{
 "app_tipo":["Tipo de pedido","Order type","Tipo di ordine","Type de commande","Bestellart"],
 "tipo_local":["Comer aquí","Eat in","Mangia qui","Sur place","Hier essen"],
 "tipo_recoger":["Recoger","Pickup","Ritiro","À emporter","Abholen"],
+"tipo_recoger_s":["Lista en ~15 min","Ready in ~15 min","Pronta in ~15 min","Prête en ~15 min","Fertig in ~15 Min."],
+"tipo_domicilio_s":["Uber Eats · Glovo","Uber Eats · Glovo","Uber Eats · Glovo","Uber Eats · Glovo","Uber Eats · Glovo"],
 "tipo_domicilio":["A domicilio","Delivery","A domicilio","Livraison","Lieferung"],
 "tipo_local_p":["Pide y paga con la app para comer en el local. Al llegar, enseña tu número en caja por la vía rápida.","Order and pay in the app to eat in. When you arrive, show your number at the fast lane.","Ordina e paga con l'app per mangiare nel locale. All'arrivo, mostra il tuo numero alla corsia veloce.","Commande et paie dans l'app pour manger sur place. En arrivant, montre ton numéro à la voie rapide.","Bestell und bezahl in der App, um vor Ort zu essen. Zeig bei Ankunft deine Nummer an der Schnellspur."],
 "tipo_recoger_p":["Pide para ahora o para más tarde y recógela recién salida del horno, sin hacer cola.","Order for now or later and pick it up fresh from the oven, no queue.","Ordina per ora o più tardi e ritirala appena sfornata, senza fila.","Commande pour maintenant ou plus tard et récupère-la à la sortie du four, sans attendre.","Bestell für jetzt oder später und hol sie ofenfrisch ab, ohne Schlange."],
