@@ -31,6 +31,7 @@ function pintarPedir(){
   const l=localSel();
   if(!l){location.replace("#ubicaciones");return;}
   $("apLocal").textContent="Pizzi "+l.n;
+  $("apLocalK").textContent=t(S.perfil.tipo==="local"?"app_eat_at":"app_pickup_at");
   $("apHora").textContent=horaCorta(l,S.hora);
   $("apCats").innerHTML=CATS.map(([id,k])=>`<button type="button" data-ap-cat="${id}">${esc(t(k))}</button>`).join("");
   PD.cargando=!!TPV.refDe(l)&&cartaLista!==l.id;
@@ -89,6 +90,7 @@ function pintarCesta(){
   $("apUpsellBox").hidden=!beb.length;
   $("apUpsell").innerHTML=beb.map(it=>`<button type="button" class="ap-up" data-ap-add="${it.i}"><img src="${imgDe(it,"-s")}" alt=""><b>${esc(cap(nm(it.n).toLowerCase()))}</b><span>${eur(it.p)}</span><i aria-hidden="true">${masIco}</i></button>`).join("");
   $("apCestaLocal").textContent=l?"Pizzi "+l.n:t("pick_store");
+  $("apTipoH").textContent=t(S.perfil.tipo==="local"?"tipo_local":"pickup");
   $("apCestaDir").textContent=l?l.d:"";
   pintarFranjas($("apFranjas"));
   pintarBarra();
@@ -120,7 +122,7 @@ function pagarApp(){
   if(mail&&!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail))return errorCesta(t("app_err_mail"),$("apMail"));
   if(!$("apAcepto").checked)return errorCesta(t("err_accept"));
   const horaES=withES(()=>{const s=slots(l).find(x=>x.v===S.hora);return s?s.t:"";});
-  S.pedido={horaVal:S.hora,t0:ahora(),num:"",nom,tel,email:mail,local:l,horaES,items:S.carro.map(c=>({...c})),total:total()};
+  S.pedido={horaVal:S.hora,t0:ahora(),num:"",tipo:S.perfil.tipo==="local"?"local":"recoger",nom,tel,email:mail,local:l,horaES,items:S.carro.map(c=>({...c})),total:total()};
   S.perfil.nom=nom;S.perfil.tel=tel;if(mail)S.perfil.mail=mail;
   S.perfil.ultimo=S.carro.map(c=>({n:c.n,q:c.q,nota:c.nota}));guardarPerfil();
   enviarWeb($("apBarraBtn"),()=>errorCesta(t("app_err_send")),"estado");

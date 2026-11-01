@@ -229,3 +229,28 @@ Object.assign(I,{
 "demo_web":["DEMO · Los pedidos web no se cobran ni llegan al local","DEMO · Web orders are not charged or sent to the store","DEMO · Gli ordini web non vengono addebitati né inviati al locale","DÉMO · Les commandes web ne sont ni débitées ni envoyées au restaurant","DEMO · Web-Bestellungen werden weder belastet noch an die Filiale gesendet"],
 "app_demo_badge":["DEMO · No se ha cobrado ni enviado al local","DEMO · Not charged or sent to the store","DEMO · Non addebitato né inviato al locale","DÉMO · Ni débitée ni envoyée au restaurant","DEMO · Weder belastet noch an die Filiale gesendet"]
 });
+
+/* Inicio estilo app: tipo de pedido, mapa de locales y vía rápida */
+Object.assign(I,{
+"app_hi_n":["¡Hola, <span>{n}!</span>","Hi, <span>{n}!</span>","Ciao, <span>{n}!</span>","Salut, <span>{n} !</span>","Hallo, <span>{n}!</span>"],
+"app_nov":["Nuevas en la carta: Barbacoa y Reina.","New on the menu: Barbacoa and Reina.","Novità nel menù: Barbacoa e Reina.","Nouveau à la carte : Barbacoa et Reina.","Neu auf der Karte: Barbacoa und Reina."],
+"app_tipo":["Tipo de pedido","Order type","Tipo di ordine","Type de commande","Bestellart"],
+"tipo_local":["Comer aquí","Eat in","Mangia qui","Sur place","Hier essen"],
+"tipo_recoger":["Recoger","Pickup","Ritiro","À emporter","Abholen"],
+"tipo_domicilio":["A domicilio","Delivery","A domicilio","Livraison","Lieferung"],
+"tipo_local_p":["Pide y paga con la app para comer en el local. Al llegar, enseña tu número en caja por la vía rápida.","Order and pay in the app to eat in. When you arrive, show your number at the fast lane.","Ordina e paga con l'app per mangiare nel locale. All'arrivo, mostra il tuo numero alla corsia veloce.","Commande et paie dans l'app pour manger sur place. En arrivant, montre ton numéro à la voie rapide.","Bestell und bezahl in der App, um vor Ort zu essen. Zeig bei Ankunft deine Nummer an der Schnellspur."],
+"tipo_recoger_p":["Pide para ahora o para más tarde y recógela recién salida del horno, sin hacer cola.","Order for now or later and pick it up fresh from the oven, no queue.","Ordina per ora o più tardi e ritirala appena sfornata, senza fila.","Commande pour maintenant ou plus tard et récupère-la à la sortie du four, sans attendre.","Bestell für jetzt oder später und hol sie ofenfrisch ab, ohne Schlange."],
+"tipo_domicilio_p":["Te la llevamos a casa con Uber Eats o Glovo desde el Pizzi más cercano.","We deliver with Uber Eats or Glovo from the nearest Pizzi.","Te la portiamo a casa con Uber Eats o Glovo dalla Pizzi più vicina.","On te la livre avec Uber Eats ou Glovo depuis le Pizzi le plus proche.","Wir liefern mit Uber Eats oder Glovo von der nächsten Pizzi."],
+"app_deliv_cta":["Elegir app de reparto","Choose delivery app","Scegli l'app di consegna","Choisir l'appli de livraison","Liefer-App wählen"],
+"app_repite":["Repite tu último pedido","Repeat your last order","Ripeti l'ultimo ordine","Refaire ta dernière commande","Letzte Bestellung wiederholen"],
+"app_eat_at":["Comer en","Eat in at","Mangia a","Sur place à","Essen in"],
+"mapa_lejos":["Estás a <b>{d}</b> de este local. ¿Seguro que quieres pedir aquí para comer en el local?","You're <b>{d}</b> away from this store. Are you sure you want to order here to eat in?","Sei a <b>{d}</b> da questo locale. Sei sicuro di voler ordinare qui per mangiare nel locale?","Tu es à <b>{d}</b> de ce restaurant. Tu veux vraiment commander ici pour manger sur place ?","Du bist <b>{d}</b> von dieser Filiale entfernt. Willst du wirklich hier zum Vor-Ort-Essen bestellen?"],
+"mapa_cambiar":["Cambiar","Change","Cambia","Changer","Ändern"],
+"mapa_seguir":["Continuar","Continue","Continua","Continuer","Weiter"],
+"mapa_lejos_b":["Lejos","Far","Lontano","Loin","Weit"],
+"mapa_cerca_b":["Cerca","Nearby","Vicino","Proche","In der Nähe"],
+"via_h":["Vía rápida","Fast lane","Corsia veloce","Voie rapide","Schnellspur"],
+"via_on":["Abierta","Open","Aperta","Ouverte","Geöffnet"],
+"via_off":["Cerrada","Closed","Chiusa","Fermée","Geschlossen"],
+"via_p":["Paga en la app y, al llegar, enseña tu número en caja: sin hacer cola.","Pay in the app and show your number at the counter when you arrive: no queue.","Paga con l'app e all'arrivo mostra il numero alla cassa: senza fila.","Paie dans l'app et montre ton numéro à la caisse en arrivant : sans attendre.","Bezahl in der App und zeig bei Ankunft deine Nummer an der Kasse: ohne Schlange."]
+});

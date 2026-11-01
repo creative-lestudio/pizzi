@@ -502,7 +502,7 @@ async function enviarWeb(boton,alFallar,destino="hecho"){
   try{
     const s=slots(o.local).find(x=>x.v===o.horaVal)||{v:o.horaVal};
     const r=await TPV.enviar({local:o.local,items:o.items.map(c=>({ref:P[c.i]&&P[c.i].ref,n:c.n,q:c.q,u:c.u,nota:c.nota})),
-      hora:s,cliente:{nom:o.nom,tel:o.tel,email:o.email},total:o.total});
+      hora:s,tipo:o.tipo||"recoger",cliente:{nom:o.nom,tel:o.tel,email:o.email},total:o.total});
     o.web=true;o.num=r.ref;o.demo=r.demo;
     pintarHecho();location.hash=destino;S.carro=[];actCarro();
   }catch(e){alFallar(e);}

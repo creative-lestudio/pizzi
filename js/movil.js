@@ -62,18 +62,123 @@ const distApp=i=>DIST[i]!=null?`<span class="am-dist">${esc(fmtKm(DIST[i]))}</sp
 const hrefPedir=l=>PEDIDOS_WEB?"#pedir":l.pedidoUrl||"#carta";
 const pillPedir=(href,txt,extra="")=>`<a class="am-pill" href="${esc(href)}"${extra}><span class="am-pill-t"><b>${esc(txt)}</b></span><span class="am-flecha">${FLECHA}</span></a>`;
 
+/* ---------- Inicio ----------
+   Tipo de pedido: local (comer aquí) · recoger · domicilio. Se recuerda en el dispositivo. */
+const TIPOS=["local","recoger","domicilio"];
+if(!TIPOS.includes(S.perfil.tipo))S.perfil.tipo="recoger";
+const tipoPedido=()=>S.perfil.tipo;
+/* Para comer aquí, el cliente debería estar en el local: a más de 500 m se le pregunta */
+const LEJOS=0.5;
+const lejosDe=i=>tipoPedido()==="local"&&conPos()&&DIST[i]>LEJOS;
+
 function pintarHola(){
-  const h=ahora();
+  const h=ahora(),nom=(S.perfil.nom||"").trim().split(/\s+/)[0];
   $("amSaludo").textContent=t(h<720&&h>=360?"hi_m":h<1230&&h>=720?"hi_a":"hi_n");
-  const e=APP.estado,l=localSel(),busca=e==="buscando";
+  $("amHola").innerHTML=nom?t("app_hi_n",{n:esc(nom)}):t("app_hi");
+  const e=APP.estado,l=localSel(),busca=e==="buscando",tipo=tipoPedido();
   const fallo=["denied","err","none"].includes(e);
-  $("amCercaT").innerHTML=busca?`<small>${esc(t("app_locating"))}</small><span class="am-pulso" aria-hidden="true"></span>`
-    :!l?`<small>${esc(t("app_t_locs"))}</small><b>${esc(t("choose_store"))}</b>`
-    :`<small>${esc(t(conPos()&&!APP.manual?"app_nearest":"app_yours"))}</small><b>${esc(l.n)}</b><span class="am-badges">${estadoApp(l)}${distApp(S.local)}</span>`;
+  $("amCercaT").innerHTML=busca?`<b>${esc(t("app_locating"))}</b><span class="am-pulso" aria-hidden="true"></span>`
+    :!l?`<b>${esc(t("choose_store"))}</b>`
+    :`<b>${esc(l.n)}${DIST[S.local]!=null?` <span>(${esc(fmtKm(DIST[S.local]))})</span>`:""}</b><small><i class="${abierto(l)?"ab":"ce"}"></i>${esc(abierto(l)?t("app_open"):t("app_closed"))} · ${esc(hrTexto(l))}</small>`;
   $("amMsg").textContent=fallo&&!l?t(e==="denied"?"near_denied":e==="none"?"near_none":"near_err"):e==="aprox"&&!APP.manual?t("app_approx"):"";
-  // «Pedir aquí»: con pedidos web, la carta de la app; si no, la tienda SkyTab del local o la carta de la web.
-  $("amAqui").href=!l?"#ubicaciones":hrefPedir(l);
+  document.querySelectorAll("[data-am-tipo]").forEach(b=>b.setAttribute("aria-checked",String(b.dataset.amTipo===tipo)));
+  $("amTipoTxt").textContent=t("tipo_"+tipo+"_p");
+  // Botón principal: a domicilio lleva a las apps de reparto; si no, a pedir en el local elegido
+  const a=$("amAqui");
+  if(tipo==="domicilio"){a.href="#domicilio";$("amAquiT").textContent=t("app_deliv_cta");}
+  else{a.href=l?hrefPedir(l):"#";$("amAquiT").textContent=t("app_pide_h");}
+  // Repetir el último pedido (solo con pedidos web)
+  const ult=(S.perfil.ultimo||[]).filter(x=>{const it=porNombre(x.n);return it&&!it.oculto;});
+  $("amRepite").hidden=!(PEDIDOS_WEB&&ult.length&&tipo!=="domicilio"&&l);
 }
+
+/* ---------- Aviso de distancia ---------- */
+function avisoDistancia(i,seguir,cambiar){
+  $("amAvisoT").innerHTML=t("mapa_lejos",{d:esc(fmtKm(DIST[i]))});
+  $("amAviso").hidden=false;$("amAvisoSi").focus();
+  $("amAvisoSi").onclick=()=>{$("amAviso").hidden=true;seguir();};
+  $("amAvisoNo").onclick=()=>{$("amAviso").hidden=true;if(cambiar)cambiar();};
+}
+
+/* ---------- Mapa de locales ----------
+   Leaflet (cdnjs) con el mapa de OpenStreetMap; se carga solo al abrir el mapa.
+   Si no carga, siguen funcionando las tarjetas de los locales. */
+const MAPA={m:null,marcas:[],yo:null,k:0};
+function cargarLeaflet(){
+  if(window.L)return Promise.resolve();
+  return new Promise((ok,ko)=>{
+    const c=document.createElement("link");c.rel="stylesheet";c.href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css";document.head.appendChild(c);
+    const j=document.createElement("script");j.src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js";j.onload=ok;j.onerror=ko;document.head.appendChild(j);
+  });
+}
+function abrirMapa(){
+  MAPA.k=Math.max(0,ORDEN.indexOf(S.local??ORDEN[0]));
+  $("amMapa").hidden=false;document.documentElement.classList.add("bloqueado");
+  pintarCardMapa();
+  cargarLeaflet().then(iniciarMapa).catch(()=>$("amMapaM").classList.add("sin"));
+}
+function cerrarMapa(){$("amMapa").hidden=true;document.documentElement.classList.remove("bloqueado");}
+function iniciarMapa(){
+  if(!MAPA.m){
+    MAPA.m=L.map("amMapaM",{zoomControl:false,attributionControl:true});
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'}).addTo(MAPA.m);
+    MAPA.marcas=LOCALES.map((l,i)=>L.marker([l.lat,l.lng],{title:"Pizzi "+l.n,icon:L.divIcon({className:"am-pin",html:'<img src="assets/img/ic-ubicacion.webp" alt="">',iconSize:[40,40],iconAnchor:[20,38]})})
+      .addTo(MAPA.m).on("click",()=>{MAPA.k=ORDEN.indexOf(i);pintarCardMapa();}));
+  }
+  MAPA.m.invalidateSize();
+  if(conPos()){
+    if(!MAPA.yo)MAPA.yo=L.marker([YO.lat,YO.lng],{interactive:false,icon:L.divIcon({className:"am-yo",html:"<span></span>",iconSize:[22,22],iconAnchor:[11,11]})}).addTo(MAPA.m);
+    else MAPA.yo.setLatLng([YO.lat,YO.lng]);
+  }
+  centrarMapa(false);
+}
+function centrarMapa(animar=true){
+  if(!MAPA.m)return;
+  const i=ORDEN[MAPA.k],l=LOCALES[i];
+  MAPA.marcas.forEach((m,j)=>{const el=m.getElement();if(el)el.classList.toggle("on",j===i);});
+  MAPA.m.setView([l.lat-0.0025,l.lng],15,{animate:animar});
+}
+function pintarCardMapa(){
+  const i=ORDEN[MAPA.k],l=LOCALES[i],ab=abierto(l),d=DIST[i];
+  const hoy=turnos(l,hoyIdx());
+  $("amMapaCard").innerHTML=`
+    ${d!=null?`<span class="am-mc-d">${esc(t(d>LEJOS?"mapa_lejos_b":"mapa_cerca_b"))} · ${esc(fmtKm(d))}</span>`:""}
+    <b class="deco">${esc(l.n)}</b>
+    <span class="am-mc-h"><i class="${ab?"ab":"ce"}"></i>${esc(hoy.length?fmtTurnos(hoy):t("closed"))} · València</span>
+    <div class="am-mc-f"><span class="am-mc-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg></span>
+      <div><b>${esc(t("via_h"))} · <span class="${ab?"ab":"ce"}">${esc(ab?t("via_on"):t("via_off"))}</span></b><small>${esc(t("via_p"))}</small></div></div>
+    <div class="am-mc-acc">
+      <a href="${esc(l.maps)}" target="_blank" rel="noopener">${esc(t("how_get"))}</a>
+      <a href="tel:${esc(l.tel.replace(/\s/g,""))}">${esc(t("call_store"))}</a>
+    </div>
+    <button type="button" class="am-mc-ok" data-am-elegir="${i}" aria-label="${esc(t("order_here"))} · ${esc(l.n)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>`;
+  $("amMapaAnt").disabled=MAPA.k===0;$("amMapaSig").disabled=MAPA.k===ORDEN.length-1;
+  centrarMapa();
+}
+function elegirEnMapa(i){
+  const hecho=()=>{APP.manual=true;APP.abierto=null;elegirLocal(i);refrescar();cerrarMapa();pintarApp();};
+  if(lejosDe(i))avisoDistancia(i,hecho);else hecho();
+}
+$("amCerca").onclick=abrirMapa;
+$("appM").addEventListener("click",e=>{const m=e.target.closest("[data-am-mapa]");if(m){e.preventDefault();abrirMapa();}});
+$("amMapaX").onclick=cerrarMapa;
+$("amMapaAnt").onclick=()=>{if(MAPA.k>0){MAPA.k--;pintarCardMapa();}};
+$("amMapaSig").onclick=()=>{if(MAPA.k<ORDEN.length-1){MAPA.k++;pintarCardMapa();}};
+$("amMapaYo").onclick=()=>{if(conPos()&&MAPA.m)MAPA.m.setView([YO.lat,YO.lng],15);else buscar();};
+$("amMapaCard").addEventListener("click",e=>{const b=e.target.closest("[data-am-elegir]");if(b)elegirEnMapa(+b.dataset.amElegir);});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){if(!$("amAviso").hidden)$("amAviso").hidden=true;else if(!$("amMapa").hidden)cerrarMapa();}});
+
+/* Tipo de pedido, botón principal y repetir pedido */
+document.querySelectorAll("[data-am-tipo]").forEach(b=>b.onclick=()=>{S.perfil.tipo=b.dataset.amTipo;guardarPerfil();pintarHola();});
+$("amAqui").addEventListener("click",e=>{
+  const tipo=tipoPedido();if(tipo==="domicilio")return;
+  if(S.local===null){e.preventDefault();abrirMapa();return;}
+  if(lejosDe(S.local)){e.preventDefault();const href=$("amAqui").href;avisoDistancia(S.local,()=>{location.href=href;},abrirMapa);}
+});
+$("amRepite").onclick=()=>{
+  (S.perfil.ultimo||[]).forEach(x=>{const it=porNombre(x.n);if(it&&!it.oculto)sumar(it.i,x.q,x.nota);});
+  actCarro(true);location.hash="cesta";
+};
 
 function pintarUbicaciones(){
   $("amLocTxt").textContent=t(conPos()?"app_locs_sorted":"app_locs_pick");

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>PIZZI · Pide para recoger</title>
 <meta name="description" content="Pizzi · Auténtica pizza napoletana en Valencia. Pide online en tu Pizzi más cercano y recógela recién salida del horno.">
-<meta name="theme-color" content="#96041A">
+<meta name="theme-color" content="#96041E">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -330,6 +330,7 @@
      hola → local más cercano → «Pedir aquí» (SkyTab) o «A domicilio» (Uber Eats / Glovo).
      Desde «Pide ahora» se ven los locales, el reparto y la carta en pestañas. -->
 <div class="app-m" id="appM" hidden>
+  <div class="ah-foto" aria-hidden="true"></div>
   <div class="am-top">
     <button class="ico-btn am-volver" id="amVolver" type="button" aria-label="Volver" data-ia="back" hidden>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
@@ -341,21 +342,27 @@
     </div>
   </div>
 
-  <!-- Pantalla 1: hola + local más cercano -->
+  <!-- Pantalla 1: inicio estilo app. Saludo sobre la foto del local y hoja «Pide ahora»:
+       local (abre el mapa), tipo de pedido (comer aquí / recoger / a domicilio) y botón principal. -->
   <section class="am-p am-hola" id="am-hola">
-    <div class="am-hola-tx">
+    <div class="ah-hero">
       <p class="saludo" id="amSaludo"></p>
-      <h1 class="deco" data-ih="app_hi">¡Hola! <span>Es hora de Pizzi</span></h1>
+      <h1 class="deco" id="amHola"></h1>
+      <p class="ah-nov" data-i="app_nov">Nuevas en la carta: Barbacoa y Reina.</p>
     </div>
-    <a class="am-cerca" id="amCerca" href="#ubicaciones">
-      <span class="am-cerca-ic"><img src="assets/img/ic-ubicacion.webp" alt="" width="240" height="240"></span>
-      <span class="am-cerca-t" id="amCercaT"></span>
-    </a>
-    <p class="am-msg" id="amMsg" role="status" aria-live="polite"></p>
-    <div class="am-acc">
-      <a class="am-pill am-pill-1" id="amAqui"><span class="am-ic" aria-hidden="true"><img src="assets/img/ic-chef.webp" alt="" width="240" height="240"></span><span class="am-pill-t"><b data-i="order_here">Pedir aquí</b><small data-i="app_here_p">Recógela en el local</small></span><span class="am-flecha" aria-hidden="true"></span></a>
-      <a class="am-pill" href="#domicilio"><span class="am-ic am-ic-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M9 17h6l-3-8H8M15 6h3l3 11"/></svg></span><span class="am-pill-t"><b data-i="app_delivery">A domicilio</b><small data-i="app_delivery_p">Te la llevamos a casa</small></span><span class="am-flecha" aria-hidden="true"></span></a>
-      <a class="am-pill am-pill-c" href="#lacarta"><img class="am-ic-s" src="assets/img/ic-porcion.webp" alt="" width="240" height="240"><b data-i="app_menu">Ver carta</b></a>
+    <div class="ah-hoja">
+      <h2 class="deco" data-i="app_pide_h">Pide ahora</h2>
+      <button type="button" class="ah-local" id="amCerca"><img src="assets/img/ic-ubicacion.webp" alt="" width="240" height="240"><span id="amCercaT"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
+      <p class="am-msg" id="amMsg" role="status" aria-live="polite"></p>
+      <div class="ah-tipos" role="radiogroup" data-ia="app_tipo">
+        <button type="button" role="radio" data-am-tipo="local"><i class="ah-ok" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i><img src="assets/img/ic-chef.webp" alt="" width="240" height="240"><b data-i="tipo_local">Comer aquí</b></button>
+        <button type="button" role="radio" data-am-tipo="recoger"><i class="ah-ok" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i><span class="ah-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 11.1a2 2 0 0 1-2 1.9H8.2a2 2 0 0 1-2-1.9z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></span><b data-i="tipo_recoger">Recoger</b></button>
+        <button type="button" role="radio" data-am-tipo="domicilio"><i class="ah-ok" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i><span class="ah-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M9 17h6l-3-8H8M15 6h3l3 11"/></svg></span><b data-i="tipo_domicilio">A domicilio</b></button>
+      </div>
+      <p class="ah-desc" id="amTipoTxt"></p>
+      <a class="ah-cta" id="amAqui" href="#pedir"><span id="amAquiT" data-i="app_pide_h">Pide ahora</span><span class="ah-cta-f" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+      <button type="button" class="ah-sec" id="amRepite" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg><span data-i="app_repite">Repite tu último pedido</span></button>
+      <a class="ah-sec" href="#lacarta"><img src="assets/img/ic-porcion.webp" alt="" width="240" height="240"><span data-i="app_menu">Ver carta</span></a>
     </div>
   </section>
 
@@ -393,7 +400,7 @@
   <!-- Pedir (pedidos web, js/pedir.js): carta, cesta y seguimiento -->
   <section class="am-p ap-pant" id="am-pedir" hidden>
     <div class="ap-cab">
-      <a class="ap-chip" href="#ubicaciones"><span class="ap-chip-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg></span><span class="ap-chip-t"><small data-i="app_pickup_at">Recoger en</small><b id="apLocal"></b></span></a>
+      <a class="ap-chip" href="#ubicaciones" data-am-mapa><span class="ap-chip-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg></span><span class="ap-chip-t"><small id="apLocalK">Recoger en</small><b id="apLocal"></b></span></a>
       <button type="button" class="ap-chip" id="apHoraBtn"><span class="ap-chip-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><span class="ap-chip-t"><small data-i="when">Cuándo</small><b id="apHora"></b></span></button>
     </div>
     <div class="ap-franjas" id="apFranjasCab" hidden></div>
@@ -410,8 +417,8 @@
       <div class="ap-carril" id="apUpsell"></div>
     </div>
     <div class="ap-caja">
-      <h2 data-i="pickup">Recogida</h2>
-      <a class="ap-fila" href="#ubicaciones"><span class="ap-chip-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg></span><span class="ap-chip-t"><b id="apCestaLocal"></b><small id="apCestaDir"></small></span><span class="ap-cambiar" data-i="change">Cambiar</span></a>
+      <h2 id="apTipoH">Recogida</h2>
+      <a class="ap-fila" href="#ubicaciones" data-am-mapa><span class="ap-chip-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg></span><span class="ap-chip-t"><b id="apCestaLocal"></b><small id="apCestaDir"></small></span><span class="ap-cambiar" data-i="change">Cambiar</span></a>
       <div class="ap-franjas" id="apFranjas" role="radiogroup"></div>
     </div>
     <div class="ap-caja">
@@ -448,6 +455,24 @@
     <a class="am-pill am-pill-c" href="#hola"><b data-i="app_order_more">Volver al inicio</b></a>
   </section>
 
+  <!-- Mapa de locales (js/movil.js): mapa con la ubicación del cliente y una tarjeta por local -->
+  <div class="am-mapa" id="amMapa" role="dialog" aria-modal="true" data-ia="app_t_locs" hidden>
+    <div class="am-mapa-m" id="amMapaM"></div>
+    <button type="button" class="am-mapa-b am-mapa-x" id="amMapaX" data-ia="close" aria-label="Cerrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <button type="button" class="am-mapa-b am-mapa-yo" id="amMapaYo" data-ia="near_me" aria-label="Cerca de mí"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 3L3 10.5l7.5 3L13.5 21z"/></svg></button>
+    <div class="am-mapa-p">
+      <button type="button" class="am-mapa-fl" id="amMapaAnt" data-ia="back" aria-label="Anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <div class="am-mapa-card" id="amMapaCard"></div>
+      <button type="button" class="am-mapa-fl" id="amMapaSig" aria-label="Siguiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
+    </div>
+  </div>
+  <div class="am-aviso" id="amAviso" role="alertdialog" aria-modal="true" aria-labelledby="amAvisoT" hidden>
+    <div class="am-aviso-c">
+      <span class="am-aviso-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M21 3L3 10.5l7.5 3L13.5 21z"/></svg></span>
+      <p id="amAvisoT"></p>
+      <div class="am-aviso-b"><button type="button" id="amAvisoNo" data-i="mapa_cambiar">Cambiar</button><button type="button" id="amAvisoSi" data-i="mapa_seguir">Continuar</button></div>
+    </div>
+  </div>
   <div class="ap-barra" id="apBarra" hidden><button type="button" id="apBarraBtn"></button></div>
   <div class="ap-velo" id="apVelo" hidden></div>
   <div class="ap-hoja" id="apHoja" role="dialog" aria-modal="true" aria-labelledby="apHojaT" hidden>
