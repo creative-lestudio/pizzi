@@ -67,19 +67,10 @@ const TIPOS=["recoger","domicilio"];
 if(!TIPOS.includes(S.perfil.tipo))S.perfil.tipo="recoger";
 const tipoPedido=()=>S.perfil.tipo;
 
-/* «Las más pedidas»: tarjetas con la foto de la pizza; al tocar se abre la carta */
-function pintarTop(){
-  const its=TOP.map(porNombre).filter(x=>x&&!x.oculto);
-  $("amTop").innerHTML=its.map(it=>`<a class="ah-pz" href="${PEDIDOS_WEB?"#pedir":"#lacarta"}" data-am-top="${it.i}">
-    <span class="ah-pz-f"><img src="${imgDe(it,"-s")}" alt="" loading="lazy"></span>
-    ${it.badge?`<i>${esc(t(it.badge==="top"?"tag_top":"tag_fresh"))}</i>`:""}
-    <b>${esc(cap(nm(it.n).toLowerCase()))}</b><span>${eur(it.p)}</span></a>`).join("");
-}
-
 function pintarHola(){
-  const h=ahora(),nom=(S.perfil.nom||"").trim().split(/\s+/)[0];
-  $("amSaludo").textContent=t(h<720&&h>=360?"hi_m":h<1230&&h>=720?"hi_a":"hi_n");
-  $("amHola").innerHTML=nom?t("app_hi_n",{n:esc(nom)}):t("app_hi");
+  // Saludo según la hora de Valencia: «Hola, buenos días / buenas tardes / buenas noches»
+  const h=ahora();
+  $("amHola").innerHTML=t("app_hola",{s:t(h<720&&h>=360?"hola_m":h<1230&&h>=720?"hola_a":"hola_n")});
   const e=APP.estado,l=localSel(),busca=e==="buscando",tipo=tipoPedido();
   const fallo=["denied","err","none"].includes(e);
   $("amCercaT").innerHTML=busca?`<b>${esc(t("app_locating"))}</b><span class="am-pulso" aria-hidden="true"></span>`
@@ -95,7 +86,6 @@ function pintarHola(){
   // Repetir el último pedido (solo con pedidos web)
   const ult=(S.perfil.ultimo||[]).filter(x=>{const it=porNombre(x.n);return it&&!it.oculto;});
   $("amRepite").hidden=!(PEDIDOS_WEB&&ult.length&&tipo!=="domicilio"&&l);
-  pintarTop();
 }
 
 /* ---------- Mapa de locales ----------
@@ -191,13 +181,6 @@ document.querySelectorAll("[data-am-tipo]").forEach(b=>b.onclick=()=>{S.perfil.t
 $("amAqui").addEventListener("click",e=>{
   if(tipoPedido()==="domicilio")return;
   if(S.local===null){e.preventDefault();abrirMapa();}
-});
-/* Pizza destacada: con pedidos web abre su ficha en la carta del local */
-$("amTop").addEventListener("click",e=>{
-  const c=e.target.closest("[data-am-top]");if(!c||!PEDIDOS_WEB)return;
-  e.preventDefault();
-  if(S.local===null){abrirMapa();return;}
-  location.hash="pedir";setTimeout(()=>abrirProdApp(+c.dataset.amTop),350);
 });
 $("amRepite").onclick=()=>{
   (S.perfil.ultimo||[]).forEach(x=>{const it=porNombre(x.n);if(it&&!it.oculto)sumar(it.i,x.q,x.nota);});
