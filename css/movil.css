@@ -293,8 +293,9 @@ html.con-barra .toast{bottom:calc(96px + var(--sab))}
    ========================================================= */
 .app-m{--acento:#FB72A5}
 .ah-foto{position:absolute; top:0; left:0; right:0; height:min(66dvh,600px); z-index:0; pointer-events:none;
-  background:linear-gradient(180deg,rgba(40,0,8,.62) 0%,rgba(50,0,10,.55) 20%,rgba(70,0,14,.72) 46%,rgba(110,2,22,.88) 72%,#8A0619 100%),url(../assets/img/hero.webp) center 35%/cover no-repeat}
-.en-pide .ah-foto{display:none}
+  background:linear-gradient(180deg,rgba(40,0,8,.55) 0%,rgba(40,0,8,.12) 24%,rgba(60,0,12,.18) 50%,rgba(100,2,20,.7) 80%,#8A0619 100%),url(../assets/img/hero-app.webp) center 30%/cover no-repeat}
+/* En el resto de pantallas la misma foto queda como cabecera corta detrás del logo */
+.en-pide .ah-foto{height:230px; background-position:center 40%}
 .app-m:not(.en-pide) .am-top{margin-top:0}
 .am-hola{flex:1 0 auto; display:flex; flex-direction:column; justify-content:flex-end; gap:0; padding-top:0; padding-bottom:0; margin-bottom:0; min-height:calc(100dvh - var(--sat) - 72px)}
 .ah-hero{padding:24px 6px 22px; color:#fff; text-shadow:0 3px 18px rgba(40,0,6,.55)}
@@ -454,3 +455,77 @@ html.con-barra .toast{bottom:calc(96px + var(--sab))}
 .ah-pz b{font:400 20px/1 var(--deco); text-transform:uppercase; -webkit-text-stroke:0}
 .ah-pz span:last-child{font:600 15px/1 var(--cond); color:var(--tinta)}
 @media (min-width:700px){.ah-top{margin:10px -40px 0}.ah-top-cab{padding:0 40px 12px}.ah-carril{padding:2px 40px 10px; scroll-padding:0 40px}}
+
+
+/* =========================================================
+   Resto de pantallas con el mismo look que el inicio:
+   foto de cabecera, hoja blanca redondeada encima y, dentro, tarjetas rosa claro,
+   bordes finos, títulos en vino y el botón principal vino con círculo blanco.
+   ========================================================= */
+.app-m.en-pide .am-top{margin-top:0}
+.app-m.en-pide .am-pide,.app-m.en-pide .ap-pant{position:relative; flex:1 0 auto; margin:96px 0 0; padding:34px 20px calc(30px + var(--sab)); border-radius:32px 32px 0 0;
+  background:#fff; color:var(--tinta); box-shadow:0 -14px 40px rgba(40,0,6,.3)}
+.app-m.en-pide .ap-pant{padding-bottom:calc(120px + var(--sab))}
+.app-m.en-pide .am-pide::before,.app-m.en-pide .ap-pant::before{content:""; position:absolute; top:10px; left:50%; width:44px; height:5px; margin-left:-22px; border-radius:3px; background:var(--rosa)}
+.am-pide>.deco,.ap-pant>.deco,.am-carta-cab .deco{color:var(--vino); text-shadow:none}
+.am-sub,.am-txt{color:var(--suave)}
+
+/* Pestañas como las tarjetas de tipo de pedido */
+.am-tabs a{background:#fff; box-shadow:inset 0 0 0 1.5px var(--am-borde),0 6px 16px rgba(40,0,6,.06); border-radius:20px}
+.am-tic{border-radius:14px; background:var(--rosa-cc)}
+.am-tic img{width:70%; height:70%}
+.am-tabs a.on{background:var(--rosa-cc); box-shadow:inset 0 0 0 2px var(--vino),0 10px 22px rgba(150,4,30,.14)}
+.am-tabs a.on .am-tic{background:var(--vino); color:#fff}
+.am-tabs a.on .am-tic img{filter:brightness(0) invert(1)}
+
+/* Locales: tarjetas rosa claro como la del local en el inicio */
+.am-loc{background:var(--rosa-cc); box-shadow:none; border-radius:22px}
+.am-loc.on{box-shadow:inset 0 0 0 2px var(--vino)}
+.am-loc-c .am-pill{background:var(--vino); color:#fff}
+.am-loc-c .am-pill .am-flecha{background:#fff; color:var(--vino)}
+.am-loc-c .am-pill:active{background:var(--vino-o)}
+.am-mini{background:#fff; box-shadow:inset 0 0 0 1.5px var(--am-borde)}
+
+/* Botones de reparto y demás píldoras dentro de la hoja */
+.am-pide .am-pill{box-shadow:inset 0 0 0 1.5px var(--am-borde),0 6px 16px rgba(40,0,6,.06); border-radius:22px}
+.am-redes a{background:var(--rosa-cc); box-shadow:none}
+
+/* Carta para consultar sobre fondo blanco */
+.am-chips button,.ap-cats button{background:var(--rosa-cc)}
+.am-cat>h3,.ap-sec>h2{color:var(--vino); text-shadow:none}
+.am-cat .pz p{color:var(--suave)}
+.am-cat .pz-pill{box-shadow:0 8px 18px rgba(80,0,16,.14)}
+.am-cat .bb-t{color:var(--vino)}
+.am-cat .bb-t .pts{border-bottom-color:var(--rosa)}
+
+/* Carta para pedir */
+.ap-chip,.ap-fila{background:var(--rosa-cc); box-shadow:none; border-radius:18px}
+.ap-chip-ic{background:#fff}
+.ap-cats{margin:14px -20px 6px; padding:10px 20px; background:#fff}
+.ap-franjas{margin-left:-20px; margin-right:-20px; padding-left:20px; padding-right:20px}
+#apFranjasCab button{background:var(--rosa-cc); box-shadow:none}
+.ap-aviso{background:var(--rosa-cc); color:var(--tinta)}
+.ap-prod{box-shadow:inset 0 0 0 1.5px var(--am-borde),0 6px 16px rgba(40,0,6,.06); border-radius:22px}
+.ap-prod-f img{border-radius:16px}
+
+/* Cesta y seguimiento */
+.ap-caja{box-shadow:inset 0 0 0 1.5px var(--am-borde),0 6px 16px rgba(40,0,6,.06); border-radius:22px}
+.ap-check{color:var(--tinta)}
+.ap-check input{accent-color:var(--vino)}
+.ap-check a{color:var(--vino)}
+.ap-error{background:var(--rosa-cc)}
+.ap-ok{background:var(--vino); color:#fff; box-shadow:0 10px 24px rgba(150,4,30,.3)}
+.ap-acc .am-mini{background:#fff}
+
+/* Barra inferior como el botón principal del inicio */
+.ap-barra{background:linear-gradient(rgba(255,255,255,0),#fff 45%)}
+.ap-barra button{background:var(--vino); color:#fff; box-shadow:0 12px 28px rgba(150,4,30,.35); min-height:66px; padding:10px 12px 10px 26px}
+.ap-barra i{background:#fff; color:var(--vino)}
+.ap-barra button b{padding:10px 16px; border-radius:999px; background:#fff; color:var(--vino)}
+
+@media (min-width:700px){
+  .app-m.en-pide .am-pide,.app-m.en-pide .ap-pant{margin-top:110px; padding-left:40px; padding-right:40px}
+  .ap-cats{margin-left:-40px; margin-right:-40px; padding-left:40px; padding-right:40px}
+  .en-pide .ah-foto{height:300px}
+}
+.am-cat .tag{background:var(--acento); color:#fff; box-shadow:none}

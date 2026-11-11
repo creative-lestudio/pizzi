@@ -283,3 +283,11 @@ Object.assign(I,{
 "al_altramuces":["Altramuces","Lupin","Lupini","Lupin","Lupinen"],
 "al_moluscos":["Moluscos","Molluscs","Molluschi","Mollusques","Weichtiere"]
 });
+
+/* Saludo del inicio */
+Object.assign(I,{
+"app_hola":["Hola, <span>{s}</span>","Hello, <span>{s}</span>","Ciao, <span>{s}</span>","Salut, <span>{s}</span>","Hallo, <span>{s}</span>"],
+"hola_m":["buenos días","good morning","buongiorno","bonjour","guten Morgen"],
+"hola_a":["buenas tardes","good afternoon","buon pomeriggio","bon après-midi","guten Tag"],
+"hola_n":["buenas noches","good evening","buonasera","bonsoir","guten Abend"]
+});
