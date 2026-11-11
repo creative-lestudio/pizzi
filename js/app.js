@@ -41,12 +41,13 @@ const eurCarta=(v,corto)=>{const s=corto?String(+v.toFixed(2)):v.toFixed(2);retu
 /* Iconos de alérgenos (los de la carta impresa: gluten, lácteos, pescado, frutos de cáscara).
    Los datos están en ALERG (js/legal.js); cada icono lleva su nombre para lectores de pantalla. */
 const ALG_ICO={
-  gluten:'<path d="M12 21V9"/><path d="M12 9c-2.5-.5-4-2.4-4-5 2.5.5 4 2.4 4 5zm0 0c2.5-.5 4-2.4 4-5-2.5.5-4 2.4-4 5zM12 14c-2.5-.5-4-2.4-4-5 2.5.5 4 2.4 4 5zm0 0c2.5-.5 4-2.4 4-5-2.5.5-4 2.4-4 5zM12 19c-2.5-.5-4-2.4-4-5 2.5.5 4 2.4 4 5zm0 0c2.5-.5 4-2.4 4-5-2.5.5-4 2.4-4 5z"/>',
-  leche:'<path d="M3 17l9-9 9 4v6H3z"/><path d="M3 17v-1l9-8"/><circle cx="9" cy="14" r="1.2"/><circle cx="15" cy="15" r="1"/><circle cx="17" cy="12.5" r=".8"/>',
-  pescado:'<path d="M2 12c3-4 7-5 11-4 3 .7 5 2.3 6 4-1 1.7-3 3.3-6 4-4 1-8 0-11-4z"/><path d="M19 12l3-3v6z"/><circle cx="7" cy="11" r=".9" fill="currentColor"/>',
-  "frutos de cáscara":'<path d="M12 3c4 0 7 4 7 9s-3 9-7 9-7-4-7-9 3-9 7-9z"/><path d="M12 3c-2 3-2 15 0 18"/>'
+  gluten:'<path d="M12 22V10.5"/><path d="M12 10.5c-.2-2.6 1.2-4.6 3.6-5.5.3 2.6-1.1 4.7-3.6 5.5zM12 10.5c.2-2.6-1.2-4.6-3.6-5.5-.3 2.6 1.1 4.7 3.6 5.5zM12 15.5c-.2-2.6 1.2-4.6 3.6-5.5.3 2.6-1.1 4.7-3.6 5.5zM12 15.5c.2-2.6-1.2-4.6-3.6-5.5-.3 2.6 1.1 4.7 3.6 5.5zM12 20.5c-.2-2.6 1.2-4.6 3.6-5.5.3 2.6-1.1 4.7-3.6 5.5zM12 20.5c.2-2.6-1.2-4.6-3.6-5.5-.3 2.6 1.1 4.7 3.6 5.5zM12 5.6c-1-1-1-2.6 0-3.6 1 1 1 2.6 0 3.6z"/>',
+  leche:'<path d="M3.5 16.5L15 7l5.5 3.2v6.3z"/><path d="M3.5 16.5v3h17v-3"/><circle cx="9.5" cy="18" r="1" fill="currentColor" stroke="none"/><circle cx="15.5" cy="13.2" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="14.6" r=".8" fill="currentColor" stroke="none"/>',
+  pescado:'<path d="M2.5 12c2.6-3.6 6.2-5 10-4.4 3 .5 5.2 2.2 6.5 4.4-1.3 2.2-3.5 3.9-6.5 4.4-3.8.6-7.4-.8-10-4.4z"/><path d="M19 12l2.5-3.2v6.4z"/><path d="M9.5 9.2c.8 1.8.8 3.8 0 5.6"/><circle cx="6.3" cy="11.2" r=".9" fill="currentColor" stroke="none"/>',
+  "frutos de cáscara":'<path d="M12 3c3.9 2.3 6 6.2 6 10.2 0 4-2.7 7.3-6 7.3s-6-3.3-6-7.3C6 9.2 8.1 5.3 12 3z"/><path d="M12 6.5c-1.2 3.2-1.2 8.3 0 12.5"/>'
 };
-const algIco=a=>ALG_ICO[a]?`<svg class="al-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="${esc(alg(a))}"><title>${esc(alg(a))}</title>${ALG_ICO[a]}</svg>`:"";
+/* Cada icono va en una pastilla redonda rosa con el dibujo en vino, como los iconos de la app */
+const algIco=a=>ALG_ICO[a]?`<span class="al-i" role="img" aria-label="${esc(alg(a))}" title="${esc(cap(alg(a)))}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ALG_ICO[a]}</svg></span>`:"";
 const algFila=it=>{const a=(ALERG[it.n]||[]).filter(x=>ALG_ICO[x]);return a.length?`<span class="al-fila">${a.map(algIco).join("")}</span>`:"";};
 /* Leyenda al principio de la carta */
 function leyendaAlerg(){
