@@ -172,7 +172,7 @@ const DESC={"MARGHERITA":["Salsa de tomate, mozzarella fior di latte y albahaca 
 "AGUA":["Font d’Or, botella 33 cl","Font d’Or still water, 33 cl bottle","Acqua naturale Font d’Or, bottiglia 33 cl","Eau plate Font d’Or, bouteille 33 cl","Font d’Or stilles Wasser, 33-cl-Flasche"],
 "AGUA CON GAS":["Agua con gas, botella 33 cl","Sparkling water, 33 cl bottle","Acqua frizzante, bottiglia 33 cl","Eau gazeuse, bouteille 33 cl","Sprudelwasser, 33-cl-Flasche"]};
 const NOM={"FANTA NARANJA":["FANTA NARANJA","FANTA ORANGE","FANTA ARANCIA","FANTA ORANGE","FANTA ORANGE"],"FANTA LIMÓN":["FANTA LIMÓN","FANTA LEMON","FANTA LIMONE","FANTA CITRON","FANTA ZITRONE"],"CERVEZA TURIA":["CERVEZA TURIA","TURIA BEER","BIRRA TURIA","BIÈRE TURIA","TURIA BIER"],"AGUA":["AGUA","WATER","ACQUA","EAU","WASSER"],"AGUA CON GAS":["AGUA CON GAS","SPARKLING WATER","ACQUA FRIZZANTE","EAU GAZEUSE","SPRUDELWASSER"]};
-const ALG={"gluten":["gluten","gluten","glutine","gluten","Gluten"],"leche":["leche","milk","latte","lait","Milch"],"pescado":["pescado","fish","pesce","poisson","Fisch"],"frutos de cáscara":["frutos de cáscara","tree nuts","frutta a guscio","fruits à coque","Schalenfrüchte"]};
+const ALG={"gluten":["gluten","gluten","glutine","gluten","Gluten"],"leche":["lácteos","dairy","latticini","produits laitiers","Milchprodukte"],"pescado":["pescado","fish","pesce","poisson","Fisch"],"frutos de cáscara":["frutos de cáscara","tree nuts","frutta a guscio","fruits à coque","Schalenfrüchte"]};
 
 /* App móvil (js/movil.js) */
 Object.assign(I,{
@@ -290,4 +290,10 @@ Object.assign(I,{
 "hola_m":["buenos días","good morning","buongiorno","bonjour","guten Morgen"],
 "hola_a":["buenas tardes","good afternoon","buon pomeriggio","bon après-midi","guten Tag"],
 "hola_n":["buenas noches","good evening","buonasera","bonsoir","guten Abend"]
+});
+
+/* Leyenda de alérgenos en la carta */
+Object.assign(I,{
+"al_ley":["Alérgenos","Allergens","Allergeni","Allergènes","Allergene"],
+"al_ley_p":["Orientativos. Si tienes alergias, consulta con nuestro equipo: puede haber contaminación cruzada.","For guidance only. If you have allergies, ask our team: cross-contamination may occur.","Indicativi. Se hai allergie, chiedi al nostro staff: può esserci contaminazione crociata.","À titre indicatif. En cas d'allergie, demande à notre équipe : contamination croisée possible.","Nur zur Orientierung. Bei Allergien frag unser Team: Kreuzkontamination möglich."]
 });

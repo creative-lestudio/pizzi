@@ -151,6 +151,7 @@ function pintarCardMapa(){
   const i=ORDEN[MAPA.k],l=LOCALES[i],ab=abierto(l),d=DIST[i];
   const hoy=turnos(l,hoyIdx());
   $("amMapaCard").innerHTML=`
+    <img class="am-mc-foto" src="${fotoLocal(l)}" alt="${esc(t("facade"))} · Pizzi ${esc(l.n)}">
     ${d!=null?`<span class="am-mc-d">${esc(t(d>1?"mapa_lejos_b":"mapa_cerca_b"))} · ${esc(fmtKm(d))}</span>`:""}
     <b class="deco">${esc(l.n)}</b>
     <span class="am-mc-h"><i class="${ab?"ab":"ce"}"></i>${esc(hoy.length?fmtTurnos(hoy):t("closed"))} · València</span>
@@ -226,6 +227,7 @@ function pintarCartaApp(){
   $("amChips").innerHTML=CATS.map(([id,k])=>`<button type="button" data-am-cat="${id}">${esc(t(k))}</button>`).join("");
   $("amCarta").innerHTML=CATS.map(([id,k,tipo])=>`<section class="am-cat" id="amc-${id}">
     <h3 class="deco">${esc(tipo==="pizza"?t("cat_pizzas_31"):t(k))}</h3>
+    ${tipo==="pizza"?leyendaAlerg():""}
     ${tipo==="pizza"?`<div class="carta-pz">${P.filter(x=>x.t===tipo).map(x=>soloVer(pizzaCarta(x))).join("")}</div>`
       :`<ul class="bebidas">${P.filter(x=>x.t===tipo).map(x=>soloVer(bebidaCarta(x))).join("")}</ul>`}
   </section>`).join("");

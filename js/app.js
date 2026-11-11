@@ -38,20 +38,35 @@ function foto(it,small=true){
 /* Tarjeta de pizza con el estilo de la carta impresa: media pizza sobre la etiqueta rosa */
 /* Precio como en la carta impresa: pizzas "6,90€", bebidas "2,5€" */
 const eurCarta=(v,corto)=>{const s=corto?String(+v.toFixed(2)):v.toFixed(2);return (LANG==="en"?s:s.replace(".",","))+"€";};
+/* Iconos de alérgenos (los de la carta impresa: gluten, lácteos, pescado, frutos de cáscara).
+   Los datos están en ALERG (js/legal.js); cada icono lleva su nombre para lectores de pantalla. */
+const ALG_ICO={
+  gluten:'<path d="M12 21V9"/><path d="M12 9c-2.5-.5-4-2.4-4-5 2.5.5 4 2.4 4 5zm0 0c2.5-.5 4-2.4 4-5-2.5.5-4 2.4-4 5zM12 14c-2.5-.5-4-2.4-4-5 2.5.5 4 2.4 4 5zm0 0c2.5-.5 4-2.4 4-5-2.5.5-4 2.4-4 5zM12 19c-2.5-.5-4-2.4-4-5 2.5.5 4 2.4 4 5zm0 0c2.5-.5 4-2.4 4-5-2.5.5-4 2.4-4 5z"/>',
+  leche:'<path d="M3 17l9-9 9 4v6H3z"/><path d="M3 17v-1l9-8"/><circle cx="9" cy="14" r="1.2"/><circle cx="15" cy="15" r="1"/><circle cx="17" cy="12.5" r=".8"/>',
+  pescado:'<path d="M2 12c3-4 7-5 11-4 3 .7 5 2.3 6 4-1 1.7-3 3.3-6 4-4 1-8 0-11-4z"/><path d="M19 12l3-3v6z"/><circle cx="7" cy="11" r=".9" fill="currentColor"/>',
+  "frutos de cáscara":'<path d="M12 3c4 0 7 4 7 9s-3 9-7 9-7-4-7-9 3-9 7-9z"/><path d="M12 3c-2 3-2 15 0 18"/>'
+};
+const algIco=a=>ALG_ICO[a]?`<svg class="al-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="${esc(alg(a))}"><title>${esc(alg(a))}</title>${ALG_ICO[a]}</svg>`:"";
+const algFila=it=>{const a=(ALERG[it.n]||[]).filter(x=>ALG_ICO[x]);return a.length?`<span class="al-fila">${a.map(algIco).join("")}</span>`:"";};
+/* Leyenda al principio de la carta */
+function leyendaAlerg(){
+  return `<div class="al-ley"><b>${esc(t("al_ley"))}</b><ul>${Object.keys(ALG_ICO).map(a=>`<li>${algIco(a)}<span>${esc(cap(alg(a)))}</span></li>`).join("")}</ul><small>${esc(t("al_ley_p"))}</small></div>`;
+}
 function pizzaCarta(it){
   const n=nm(it.n);
   return `<div class="pz" role="button" tabindex="0" data-prod="${it.i}" data-pi="${it.i}" aria-label="${esc(n)}, ${eur(it.p)}">
     <div class="pz-img"><img src="${imgDe(it,"-m")}" alt="${esc(cap(n.toLowerCase()))}" loading="lazy" decoding="async" width="520" height="278"></div>
-    <div class="pz-pill"><h3 class="${n.length>11?"largo":""}">${esc(n)}</h3><span class="pz-precio">${eurCarta(it.p)}</span></div>
+    <div class="pz-pill"><h3>${esc(n)}</h3><span class="pz-precio">${eurCarta(it.p)}</span></div>
     <p>${esc(desc(it))}</p>
+    ${algFila(it)}
     ${it.badge?`<span class="tag">${t(it.badge==="top"?"tag_top":"tag_fresh")}</span>`:""}
     <button type="button" class="mas" data-add="${it.i}" aria-label="${esc(t("quick_add",{n}))}">${ICO.mas}</button>
   </div>`;
 }
-/* Fila de bebida con puntos, como en la carta */
+/* Bebida: foto, nombre con puntos y precio, como en la carta */
 function bebidaCarta(it){
   const n=nm(it.n);
-  return `<li class="bb" data-pi="${it.i}"><button type="button" class="bb-t" data-prod="${it.i}"><span class="bn">${esc(n)}</span><span class="pts" aria-hidden="true"></span><span class="bp">${eurCarta(it.p,true)}</span></button>
+  return `<li class="bb" data-pi="${it.i}"><button type="button" class="bb-t" data-prod="${it.i}"><span class="bb-f"><img src="${imgDe(it,"-s")}" alt="" loading="lazy" decoding="async"></span><span class="bn">${esc(n)}</span><span class="pts" aria-hidden="true"></span><span class="bp">${eurCarta(it.p,true)}</span></button>
     <button type="button" class="mas" data-add="${it.i}" aria-label="${esc(t("quick_add",{n}))}">${ICO.mas}</button></li>`;
 }
 const fotoLocal=l=>IMG+(FOTO_LOCAL[l.id]||"l-mercado")+".webp";
@@ -411,6 +426,7 @@ function pintarCarta(){
   $("cartaCuerpo").innerHTML=CATS.map(([id,k,tipo])=>`
     <section class="cat-sec" id="cat-${id}" data-sec="${id}">
       <div class="cat-cab"><img src="assets/img/logo-rosa.png" alt="PIZZI" width="1231" height="673"><h2 class="deco">${tipo==="pizza"?t("cat_pizzas_31"):t(k)}</h2></div>
+      ${tipo==="pizza"?leyendaAlerg():""}
       ${tipo==="pizza"?`<div class="carta-pz">${P.filter(x=>x.t===tipo&&!x.oculto).map(pizzaCarta).join("")}</div>`
         :`<ul class="bebidas">${P.filter(x=>x.t===tipo&&!x.oculto).map(bebidaCarta).join("")}</ul>`}
     </section>`).join("");
