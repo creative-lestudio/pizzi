@@ -21,6 +21,7 @@ function filaProd(it){
     <div class="ap-prod-t">
       <b>${esc(cap(n.toLowerCase()))}</b>
       ${desc(it)?`<p>${esc(desc(it))}</p>`:""}
+      ${algFila(it)}
       <span class="ap-precio">${eur(it.p)}${it.badge?` <i>${esc(t(it.badge==="top"?"tag_top":"tag_fresh"))}</i>`:""}</span>
     </div>
     <div class="ap-prod-f"><img src="${imgDe(it,"-s")}" alt="" loading="lazy" decoding="async">
@@ -40,7 +41,7 @@ function pintarPedir(){
   $("apAviso").textContent=PD.cargando?t("app_loading_menu"):t("app_no_slots");
   $("apCarta").innerHTML=CATS.map(([id,k,tipo])=>{
     const its=P.filter(x=>x.t===tipo&&!x.oculto);
-    return its.length?`<section class="ap-sec" id="apc-${id}"><h2 class="deco">${esc(t(k))}</h2>${its.map(filaProd).join("")}</section>`:"";
+    return its.length?`<section class="ap-sec" id="apc-${id}"><h2 class="deco">${esc(t(k))}</h2>${tipo==="pizza"?leyendaAlerg():""}${its.map(filaProd).join("")}</section>`:"";
   }).join("");
   pintarBarra();
 }
