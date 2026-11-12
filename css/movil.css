@@ -7,7 +7,7 @@
    también bajo la barra del navegador del iPhone. <html> y <body> llevan el mismo vino que la app
    para que el rebote al desplazar no muestre otro color. */
 html.modo-app,html.modo-app body{background:#8A0619; scrollbar-gutter:auto}
-html.modo-app body>:not(.app-m):not(.toast){display:none!important}
+html.modo-app body>:not(.app-m):not(.toast):not(.al-modal){display:none!important}
 
 .app-m{
   --am-rosa:#E2B0AE; --am-borde:rgba(150,4,30,.18); --am-verde:#2E7D4F; --am-verde-bg:#DDF2E3;
@@ -550,3 +550,12 @@ html.con-barra .toast{bottom:calc(96px + var(--sab))}
 .am-lang-l button{justify-content:flex-start; gap:12px}
 #amc-alergenos .al-sec{padding:4px 0 0; background:none}
 .am-cat .al-tabla tbody th{font-size:18px}
+
+/* ---------- Ajustes de la app (móvil) ---------- */
+.app-m{background:#96041E}
+html.modo-app,html.modo-app body{background:#96041E}
+.ah-foto{background-image:linear-gradient(180deg,rgba(40,0,8,.45) 0%,rgba(40,0,8,.1) 30%,rgba(120,2,24,.65) 78%,#96041E 100%),url(../assets/img/hero-app.webp)}
+.am-top{padding-top:calc(var(--sat) + 30px)}
+.ah-hero .deco{font-size:clamp(30px,9vw,40px)}
+.ah-hoja{gap:12px; padding-bottom:calc(10px + var(--sab))}
+.ah-hoja>.ah-sec:last-child{min-height:40px; padding-bottom:0}

@@ -10,11 +10,11 @@ const EMPRESA={
   tel:"+34 744 78 47 37",
   registro:"[DATOS DE INSCRIPCIÓN EN EL REGISTRO MERCANTIL: tomo, folio, hoja]",
   web:"[DOMINIO DE LA WEB]",
-  actualizado:"7 de octubre de 2026",
+  actualizado:"12 de noviembre de 2026",
   alergenosValidados:false   // pasar a true cuando Pizzi valide la tabla con las fichas de sus proveedores
 };
 const pv=x=>String(x).startsWith("[")?`<mark class="pend">${esc(x)}</mark>`:esc(x);
-const PAGINAS=["aviso-legal","privacidad","cookies","condiciones","alergenos"];
+const PAGINAS=["aviso-legal","privacidad","cookies","condiciones","alergenos","accesibilidad"];
 const listaLocalesLegal=()=>`<ul>${LOCALES.map(l=>`<li><b>Pizzi ${esc(l.n)}</b> · ${esc(l.d)} · Tel. ${esc(l.tel)}</li>`).join("")}</ul>`;
 const ALERG={
   "MARGHERITA":["gluten","leche"],
@@ -183,6 +183,14 @@ ${listaLocalesLegal()}
 <h2>13. Modificaciones</h2>
 <p>Se aplican las condiciones vigentes en el momento de confirmar cada pedido.</p>`,
 
+"accesibilidad":()=>`
+<h1>Declaración de accesibilidad</h1>
+<p class="upd">Última actualización: ${EMPRESA.actualizado}</p>
+<p>${pv(EMPRESA.razon)} se compromete a que esta web y su servicio de pedidos sean accesibles, conforme a la Ley 11/2023 (transposición de la Directiva (UE) 2019/882, Acta Europea de Accesibilidad), exigible a los servicios de comercio electrónico desde el 28 de junio de 2025, y a la norma UNE-EN 301 549 (WCAG 2.1, nivel AA).</p>
+<h2>Situación de cumplimiento</h2>
+<p>La web es parcialmente conforme: se puede usar con teclado y lector de pantalla, respeta la preferencia de reducir animaciones, tiene textos alternativos y contraste suficiente en los elementos principales, y funciona en móvil y ordenador. Seguimos revisando el mapa de locales y las ventanas emergentes.</p>
+<h2>Contacto y reclamaciones</h2>
+<p>Si encuentras una barrera de accesibilidad o no puedes completar un pedido, escríbenos a ${pv(EMPRESA.email)} o llama al ${esc(EMPRESA.tel)}: te ayudaremos a hacer el pedido por otra vía y responderemos en un plazo máximo de 20 días hábiles. Si la respuesta no es satisfactoria, puedes acudir a la autoridad de consumo de la Comunitat Valenciana.</p>`,
 "alergenos":()=>{
   const filas=P.map(it=>{const a=ALERG[it.n]||[];return `<tr><td>${esc(nomLegal(it.n))}</td><td>${a.length?a.map(esc).join(", "):"—"}</td></tr>`}).join("");
   return `

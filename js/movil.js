@@ -52,7 +52,8 @@ function reparto(){
     const i=cand.find(x=>!pos||DIST[x]<=R.radioMax);
     return R[p+"Todos"]&&i!==undefined?{u:R[p+"Todos"],i}:null;
   };
-  return{glovo:centrica?elegir("glovo"):null,uber:elegir("uber"),centrica};
+  // Se ofrecen las dos apps y el cliente elige
+  return{glovo:elegir("glovo"),uber:elegir("uber"),centrica};
 }
 
 /* ---------- Pintado ---------- */
@@ -226,13 +227,13 @@ function pintarDomicilio(){
 const soloVer=h=>h.replace(/<button type="button" class="mas"[\s\S]*?<\/button>/g,"").replace(/ data-prod="\d+"/g,"").replace(' role="button" tabindex="0"',"")
   .replace(/<button type="button" class="bb-t">([\s\S]*?)<\/button>/g,'<span class="bb-t">$1</span>');
 function pintarCartaApp(){
-  $("amChips").innerHTML=CATS.map(([id,k])=>`<button type="button" data-am-cat="${id}">${esc(t(k))}</button>`).join("")+`<button type="button" data-am-cat="alergenos">${esc(t("al_ley"))}</button>`;
+  $("amChips").innerHTML=CATS.map(([id,k])=>`<button type="button" data-am-cat="${id}">${esc(t(k))}</button>`).join("");
   $("amCarta").innerHTML=CATS.map(([id,k,tipo])=>`<section class="am-cat" id="amc-${id}">
     <h3 class="deco">${esc(tipo==="pizza"?t("cat_pizzas_31"):t(k))}</h3>
     ${tipo==="pizza"?leyendaAlerg():""}
     ${tipo==="pizza"?`<div class="carta-pz">${P.filter(x=>x.t===tipo).map(x=>soloVer(pizzaCarta(x))).join("")}</div>`
       :`<ul class="bebidas">${P.filter(x=>x.t===tipo).map(x=>soloVer(bebidaCarta(x))).join("")}</ul>`}
-  </section>`).join("")+`<section class="am-cat" id="amc-alergenos">${tablaAlerg()}</section>`;
+  </section>`).join("");
   APP.cartaLang=LANG;
 }
 
