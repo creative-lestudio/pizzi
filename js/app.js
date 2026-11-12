@@ -60,7 +60,7 @@ const algIco=a=>ALG_ICO[a]?`<span class="al-i" role="img" aria-label="${esc(alg(
 const algFila=it=>{const a=(ALERG[it.n]||[]).filter(x=>ALG_ICO[x]);return a.length?`<span class="al-fila">${a.map(algIco).join("")}</span>`:"";};
 /* Leyenda al principio de la carta */
 function leyendaAlerg(){
-  return `<div class="al-ley"><b>${esc(t("al_ley"))}</b><ul>${Object.keys(ALG_ICO).map(a=>`<li>${algIco(a)}<span>${esc(cap(alg(a)))}</span></li>`).join("")}</ul><small>${esc(t("al_ley_p"))}</small></div>`;
+  return `<div class="al-ley"><b>${esc(t("al_ley"))}</b><ul>${Object.keys(ALG_ICO).map(a=>`<li>${algIco(a)}<span>${esc(cap(alg(a)))}</span></li>`).join("")}</ul><small>${esc(t("al_ley_p"))}</small><button type="button" class="al-btn" data-al-abrir>${esc(t("al_sec_h"))}</button></div>`;
 }
 /* Sección de alérgenos de la carta: cada producto con sus alérgenos (datos de ALERG, js/legal.js) */
 function tablaAlerg(){
@@ -70,6 +70,11 @@ function tablaAlerg(){
     <tbody>${P.filter(x=>!x.oculto).map(fila).join("")}</tbody></table>
     <small>${esc(t("al_ley_p"))}</small> <a href="#alergenos">${esc(t("aler_more"))}</a></div>`;
 }
+/* Ventana con la información de alérgenos (se abre desde el botón de la leyenda) */
+function abrirAlerg(){$("alModalC").innerHTML=tablaAlerg();$("alModal").hidden=false;document.documentElement.classList.add("bloqueado");$("alModalX").focus();}
+function cerrarAlerg(){$("alModal").hidden=true;document.documentElement.classList.remove("bloqueado");}
+document.addEventListener("click",e=>{if(e.target.closest("[data-al-abrir]")){e.preventDefault();abrirAlerg();}else if(e.target.id==="alModal")cerrarAlerg();});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("alModal").hidden)cerrarAlerg();});
 function pizzaCarta(it){
   const n=nm(it.n);
   return `<div class="pz" role="button" tabindex="0" data-prod="${it.i}" data-pi="${it.i}" aria-label="${esc(n)}, ${eur(it.p)}">
@@ -440,14 +445,14 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-pedir]");i
 
 /* ---------- CARTA ---------- */
 function pintarCarta(){
-  $("cats").innerHTML=CATS.map(([id,k],j)=>`<a href="#cat-${id}" data-cat="${id}" class="${j===0?"on":""}">${t(k)}</a>`).join("")+`<a href="#cat-alergenos" data-cat="alergenos">${t("al_ley")}</a>`;
+  $("cats").innerHTML=CATS.map(([id,k],j)=>`<a href="#cat-${id}" data-cat="${id}" class="${j===0?"on":""}">${t(k)}</a>`).join("");
   $("cartaCuerpo").innerHTML=CATS.map(([id,k,tipo])=>`
     <section class="cat-sec" id="cat-${id}" data-sec="${id}">
       <div class="cat-cab"><img src="assets/img/logo-rosa.png" alt="PIZZI" width="1231" height="673"><h2 class="deco">${tipo==="pizza"?t("cat_pizzas_31"):t(k)}</h2></div>
       ${tipo==="pizza"?leyendaAlerg():""}
       ${tipo==="pizza"?`<div class="carta-pz">${P.filter(x=>x.t===tipo&&!x.oculto).map(pizzaCarta).join("")}</div>`
         :`<ul class="bebidas">${P.filter(x=>x.t===tipo&&!x.oculto).map(bebidaCarta).join("")}</ul>`}
-    </section>`).join("")+`<section class="cat-sec" id="cat-alergenos" data-sec="alergenos">${tablaAlerg()}</section>`;
+    </section>`).join("");
   marcarEnCarro();
   pintarAvisoCarta();
 }

@@ -616,3 +616,26 @@ mark.pend{background:#FFE066; color:var(--tinta); padding:0 4px; border-radius:4
 .al-sec a{color:var(--vino); font-size:14px}
 /* Inicio de escritorio con la foto del local */
 .hero-bg{background-image:url(../assets/img/hero-web.webp); background-position:center 45%}
+
+/* ---------- Ventana de alérgenos ---------- */
+.al-btn{display:block; margin:12px 0 0; padding:10px 18px; border:0; border-radius:999px; background:var(--rosa); color:var(--vino); cursor:pointer; font:600 15px/1 var(--cond); letter-spacing:.06em; text-transform:uppercase; -webkit-text-stroke:var(--t-r) currentColor}
+.al-modal{position:fixed; inset:0; z-index:120; display:flex; align-items:flex-end; justify-content:center; background:rgba(30,0,6,.6)}
+.al-modal[hidden]{display:none}
+.al-modal-c{position:relative; width:100%; max-width:720px; max-height:88dvh; overflow-y:auto; border-radius:28px 28px 0 0; background:#fff; padding-bottom:var(--sab)}
+.al-modal-c .al-sec{margin:0; padding:26px 20px 20px}
+.al-modal-c .al-sec h2{padding-right:48px}
+.al-modal-x{position:sticky; top:12px; float:right; margin:12px 12px 0 0; z-index:2; width:40px; height:40px; display:grid; place-items:center; border:0; border-radius:50%; background:var(--rosa-cc); color:var(--vino); cursor:pointer}
+.al-modal-x svg{width:20px; height:20px}
+@media (min-width:700px){.al-modal{align-items:center}.al-modal-c{border-radius:28px}}
+
+/* ---------- Escritorio: inicio breve y directo ----------
+   Foto del local a pantalla ancha con el titular a la izquierda y la tarjeta de pedido a la derecha;
+   debajo, solo «Así de fácil» y los locales. */
+@media (min-width:900px){
+  #v-inicio .hero{min-height:calc(100vh - var(--hdr) - 60px); display:flex; align-items:center}
+  #v-inicio .hero-in{width:100%; padding-right:470px}
+  #v-inicio .hero h1{font-size:clamp(64px,7vw,104px)}
+  #v-inicio .pedir-card{position:relative; z-index:3; width:420px; margin:calc(-1 * (100vh - var(--hdr) - 60px) / 2 - 190px) 0 0 auto; box-shadow:0 30px 70px rgba(40,0,6,.4)}
+  #v-inicio .bloque-carta,#v-inicio .banda,#v-inicio .repetir{display:none!important}
+  #v-inicio .bloque{margin-top:70px}
+}

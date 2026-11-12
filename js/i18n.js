@@ -305,3 +305,5 @@ Object.assign(I,{
 "al_prod":["Producto","Product","Prodotto","Produit","Produkt"],
 "al_none":["Sin alérgenos declarados","No declared allergens","Nessun allergene dichiarato","Aucun allergène déclaré","Keine deklarierten Allergene"]
 });
+
+Object.assign(I,{"lg_acc":["Accesibilidad","Accessibility","Accessibilità","Accessibilité","Barrierefreiheit"]});

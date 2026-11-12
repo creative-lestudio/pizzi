@@ -28,7 +28,7 @@ const CONFIG={
     radioCentro:3,
     radioMax:7,
     uberTodos:"",
-    glovoTodos:""
+    glovoTodos:"https://glovoapp.com/es/es/valencia/search/?query=pizzi"
   }
 };
 
