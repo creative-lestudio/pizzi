@@ -6,7 +6,7 @@
    - whatsappDemo: MODO PRUEBA. Mientras un local no tenga su "whatsapp", los pedidos llegan a este número.
 */
 const CONFIG={
-  demo:true,
+  demo:false,
   whatsappDemo:"584241859724",
   /* CONECTOR CON EL TPV (js/conector.js)
      - envio: "demo" simula el pedido (no llega al local ni se cobra). "shift4" cuando Shift4 lo apruebe.
