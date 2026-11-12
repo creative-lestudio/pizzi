@@ -307,3 +307,8 @@ Object.assign(I,{
 });
 
 Object.assign(I,{"lg_acc":["Accesibilidad","Accessibility","Accessibilità","Accessibilité","Barrierefreiheit"]});
+
+Object.assign(I,{
+"call_order":["Llamar para pedir","Call to order","Chiama per ordinare","Appeler pour commander","Zum Bestellen anrufen"],
+"call_note":["Pizzi {n} aún no tiene pedido online: llámanos y te lo preparamos.","Pizzi {n} doesn't have online ordering yet: call us and we'll get it ready.","Pizzi {n} non ha ancora l'ordine online: chiamaci e te lo prepariamo.","Pizzi {n} n'a pas encore la commande en ligne : appelle-nous et on te la prépare.","Pizzi {n} hat noch keine Online-Bestellung: ruf uns an, wir bereiten sie vor."]
+});

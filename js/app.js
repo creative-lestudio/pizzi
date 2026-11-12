@@ -437,7 +437,7 @@ function tarjetaLocal(i,completa){
       <div class="row">
         <a class="btn btn-linea" href="${l.maps}" target="_blank" rel="noopener">${t("how_get")}</a>
         ${l.pedidoUrl?`<a class="btn btn-vino" href="${l.pedidoUrl}" target="_blank" rel="noopener">${t("order_pay_online")}</a>`
-          :`<button type="button" class="btn btn-vino" data-pedir="${i}">${abierto(l)?t("order_here"):t("schedule")}</button>`}
+          :`<a class="btn btn-vino" href="${telDe(l)}">${t("call_order")}</a>`}
       </div>
     </div></article>`;
 }
@@ -456,9 +456,12 @@ function pintarCarta(){
   marcarEnCarro();
   pintarAvisoCarta();
 }
+/* Locales sin tienda SkyTab todavía: se pide por teléfono */
+const telDe=l=>"tel:"+l.tel.replace(/\s/g,"");
 function pintarAvisoCarta(){
   const l=localSel(),av=$("avisoCarta");
-  if(l&&l.pedidoUrl){av.hidden=false;av.innerHTML=`<p>${t("online_note",{n:esc(l.n)})}</p><a class="btn btn-blanco" href="${l.pedidoUrl}" target="_blank" rel="noopener">${t("go_pay")}</a>`;}
+  if(l&&!l.pedidoUrl&&!PEDIDOS_WEB){av.hidden=false;av.innerHTML=`<p>${t("call_note",{n:esc(l.n)})}</p><a class="btn btn-blanco" href="${telDe(l)}">${t("call_order")}</a>`;}
+  else if(l&&l.pedidoUrl){av.hidden=false;av.innerHTML=`<p>${t("online_note",{n:esc(l.n)})}</p><a class="btn btn-blanco" href="${l.pedidoUrl}" target="_blank" rel="noopener">${t("go_pay")}</a>`;}
   else if(l&&!abierto(l)){const p=proxima(l);av.hidden=false;av.innerHTML=`<p>${t("closed_sched",{n:esc(l.n),o:esc(p?(p.off===0?t("opens_today",{h:hhmm(p.m)}):t("opens_at",{d:nombreDia(p.off),h:hhmm(p.m)})):"")})}</p>`;}
   else av.hidden=true;
 }
@@ -502,9 +505,15 @@ function pintarPedido(){
   $("coHora").textContent=l?horaCorta(l,S.hora):t("first_store");
   $("coTot").textContent=eur(total());$("confTot").textContent=eur(total());
   // Local con tienda online propia
-  const online=!PEDIDOS_WEB&&!!(l&&l.pedidoUrl);
+  // Sin pedidos web: con SkyTab se paga en su tienda; sin SkyTab, se pide llamando al local (ya no por WhatsApp)
+  const online=!PEDIDOS_WEB&&!!l;
   $("avisoOnline").hidden=!online;$("bloqueAcepto").hidden=online;$("ctaConfirmar").hidden=online;$("waNota").hidden=online;$("cajaDatos").hidden=online;
-  if(online){$("irOnline").href=l.pedidoUrl;$("avisoTxt").innerHTML=t("online_note",{n:esc(l.n)});}
+  if(online){
+    const sky=!!l.pedidoUrl,a=$("irOnline");
+    a.href=sky?l.pedidoUrl:telDe(l);a.textContent=t(sky?"go_pay":"call_order");
+    if(sky){a.target="_blank";}else a.removeAttribute("target");
+    $("avisoTxt").innerHTML=t(sky?"online_note":"call_note",{n:esc(l.n)});
+  }
   $("privFirst").textContent=t("priv_first",{r:EMPRESA.razon});
   if(PEDIDOS_WEB){$("waNota").hidden=true;$("pagoT").textContent=t("pay_web");$("pagoP").textContent=t("pay_web_p");}
 }

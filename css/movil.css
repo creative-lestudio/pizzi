@@ -559,3 +559,5 @@ html.modo-app,html.modo-app body{background:#96041E}
 .ah-hero .deco{font-size:clamp(30px,9vw,40px)}
 .ah-hoja{gap:12px; padding-bottom:calc(10px + var(--sab))}
 .ah-hoja>.ah-sec:last-child{min-height:40px; padding-bottom:0}
+/* App (móvil): sin foto, fondo vino liso en todas las pantallas */
+.ah-foto{display:none!important}
