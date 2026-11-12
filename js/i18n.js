@@ -297,3 +297,11 @@ Object.assign(I,{
 "al_ley":["Alérgenos","Allergens","Allergeni","Allergènes","Allergene"],
 "al_ley_p":["Orientativos. Si tienes alergias, consulta con nuestro equipo: puede haber contaminación cruzada.","For guidance only. If you have allergies, ask our team: cross-contamination may occur.","Indicativi. Se hai allergie, chiedi al nostro staff: può esserci contaminazione crociata.","À titre indicatif. En cas d'allergie, demande à notre équipe : contamination croisée possible.","Nur zur Orientierung. Bei Allergien frag unser Team: Kreuzkontamination möglich."]
 });
+
+/* Sección de alérgenos de la carta */
+Object.assign(I,{
+"al_sec_h":["Información de alérgenos","Allergen information","Informazioni sugli allergeni","Informations sur les allergènes","Allergeninformationen"],
+"al_sec_p":["Alérgenos de declaración obligatoria (Reglamento UE 1169/2011) presentes en cada producto.","Mandatory allergens (EU Regulation 1169/2011) in each product.","Allergeni obbligatori (Regolamento UE 1169/2011) presenti in ogni prodotto.","Allergènes à déclaration obligatoire (règlement UE 1169/2011) présents dans chaque produit.","Kennzeichnungspflichtige Allergene (EU-Verordnung 1169/2011) in jedem Produkt."],
+"al_prod":["Producto","Product","Prodotto","Produit","Produkt"],
+"al_none":["Sin alérgenos declarados","No declared allergens","Nessun allergene dichiarato","Aucun allergène déclaré","Keine deklarierten Allergene"]
+});

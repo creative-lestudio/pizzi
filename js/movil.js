@@ -22,7 +22,9 @@ const APP={estado:null,manual:false,abierto:null,desdeHola:false,pant:null,carta
 const PLAT={glovo:"Glovo",uber:"Uber Eats"};
 
 const hashApp=()=>location.hash.replace("#","");
-const enApp=()=>PANT_APP.includes(hashApp());
+/* La app es la versión móvil; en el ordenador se ve la web de escritorio (inicio, carta, locales, pedido) */
+const MOVIL=matchMedia("(max-width:899px)");
+const enApp=()=>MOVIL.matches&&PANT_APP.includes(hashApp());
 const pantallaApp=()=>TABS.includes(hashApp())||PANT_PEDIR.includes(hashApp())?hashApp():"hola";
 const conPos=()=>!!YO&&(APP.estado==="ok"||APP.estado==="aprox");
 
@@ -224,13 +226,13 @@ function pintarDomicilio(){
 const soloVer=h=>h.replace(/<button type="button" class="mas"[\s\S]*?<\/button>/g,"").replace(/ data-prod="\d+"/g,"").replace(' role="button" tabindex="0"',"")
   .replace(/<button type="button" class="bb-t">([\s\S]*?)<\/button>/g,'<span class="bb-t">$1</span>');
 function pintarCartaApp(){
-  $("amChips").innerHTML=CATS.map(([id,k])=>`<button type="button" data-am-cat="${id}">${esc(t(k))}</button>`).join("");
+  $("amChips").innerHTML=CATS.map(([id,k])=>`<button type="button" data-am-cat="${id}">${esc(t(k))}</button>`).join("")+`<button type="button" data-am-cat="alergenos">${esc(t("al_ley"))}</button>`;
   $("amCarta").innerHTML=CATS.map(([id,k,tipo])=>`<section class="am-cat" id="amc-${id}">
     <h3 class="deco">${esc(tipo==="pizza"?t("cat_pizzas_31"):t(k))}</h3>
     ${tipo==="pizza"?leyendaAlerg():""}
     ${tipo==="pizza"?`<div class="carta-pz">${P.filter(x=>x.t===tipo).map(x=>soloVer(pizzaCarta(x))).join("")}</div>`
       :`<ul class="bebidas">${P.filter(x=>x.t===tipo).map(x=>soloVer(bebidaCarta(x))).join("")}</ul>`}
-  </section>`).join("");
+  </section>`).join("")+`<section class="am-cat" id="amc-alergenos">${tablaAlerg()}</section>`;
   APP.cartaLang=LANG;
 }
 
@@ -245,7 +247,7 @@ function pintarApp(){
   PANT_PEDIR.forEach(x=>$("am-"+x).hidden=x!==p);
   $("appM").classList.toggle("en-pide",p!=="hola");
   $("amVolver").hidden=p==="hola";
-  $("amLangCode").textContent=LANG.toUpperCase();
+  $("amLangCode").innerHTML=bandera(LANG);
   if(p==="hola"){pintarHola();pintarBarra();return;}
   if(pedir){repintarPedir();return;}
   pintarBarra();
@@ -270,6 +272,7 @@ function alEntrar(){
   if(APP.estado===null)buscar();
 }
 window.addEventListener("hashchange",alEntrar);
+MOVIL.addEventListener("change",()=>{alEntrar();if(!enApp())ir();});
 
 $("appM").addEventListener("click",e=>{
   // Las pestañas sustituyen la entrada del historial: «atrás» vuelve al inicio, no a la pestaña anterior
@@ -294,7 +297,7 @@ function cerrarLangApp(){amLangL.hidden=true;$("amLang").setAttribute("aria-expa
 $("amLang").onclick=e=>{
   e.stopPropagation();
   if(!amLangL.hidden){cerrarLangApp();return;}
-  amLangL.innerHTML=LANGS.map(l=>`<li><button type="button" role="option" aria-selected="${l===LANG}" data-am-l="${l}"><span>${LNAME[l]}</span><b>${l.toUpperCase()}</b></button></li>`).join("");
+  amLangL.innerHTML=LANGS.map(l=>`<li><button type="button" role="option" aria-selected="${l===LANG}" data-am-l="${l}">${bandera(l)}<span>${LNAME[l]}</span></button></li>`).join("");
   amLangL.hidden=false;$("amLang").setAttribute("aria-expanded","true");
 };
 amLangL.onclick=e=>{

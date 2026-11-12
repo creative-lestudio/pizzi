@@ -6,6 +6,15 @@
 
 /* ---------- Idioma ---------- */
 let LANG="es";
+/* Banderas del selector de idioma (SVG: se ven igual en todos los sistemas, también en Windows) */
+const BANDERAS={
+  es:'<rect width="30" height="20" fill="#AA151B"/><rect y="5" width="30" height="10" fill="#F1BF00"/>',
+  en:'<rect width="30" height="20" fill="#012169"/><path d="M0 0l30 20M30 0L0 20" stroke="#fff" stroke-width="4"/><path d="M0 0l30 20M30 0L0 20" stroke="#C8102E" stroke-width="1.6"/><path d="M15 0v20M0 10h30" stroke="#fff" stroke-width="6"/><path d="M15 0v20M0 10h30" stroke="#C8102E" stroke-width="3.4"/>',
+  it:'<rect width="10" height="20" fill="#009246"/><rect x="10" width="10" height="20" fill="#fff"/><rect x="20" width="10" height="20" fill="#CE2B37"/>',
+  fr:'<rect width="10" height="20" fill="#0055A4"/><rect x="10" width="10" height="20" fill="#fff"/><rect x="20" width="10" height="20" fill="#EF4135"/>',
+  de:'<rect width="30" height="7" fill="#000"/><rect y="6.6" width="30" height="6.8" fill="#DD0000"/><rect y="13.3" width="30" height="6.7" fill="#FFCE00"/>'
+};
+const bandera=l=>`<svg class="bandera" viewBox="0 0 30 20" aria-hidden="true">${BANDERAS[l]||""}</svg>`;
 try{const g=localStorage.getItem("pizzi-lang");if(LANGS.includes(g))LANG=g;}catch(e){}
 const LI=()=>LANGS.indexOf(LANG);
 const t=(k,v)=>{const a=I[k];let s=a?(a[LI()]??a[0]):k;if(v)for(const x in v)s=s.split("{"+x+"}").join(v[x]);return s;};
@@ -52,6 +61,14 @@ const algFila=it=>{const a=(ALERG[it.n]||[]).filter(x=>ALG_ICO[x]);return a.leng
 /* Leyenda al principio de la carta */
 function leyendaAlerg(){
   return `<div class="al-ley"><b>${esc(t("al_ley"))}</b><ul>${Object.keys(ALG_ICO).map(a=>`<li>${algIco(a)}<span>${esc(cap(alg(a)))}</span></li>`).join("")}</ul><small>${esc(t("al_ley_p"))}</small></div>`;
+}
+/* Sección de alérgenos de la carta: cada producto con sus alérgenos (datos de ALERG, js/legal.js) */
+function tablaAlerg(){
+  const fila=it=>{const a=ALERG[it.n]||[];return `<tr><th scope="row">${esc(cap(nm(it.n).toLowerCase()))}</th><td>${a.length?`<span class="al-tl">${a.map(x=>`<span>${algIco(x)}${esc(cap(alg(x)))}</span>`).join("")}</span>`:esc(t("al_none"))}</td></tr>`;};
+  return `<div class="al-sec"><h2 class="deco">${esc(t("al_sec_h"))}</h2><p>${esc(t("al_sec_p"))}</p>
+    <table class="al-tabla"><thead><tr><th scope="col">${esc(t("al_prod"))}</th><th scope="col">${esc(t("al_ley"))}</th></tr></thead>
+    <tbody>${P.filter(x=>!x.oculto).map(fila).join("")}</tbody></table>
+    <small>${esc(t("al_ley_p"))}</small> <a href="#alergenos">${esc(t("aler_more"))}</a></div>`;
 }
 function pizzaCarta(it){
   const n=nm(it.n);
@@ -423,14 +440,14 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-pedir]");i
 
 /* ---------- CARTA ---------- */
 function pintarCarta(){
-  $("cats").innerHTML=CATS.map(([id,k],j)=>`<a href="#cat-${id}" data-cat="${id}" class="${j===0?"on":""}">${t(k)}</a>`).join("");
+  $("cats").innerHTML=CATS.map(([id,k],j)=>`<a href="#cat-${id}" data-cat="${id}" class="${j===0?"on":""}">${t(k)}</a>`).join("")+`<a href="#cat-alergenos" data-cat="alergenos">${t("al_ley")}</a>`;
   $("cartaCuerpo").innerHTML=CATS.map(([id,k,tipo])=>`
     <section class="cat-sec" id="cat-${id}" data-sec="${id}">
       <div class="cat-cab"><img src="assets/img/logo-rosa.png" alt="PIZZI" width="1231" height="673"><h2 class="deco">${tipo==="pizza"?t("cat_pizzas_31"):t(k)}</h2></div>
       ${tipo==="pizza"?leyendaAlerg():""}
       ${tipo==="pizza"?`<div class="carta-pz">${P.filter(x=>x.t===tipo&&!x.oculto).map(pizzaCarta).join("")}</div>`
         :`<ul class="bebidas">${P.filter(x=>x.t===tipo&&!x.oculto).map(bebidaCarta).join("")}</ul>`}
-    </section>`).join("");
+    </section>`).join("")+`<section class="cat-sec" id="cat-alergenos" data-sec="alergenos">${tablaAlerg()}</section>`;
   marcarEnCarro();
   pintarAvisoCarta();
 }
@@ -630,8 +647,8 @@ function aplicarIdioma(){
   document.querySelectorAll("[data-ih]").forEach(el=>{el.innerHTML=t(el.dataset.ih);});
   document.querySelectorAll("[data-ia]").forEach(el=>{el.setAttribute("aria-label",t(el.dataset.ia));});
   document.querySelectorAll("[data-iph]").forEach(el=>{el.placeholder=t(el.dataset.iph);});
-  $("langCode").textContent=LANG.toUpperCase();
-  langList.innerHTML=LANGS.map(l=>`<li><button type="button" role="option" aria-selected="${l===LANG}" data-l="${l}"><span>${LNAME[l]}</span><span>${l.toUpperCase()}</span></button></li>`).join("");
+  $("langCode").innerHTML=bandera(LANG);
+  langList.innerHTML=LANGS.map(l=>`<li><button type="button" role="option" aria-selected="${l===LANG}" data-l="${l}">${bandera(l)}<span>${LNAME[l]}</span></button></li>`).join("");
 }
 langList.onclick=e=>{const b=e.target.closest("[data-l]");if(!b)return;LANG=b.dataset.l;try{localStorage.setItem("pizzi-lang",LANG);}catch(x){}cerrarLang();aplicarIdioma();refrescar();actCarro();};
 
