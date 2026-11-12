@@ -596,3 +596,23 @@ mark.pend{background:#FFE066; color:var(--tinta); padding:0 4px; border-radius:4
 .bb-f{width:56px; height:56px; flex:none; display:grid; place-items:center; border-radius:14px; background:rgba(255,255,255,.12)}
 .bb-f img{max-width:46px; max-height:50px; width:auto; height:auto; object-fit:contain; filter:drop-shadow(0 4px 6px rgba(40,0,6,.3))}
 .bb-t .pts{transform:none; align-self:center}
+
+/* ---------- Banderas del selector de idioma ---------- */
+.bandera{width:26px; height:18px; flex:none; border-radius:3px; box-shadow:0 0 0 1px rgba(0,0,0,.12); vertical-align:middle}
+#langList button{display:flex; align-items:center; gap:10px; justify-content:flex-start}
+
+/* ---------- Sección de alérgenos de la carta ---------- */
+.al-sec{margin-top:10px; padding:22px; border-radius:var(--r-xl); background:#fff; color:var(--tinta); scroll-margin-top:140px}
+.al-sec h2{font-size:clamp(28px,4vw,40px); color:var(--vino); margin-bottom:6px}
+.al-sec>p{margin:0 0 14px; color:var(--suave); font-size:16px}
+.al-tabla{width:100%; border-collapse:collapse; font-size:16px}
+.al-tabla th,.al-tabla td{padding:10px 8px; border-bottom:1px solid var(--linea); text-align:left; vertical-align:middle}
+.al-tabla thead th{font:600 13px/1 var(--cond); letter-spacing:.1em; text-transform:uppercase; color:var(--suave)}
+.al-tabla tbody th{font:400 20px/1.1 var(--deco); text-transform:uppercase; color:var(--vino); width:38%}
+.al-tl{display:flex; flex-wrap:wrap; gap:6px 12px}
+.al-tl>span{display:inline-flex; align-items:center; gap:6px}
+.al-tl .al-i{width:26px; height:26px}
+.al-sec small{color:var(--suave); font-size:13px}
+.al-sec a{color:var(--vino); font-size:14px}
+/* Inicio de escritorio con la foto del local */
+.hero-bg{background-image:url(../assets/img/hero-web.webp); background-position:center 45%}
