@@ -323,4 +323,3 @@ Object.assign(I,{
 });
 
 Object.assign(I,{"ing_h":["Ingredientes","Ingredients","Ingredienti","Ingrédients","Zutaten"]});
-Object.assign(I,{"tipo_h":["¿Cómo la quieres?","How would you like it?","Come la vuoi?","Comment la veux-tu ?","Wie möchtest du sie?"]});

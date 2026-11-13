@@ -577,10 +577,11 @@ html.modo-app,html.modo-app body{background:#96041E}
 .am-menu ul{list-style:none; margin:0; padding:8px 14px}
 .am-menu li a{display:flex; align-items:center; gap:14px; min-height:60px; padding:8px 6px; border-bottom:1px solid var(--linea); color:var(--vino); text-decoration:none; font:600 18px/1.1 var(--cond); letter-spacing:.03em; -webkit-text-stroke:var(--t-r) currentColor}
 .am-mi{width:40px; height:40px; flex:none; display:grid; place-items:center; border-radius:12px; background:var(--rosa-cc)}
+.am-mi img{width:26px; height:26px}
 .am-mi svg{width:22px; height:22px}
 .am-menu-pie{margin-top:auto; padding:16px 20px calc(20px + var(--sab))}
 .am-menu-lang{display:flex; gap:8px; justify-content:center; margin-bottom:6px}
-.am-menu-lang button{padding:6px; border:0; border-radius:10px; background:none; cursor:pointer}
+.am-menu-lang button{touch-action:manipulation; padding:6px; border:0; border-radius:10px; background:none; cursor:pointer}
 .am-menu-lang button[aria-pressed="true"]{background:var(--rosa-cc); box-shadow:inset 0 0 0 2px var(--vino)}
 .am-menu-lang .bandera{width:30px; height:20px}
 .am-menu-pie .am-redes{padding:12px 0 0}
@@ -624,10 +625,3 @@ html.modo-app,html.modo-app body,.app-m{background:linear-gradient(rgba(150,4,30
 @keyframes am-pin{0%{box-shadow:0 0 0 0 rgba(150,4,30,.45),0 3px 8px rgba(80,0,16,.35)}100%{box-shadow:0 0 0 18px rgba(150,4,30,0),0 3px 8px rgba(80,0,16,.35)}}
 .am-yo{width:96px; height:96px; display:grid; place-items:center; border-radius:50%; background:rgba(251,114,165,.16)}
 .am-yo span{margin:0}
-/* ---------- Inicio: solo el logo y el botón de pedir; después, recoger o a domicilio ---------- */
-.ah-inicio{flex:1; width:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:40px; padding:0 4px 8vh}
-.ah-logo{width:min(66vw,280px); filter:drop-shadow(0 6px 24px rgba(40,0,8,.4))}
-.ah-inicio .ah-cta{width:100%; max-width:420px; min-height:74px; background:#fff; color:var(--vino); box-shadow:0 14px 34px rgba(40,0,8,.4); font-size:24px}
-.ah-inicio .ah-cta-f{width:52px; height:52px; background:var(--vino); color:#fff}
-.en-inicio .am-logo{visibility:hidden}
-.ah-tipos button{min-height:104px}

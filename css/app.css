@@ -582,7 +582,8 @@ mark.pend{background:#FFE066; color:var(--tinta); padding:0 4px; border-radius:4
 /* ---------- Alérgenos ----------
    Pastilla redonda rosa con el dibujo en vino (mismo lenguaje que los iconos de tipo de pedido) */
 .al-i{width:30px; height:30px; flex:none; display:inline-grid; place-items:center; border-radius:50%; background:var(--rosa); color:var(--vino); box-shadow:0 3px 8px rgba(40,0,6,.18)}
-.al-i svg{width:68%; height:68%}
+.al-i svg{width:68%; height:68%; stroke-width:2.4}
+.al-i img{width:72%; height:72%; object-fit:contain}
 .al-fila{display:flex; justify-content:center; gap:6px; margin-top:10px}
 .al-ley{margin:0 0 26px; padding:16px; border-radius:var(--r-l); background:rgba(255,255,255,.08); box-shadow:inset 0 0 0 1.5px rgba(226,176,174,.4); color:var(--rosa-txt)}
 .al-ley b{display:block; margin-bottom:12px; font:400 22px/1 var(--deco); text-transform:uppercase; color:var(--rosa); -webkit-text-stroke:0}

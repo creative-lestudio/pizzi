@@ -14,7 +14,7 @@
 "use strict";
 
 const TABS=["ubicaciones","domicilio","lacarta"];
-const PANT_APP=["","inicio","hola","tipo",...TABS,...PANT_PEDIR];
+const PANT_APP=["","inicio","hola",...TABS,...PANT_PEDIR];
 /* estado: null (sin buscar) · buscando · ok · aprox · denied · err · none
    abierto: local desplegado en «Ubicaciones» (null = el elegido, -1 = ninguno)
    desdeHola: se llegó a «Pide ahora» desde el inicio, así que «volver» es ir atrás en el historial */
@@ -25,7 +25,7 @@ const hashApp=()=>location.hash.replace("#","");
 /* La app es la versión móvil; en el ordenador se ve la web de escritorio (inicio, carta, locales, pedido) */
 const MOVIL=matchMedia("(max-width:899px)");
 const enApp=()=>MOVIL.matches&&PANT_APP.includes(hashApp());
-const pantallaApp=()=>TABS.includes(hashApp())||PANT_PEDIR.includes(hashApp())?hashApp():"hola";   // «tipo» es el paso 2 del inicio
+const pantallaApp=()=>TABS.includes(hashApp())||PANT_PEDIR.includes(hashApp())?hashApp():"hola";
 const conPos=()=>!!YO&&(APP.estado==="ok"||APP.estado==="aprox");
 
 /* ---------- Ubicación ---------- */
@@ -72,17 +72,21 @@ if(!TIPOS.includes(S.perfil.tipo))S.perfil.tipo="recoger";
 const tipoPedido=()=>S.perfil.tipo;
 
 function pintarHola(){
-  const e=APP.estado,l=localSel(),busca=e==="buscando";
+  const e=APP.estado,l=localSel(),busca=e==="buscando",tipo=tipoPedido();
   const fallo=["denied","err","none"].includes(e);
   $("amCercaT").innerHTML=busca?`<b>${esc(t("app_locating"))}</b><span class="am-pulso" aria-hidden="true"></span>`
     :!l?`<b>${esc(t("choose_store"))}</b>`
     :`<b>${esc(l.n)}${DIST[S.local]!=null?` <span>· ${esc(fmtKm(DIST[S.local]))}</span>`:""}</b><small><i class="${abierto(l)?"ab":"ce"}"></i>${esc(abierto(l)?t("app_open"):t("app_closed"))} · ${esc(hrTexto(l))}</small>`;
   $("amMsg").textContent=fallo&&!l?t(e==="denied"?"near_denied":e==="none"?"near_none":"near_err"):e==="aprox"&&!APP.manual?t("app_approx"):"";
-  // Recoger: sin tienda SkyTab todavía, el local se atiende por teléfono
-  $("ahRecS").textContent=t(l&&!l.pedidoUrl&&!PEDIDOS_WEB?"call_order":"tipo_recoger_s");
+  document.querySelectorAll("[data-am-tipo]").forEach(b=>b.setAttribute("aria-checked",String(b.dataset.amTipo===tipo)));
+  $("amTipoTxt").textContent=t("tipo_"+tipo+"_p");
+  // Botón principal: a domicilio lleva a las apps de reparto; si no, a pedir en el local elegido
+  const a=$("amAqui");
+  if(tipo==="domicilio"){a.href="#domicilio";$("amAquiT").textContent=t("app_deliv_cta");}
+  else{a.href=l?hrefPedir(l):"#";$("amAquiT").textContent=t(l&&!l.pedidoUrl&&!PEDIDOS_WEB?"call_order":"app_pide_h");}
   // Repetir el último pedido (solo con pedidos web)
   const ult=(S.perfil.ultimo||[]).filter(x=>{const it=porNombre(x.n);return it&&!it.oculto;});
-  $("amRepite").hidden=!(PEDIDOS_WEB&&ult.length&&l);
+  $("amRepite").hidden=!(PEDIDOS_WEB&&ult.length&&tipo!=="domicilio"&&l);
 }
 
 /* ---------- Mapa de locales ----------
@@ -178,13 +182,11 @@ $("amMapaYo").onclick=()=>{if(conPos()&&MAPA.m)MAPA.m.easeTo({center:[YO.lng,YO.
 $("amMapaCard").addEventListener("click",e=>{const b=e.target.closest("[data-am-elegir]");if(b)elegirEnMapa(+b.dataset.amElegir);});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("amMapa").hidden)cerrarMapa();});
 
-/* Paso 1: «Pide ahora». Paso 2: recoger o a domicilio */
-$("amCta").addEventListener("click",()=>{APP.viaCta=true;});
-document.querySelectorAll("[data-am-tipo]").forEach(b=>b.onclick=()=>{
-  const tipo=b.dataset.amTipo;S.perfil.tipo=tipo;guardarPerfil();
-  if(tipo==="domicilio"){location.hash="domicilio";return;}
-  const l=localSel();if(!l){abrirMapa();return;}
-  const h=hrefPedir(l);if(h.startsWith("#"))location.hash=h.slice(1);else location.href=h;
+/* Tipo de pedido, botón principal y repetir pedido */
+document.querySelectorAll("[data-am-tipo]").forEach(b=>b.onclick=()=>{S.perfil.tipo=b.dataset.amTipo;guardarPerfil();pintarHola();});
+$("amAqui").addEventListener("click",e=>{
+  if(tipoPedido()==="domicilio")return;
+  if(S.local===null){e.preventDefault();abrirMapa();}
 });
 $("amRepite").onclick=()=>{
   (S.perfil.ultimo||[]).forEach(x=>{const it=porNombre(x.n);if(it&&!it.oculto)sumar(it.i,x.q,x.nota);});
@@ -248,14 +250,11 @@ function pintarApp(){
   $("appM").hidden=!on;
   if(!on){pintarBarra();return;}
   const p=pantallaApp(),pedir=PANT_PEDIR.includes(p);
-  const tipo=hashApp()==="tipo";
   $("am-hola").hidden=p!=="hola";
-  $("ahInicio").hidden=tipo;$("ahHoja").hidden=!tipo;
-  $("appM").classList.toggle("en-inicio",p==="hola"&&!tipo);
   $("am-pide").hidden=p==="hola"||pedir;
   PANT_PEDIR.forEach(x=>$("am-"+x).hidden=x!==p);
   $("appM").classList.toggle("en-pide",p!=="hola");
-  $("amVolver").hidden=p==="hola"&&!tipo;
+  $("amVolver").hidden=p==="hola";
   $("amMenuB").hidden=p!=="hola";
   $("amLangCode").innerHTML=bandera(LANG);
   if(p==="hola"){pintarHola();pintarBarra();return;}
@@ -277,7 +276,6 @@ function alEntrar(){
   if(APP.pant!==null&&grupo(APP.pant)!==grupo(p))APP.desdeHola=p!=="hola"&&APP.pant==="hola";
   // Al pasar del inicio a «Pide ahora» (o al revés) se vuelve arriba; entre pestañas no
   if(!visible||APP.pant===null||grupo(APP.pant)!==grupo(p)||(APP.pant!==p&&(PANT_PEDIR.includes(p)||PANT_PEDIR.includes(APP.pant))))window.scrollTo(0,0);
-  if(APP.tipo!==(hashApp()==="tipo")){APP.tipo=hashApp()==="tipo";window.scrollTo(0,0);}
   APP.pant=p;
   // La primera vez que se abre la app pide la ubicación (salta el permiso del navegador)
   if(APP.estado===null)buscar();
@@ -298,7 +296,6 @@ $("appM").addEventListener("click",e=>{
 });
 $("amVolver").onclick=()=>{
   const p=pantallaApp();
-  if(hashApp()==="tipo"){if(APP.viaCta){APP.viaCta=false;history.back();}else location.replace("#hola");return;}
   if(p==="cesta"){location.replace("#pedir");return;}
   if(p==="estado"){location.replace("#hola");return;}
   if(APP.desdeHola)history.back();else location.replace("#hola");
@@ -321,11 +318,11 @@ amLangL.onclick=e=>{
 document.addEventListener("click",e=>{if(!e.target.closest(".am-lang-w"))cerrarLangApp();});
 /* ---------- Menú lateral ---------- */
 const MI={
-  pide:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 11.1a2 2 0 0 1-2 1.9H8.2a2 2 0 0 1-2-1.9z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>',
+  pide:'<img src=\"assets/img/ic-porcion.webp\" alt=\"\" width=\"24\" height=\"24\">',
   carta:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5C8 3 16 3 21 5.5L12 21z"/><circle cx="10" cy="9" r="1.2"/><circle cx="14.5" cy="10" r="1"/><circle cx="12" cy="13.5" r="1"/></svg>',
-  locales:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>',
+  locales:'<img src=\"assets/img/ic-ubicacion.webp\" alt=\"\" width=\"24\" height=\"24\">',
   repite:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>',
-  alerg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V10.5"/><path d="M12 10.5c-.2-2.6 1.2-4.6 3.6-5.5.3 2.6-1.1 4.7-3.6 5.5zM12 10.5c.2-2.6-1.2-4.6-3.6-5.5-.3 2.6 1.1 4.7 3.6 5.5zM12 16c-.2-2.6 1.2-4.6 3.6-5.5.3 2.6-1.1 4.7-3.6 5.5zM12 16c.2-2.6-1.2-4.6-3.6-5.5-.3 2.6 1.1 4.7 3.6 5.5z"/></svg>',
+  alerg:'<img src=\"assets/img/ic-gluten.webp\" alt=\"\" width=\"24\" height=\"24\">',
   tel:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>',
   legal:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg>'
 };
@@ -333,7 +330,7 @@ function pintarMenu(){
   const l=localSel(),ult=PEDIDOS_WEB&&(S.perfil.ultimo||[]).length;
   const it=(ic,txt,attr)=>`<li><a ${attr}><span class="am-mi">${MI[ic]}</span><span>${esc(txt)}</span></a></li>`;
   $("amMenuL").innerHTML=[
-    it("pide",t("app_pide_h"),'href="#tipo" data-cerrar-menu'),
+    it("pide",t("app_pide_h"),'href="#hola" data-cerrar-menu'),
     it("carta",t("app_t_menu"),'href="#lacarta" data-cerrar-menu'),
     it("locales",t("app_t_locs"),'href="#ubicaciones" data-cerrar-menu'),
     ult?it("repite",t("app_repite"),'href="#" data-menu-repite'):"",

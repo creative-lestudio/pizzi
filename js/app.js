@@ -52,11 +52,12 @@ const eurCarta=(v,corto)=>{const s=corto?String(+v.toFixed(2)):v.toFixed(2);retu
 const ALG_ICO={
   gluten:'<path d="M12 22V10.5"/><path d="M12 10.5c-.2-2.6 1.2-4.6 3.6-5.5.3 2.6-1.1 4.7-3.6 5.5zM12 10.5c.2-2.6-1.2-4.6-3.6-5.5-.3 2.6 1.1 4.7 3.6 5.5zM12 15.5c-.2-2.6 1.2-4.6 3.6-5.5.3 2.6-1.1 4.7-3.6 5.5zM12 15.5c.2-2.6-1.2-4.6-3.6-5.5-.3 2.6 1.1 4.7 3.6 5.5zM12 20.5c-.2-2.6 1.2-4.6 3.6-5.5.3 2.6-1.1 4.7-3.6 5.5zM12 20.5c.2-2.6-1.2-4.6-3.6-5.5-.3 2.6 1.1 4.7 3.6 5.5zM12 5.6c-1-1-1-2.6 0-3.6 1 1 1 2.6 0 3.6z"/>',
   leche:'<path d="M3.5 16.5L15 7l5.5 3.2v6.3z"/><path d="M3.5 16.5v3h17v-3"/><circle cx="9.5" cy="18" r="1" fill="currentColor" stroke="none"/><circle cx="15.5" cy="13.2" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="14.6" r=".8" fill="currentColor" stroke="none"/>',
-  pescado:'<path d="M2.5 12c2.6-3.6 6.2-5 10-4.4 3 .5 5.2 2.2 6.5 4.4-1.3 2.2-3.5 3.9-6.5 4.4-3.8.6-7.4-.8-10-4.4z"/><path d="M19 12l2.5-3.2v6.4z"/><path d="M9.5 9.2c.8 1.8.8 3.8 0 5.6"/><circle cx="6.3" cy="11.2" r=".9" fill="currentColor" stroke="none"/>',
-  "frutos de cáscara":'<path d="M12 3c3.9 2.3 6 6.2 6 10.2 0 4-2.7 7.3-6 7.3s-6-3.3-6-7.3C6 9.2 8.1 5.3 12 3z"/><path d="M12 6.5c-1.2 3.2-1.2 8.3 0 12.5"/>'
+  pescado:'<path d="M7 12c2-3.4 5-4.4 8-4 2.6.4 4.6 2 6 4-1.4 2-3.4 3.6-6 4-3 .4-6-.6-8-4z"/><path d="M7 12L3 8.5 3.6 12 3 15.5z"/><path d="M11.5 8.2c.3-1.6 1.5-2.4 3-2"/><path d="M16 10c-.9 1.2-1 2.6-.2 3.8"/><circle cx="18.2" cy="11.6" r=".6" fill="currentColor"/>',
+  "frutos de cáscara":'<path d="M7 18c-2.5-1-2.5-4.5-.5-6 1-.8 1.1-2.5 1.9-4 1-2 4-2.4 5.6-.6 1.2 1.4 1 3.2.6 4.4"/><path d="M13.2 10.2c2.4 1.4 5.2 4.2 5.2 7.4 0 2.4-1.8 3.8-3.8 3.8-2.2 0-3.6-1.8-3.6-3.8 0-3 .8-5.8 2.2-7.4z"/><path d="M14.6 14v5"/>'
 };
 /* Cada icono va en una pastilla redonda rosa con el dibujo en vino, como los iconos de la app */
-const algIco=a=>ALG_ICO[a]?`<span class="al-i" role="img" aria-label="${esc(alg(a))}" title="${esc(cap(alg(a)))}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ALG_ICO[a]}</svg></span>`:"";
+const ALG_IMG={gluten:"ic-gluten",leche:"ic-lacteos"};
+const algIco=a=>ALG_IMG[a]?`<span class="al-i" role="img" aria-label="${esc(alg(a))}" title="${esc(cap(alg(a)))}"><img src="assets/img/${ALG_IMG[a]}.webp" alt="" width="24" height="24"></span>`:ALG_ICO[a]?`<span class="al-i" role="img" aria-label="${esc(alg(a))}" title="${esc(cap(alg(a)))}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ALG_ICO[a]}</svg></span>`:"";
 const algFila=it=>{const a=(ALERG[it.n]||[]).filter(x=>ALG_ICO[x]);return a.length?`<span class="al-fila">${a.map(algIco).join("")}</span>`:"";};
 /* Leyenda al principio de la carta */
 function leyendaAlerg(){
