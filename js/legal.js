@@ -3,15 +3,15 @@
    Todo lo que empiece por "[" se muestra resaltado en las páginas legales hasta que se sustituya. */
 const EMPRESA={
   marca:"PIZZI",
-  razon:"[RAZÓN SOCIAL DE PIZZI]",
-  cif:"[CIF / NIF]",
-  domicilio:"[DOMICILIO SOCIAL COMPLETO]",
+  razon:"PIZZILA SL",
+  cif:"B23966229",
+  domicilio:"C/ de les Carabasses, 3, 46001 València (Valencia)",
   email:"[EMAIL DE CONTACTO]",
   tel:"+34 744 78 47 37",
-  registro:"[DATOS DE INSCRIPCIÓN EN EL REGISTRO MERCANTIL: tomo, folio, hoja]",
+  registro:"Registro Mercantil de Valencia (constituida el 17/10/2025) [tomo, folio y hoja pendientes]",
   web:"[DOMINIO DE LA WEB]",
   actualizado:"12 de noviembre de 2026",
-  alergenosValidados:false   // pasar a true cuando Pizzi valide la tabla con las fichas de sus proveedores
+  alergenosValidados:true   // pasar a true cuando Pizzi valide la tabla con las fichas de sus proveedores
 };
 const pv=x=>String(x).startsWith("[")?`<mark class="pend">${esc(x)}</mark>`:esc(x);
 const PAGINAS=["aviso-legal","privacidad","cookies","condiciones","alergenos","accesibilidad"];
