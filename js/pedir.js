@@ -3,7 +3,7 @@
    Tres pantallas dentro de la app (js/movil.js las muestra según la dirección):
      #pedir  → carta del local (la real de su tienda de Shift4), con categorías y ficha de producto
      #cesta  → pedido, bebidas sugeridas, hora de recogida, datos, pago y «Pagar»
-     #estado → seguimiento: recibido → en el horno → listo, y vía rápida para recoger sin cola
+     #estado → seguimiento: recibido → en el horno → listo
    Usa el carrito, los productos y las franjas de app.js, así que escritorio y móvil comparten pedido.
    ========================================================= */
 "use strict";

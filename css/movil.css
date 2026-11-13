@@ -624,3 +624,10 @@ html.modo-app,html.modo-app body,.app-m{background:linear-gradient(rgba(150,4,30
 @keyframes am-pin{0%{box-shadow:0 0 0 0 rgba(150,4,30,.45),0 3px 8px rgba(80,0,16,.35)}100%{box-shadow:0 0 0 18px rgba(150,4,30,0),0 3px 8px rgba(80,0,16,.35)}}
 .am-yo{width:96px; height:96px; display:grid; place-items:center; border-radius:50%; background:rgba(251,114,165,.16)}
 .am-yo span{margin:0}
+/* ---------- Inicio: solo el logo y el botón de pedir; después, recoger o a domicilio ---------- */
+.ah-inicio{flex:1; width:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:40px; padding:0 4px 8vh}
+.ah-logo{width:min(66vw,280px); filter:drop-shadow(0 6px 24px rgba(40,0,8,.4))}
+.ah-inicio .ah-cta{width:100%; max-width:420px; min-height:74px; background:#fff; color:var(--vino); box-shadow:0 14px 34px rgba(40,0,8,.4); font-size:24px}
+.ah-inicio .ah-cta-f{width:52px; height:52px; background:var(--vino); color:#fff}
+.en-inicio .am-logo{visibility:hidden}
+.ah-tipos button{min-height:104px}

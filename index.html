@@ -18,9 +18,9 @@
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 <link rel="preload" href="fonts/TTModernoir-Medium.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/Cervo-Thin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="css/fonts.css?v=202611131434">
-<link rel="stylesheet" href="css/app.css?v=202611131434">
-<link rel="stylesheet" href="css/movil.css?v=202611131434">
+<link rel="stylesheet" href="css/fonts.css?v=202611131439">
+<link rel="stylesheet" href="css/app.css?v=202611131439">
+<link rel="stylesheet" href="css/movil.css?v=202611131439">
 </head>
 <body>
 <a class="saltar" href="#app" data-i="skip">Saltar al contenido</a>
@@ -317,10 +317,10 @@
       <span data-i="near_me">Cerca de mí</span>
     </button>
     <p class="cerca-msg" id="hlCercaMsg" role="status" aria-live="polite"></p>
-    <div class="hl-locales" id="hlLocales" role="radiogroup"></div>
+    <div class="hl-locales" id="hlLocales"></div>
     <div id="hlHoraBox">
       <h3 class="hl-sub" data-i="time_h">¿A qué hora?</h3>
-      <div class="horas" id="hlHoras" role="radiogroup"></div>
+      <div class="horas" id="hlHoras"></div>
     </div>
   </div>
   <div class="hoja-pie"><button class="btn btn-vino full" type="button" id="hlOk" data-i="save">Guardar</button></div>
@@ -347,19 +347,18 @@
   <!-- Pantalla 1: inicio estilo app. Saludo sobre la foto del local y hoja «Pide ahora»:
        local (abre el mapa), tipo de pedido (comer aquí / recoger / a domicilio) y botón principal. -->
   <section class="am-p am-hola" id="am-hola">
-    <div class="ah-hero">
-      <h1 class="deco" id="amHola"></h1>
+    <div class="ah-inicio" id="ahInicio">
+      <img class="ah-logo" src="assets/img/logo-rosa.png" alt="PIZZI" width="1231" height="673">
+      <a class="ah-cta" id="amCta" href="#tipo"><span data-i="app_pide_h">Pide ahora</span><span class="ah-cta-f" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
     </div>
-    <div class="ah-hoja">
-      <h2 class="deco" data-i="app_pide_h">Pide ahora</h2>
+    <div class="ah-hoja" id="ahHoja" hidden>
+      <h2 class="deco" data-i="tipo_h">¿Cómo la quieres?</h2>
       <button type="button" class="ah-local" id="amCerca"><img src="assets/img/ic-ubicacion.webp" alt="" width="240" height="240"><span id="amCercaT"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
       <p class="am-msg" id="amMsg" role="status" aria-live="polite"></p>
-      <div class="ah-tipos" role="radiogroup" data-ia="app_tipo">
-        <button type="button" role="radio" data-am-tipo="recoger"><i class="ah-ok" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i><span class="ah-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 11.1a2 2 0 0 1-2 1.9H8.2a2 2 0 0 1-2-1.9z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></span><span class="ah-tt"><b data-i="tipo_recoger">Recoger</b><small data-i="tipo_recoger_s">Lista en ~15 min</small></span></button>
-        <button type="button" role="radio" data-am-tipo="domicilio"><i class="ah-ok" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i><span class="ah-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M9 17h6l-3-8H8M15 6h3l3 11"/></svg></span><span class="ah-tt"><b data-i="tipo_domicilio">A domicilio</b><small data-i="tipo_domicilio_s">Uber Eats · Glovo</small></span></button>
+      <div class="ah-tipos" data-ia="app_tipo">
+        <button type="button" data-am-tipo="recoger"><span class="ah-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 11.1a2 2 0 0 1-2 1.9H8.2a2 2 0 0 1-2-1.9z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></span><span class="ah-tt"><b data-i="tipo_recoger">Recoger</b><small id="ahRecS" data-i="tipo_recoger_s">Lista en ~15 min</small></span></button>
+        <button type="button" data-am-tipo="domicilio"><span class="ah-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M9 17h6l-3-8H8M15 6h3l3 11"/></svg></span><span class="ah-tt"><b data-i="tipo_domicilio">A domicilio</b><small data-i="tipo_domicilio_s">Uber Eats · Glovo</small></span></button>
       </div>
-      <p class="ah-desc" id="amTipoTxt"></p>
-      <a class="ah-cta" id="amAqui" href="#pedir"><span id="amAquiT" data-i="app_pide_h">Pide ahora</span><span class="ah-cta-f" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
       <button type="button" class="ah-sec" id="amRepite" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg><span data-i="app_repite">Repite tu último pedido</span></button>
       <a class="ah-sec" href="#lacarta"><img src="assets/img/ic-porcion.webp" alt="" width="240" height="240"><span data-i="app_menu">Ver carta</span></a>
     </div>
@@ -418,7 +417,7 @@
     <div class="ap-caja">
       <h2 id="apTipoH">Recogida</h2>
       <a class="ap-fila" href="#ubicaciones" data-am-mapa><span class="ap-chip-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg></span><span class="ap-chip-t"><b id="apCestaLocal"></b><small id="apCestaDir"></small></span><span class="ap-cambiar" data-i="change">Cambiar</span></a>
-      <div class="ap-franjas" id="apFranjas" role="radiogroup"></div>
+      <div class="ap-franjas" id="apFranjas"></div>
     </div>
     <div class="ap-caja">
       <h2 data-i="tip_h">Propina para el equipo</h2>
@@ -455,10 +454,6 @@
       <span id="apNumSub"></span>
     </div>
     <div class="ap-caja" id="apPasos"></div>
-    <div class="ap-caja ap-rapida">
-      <h2 data-i="speed_h">Vía rápida</h2>
-      <p data-i="speed_p"></p>
-    </div>
     <div class="am-loc-acc ap-acc">
       <a class="am-mini" id="apMaps" target="_blank" rel="noopener" data-i="how_get">Cómo llegar</a>
       <a class="am-mini" id="apTelL" data-i="call_store">Llamar al local</a>
@@ -513,12 +508,12 @@
 <div class="al-modal" id="fichaModal" role="dialog" aria-modal="true" aria-labelledby="fichaT" hidden><div class="al-modal-c"><button type="button" class="al-modal-x" id="fichaX" aria-label="Cerrar" data-ia="close" onclick="cerrarFicha()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div id="fichaC"></div></div></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="js/i18n.js?v=202611131434"></script>
-<script src="js/data.js?v=202611131434"></script>
-<script src="js/legal.js?v=202611131434"></script>
-<script src="js/conector.js?v=202611131434"></script>
-<script src="js/app.js?v=202611131434"></script>
-<script src="js/pedir.js?v=202611131434"></script>
-<script src="js/movil.js?v=202611131434"></script>
+<script src="js/i18n.js?v=202611131439"></script>
+<script src="js/data.js?v=202611131439"></script>
+<script src="js/legal.js?v=202611131439"></script>
+<script src="js/conector.js?v=202611131439"></script>
+<script src="js/app.js?v=202611131439"></script>
+<script src="js/pedir.js?v=202611131439"></script>
+<script src="js/movil.js?v=202611131439"></script>
 </body>
 </html>

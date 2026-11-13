@@ -14,7 +14,7 @@
 "use strict";
 
 const TABS=["ubicaciones","domicilio","lacarta"];
-const PANT_APP=["","inicio","hola",...TABS,...PANT_PEDIR];
+const PANT_APP=["","inicio","hola","tipo",...TABS,...PANT_PEDIR];
 /* estado: null (sin buscar) · buscando · ok · aprox · denied · err · none
    abierto: local desplegado en «Ubicaciones» (null = el elegido, -1 = ninguno)
    desdeHola: se llegó a «Pide ahora» desde el inicio, así que «volver» es ir atrás en el historial */
@@ -25,7 +25,7 @@ const hashApp=()=>location.hash.replace("#","");
 /* La app es la versión móvil; en el ordenador se ve la web de escritorio (inicio, carta, locales, pedido) */
 const MOVIL=matchMedia("(max-width:899px)");
 const enApp=()=>MOVIL.matches&&PANT_APP.includes(hashApp());
-const pantallaApp=()=>TABS.includes(hashApp())||PANT_PEDIR.includes(hashApp())?hashApp():"hola";
+const pantallaApp=()=>TABS.includes(hashApp())||PANT_PEDIR.includes(hashApp())?hashApp():"hola";   // «tipo» es el paso 2 del inicio
 const conPos=()=>!!YO&&(APP.estado==="ok"||APP.estado==="aprox");
 
 /* ---------- Ubicación ---------- */
@@ -72,24 +72,17 @@ if(!TIPOS.includes(S.perfil.tipo))S.perfil.tipo="recoger";
 const tipoPedido=()=>S.perfil.tipo;
 
 function pintarHola(){
-  // Saludo según la hora de Valencia: «Hola, buenos días / buenas tardes / buenas noches»
-  const h=ahora();
-  $("amHola").innerHTML=t("app_hola",{s:t(h<720&&h>=360?"hola_m":h<1230&&h>=720?"hola_a":"hola_n")});
-  const e=APP.estado,l=localSel(),busca=e==="buscando",tipo=tipoPedido();
+  const e=APP.estado,l=localSel(),busca=e==="buscando";
   const fallo=["denied","err","none"].includes(e);
   $("amCercaT").innerHTML=busca?`<b>${esc(t("app_locating"))}</b><span class="am-pulso" aria-hidden="true"></span>`
     :!l?`<b>${esc(t("choose_store"))}</b>`
     :`<b>${esc(l.n)}${DIST[S.local]!=null?` <span>· ${esc(fmtKm(DIST[S.local]))}</span>`:""}</b><small><i class="${abierto(l)?"ab":"ce"}"></i>${esc(abierto(l)?t("app_open"):t("app_closed"))} · ${esc(hrTexto(l))}</small>`;
   $("amMsg").textContent=fallo&&!l?t(e==="denied"?"near_denied":e==="none"?"near_none":"near_err"):e==="aprox"&&!APP.manual?t("app_approx"):"";
-  document.querySelectorAll("[data-am-tipo]").forEach(b=>b.setAttribute("aria-checked",String(b.dataset.amTipo===tipo)));
-  $("amTipoTxt").textContent=t("tipo_"+tipo+"_p");
-  // Botón principal: a domicilio lleva a las apps de reparto; si no, a pedir en el local elegido
-  const a=$("amAqui");
-  if(tipo==="domicilio"){a.href="#domicilio";$("amAquiT").textContent=t("app_deliv_cta");}
-  else{a.href=l?hrefPedir(l):"#";$("amAquiT").textContent=t(l&&!l.pedidoUrl&&!PEDIDOS_WEB?"call_order":"app_pide_h");}
+  // Recoger: sin tienda SkyTab todavía, el local se atiende por teléfono
+  $("ahRecS").textContent=t(l&&!l.pedidoUrl&&!PEDIDOS_WEB?"call_order":"tipo_recoger_s");
   // Repetir el último pedido (solo con pedidos web)
   const ult=(S.perfil.ultimo||[]).filter(x=>{const it=porNombre(x.n);return it&&!it.oculto;});
-  $("amRepite").hidden=!(PEDIDOS_WEB&&ult.length&&tipo!=="domicilio"&&l);
+  $("amRepite").hidden=!(PEDIDOS_WEB&&ult.length&&l);
 }
 
 /* ---------- Mapa de locales ----------
@@ -165,8 +158,6 @@ function pintarCardMapa(){
     ${d!=null?`<span class="am-mc-d">${esc(t(d>1?"mapa_lejos_b":"mapa_cerca_b"))} · ${esc(fmtKm(d))}</span>`:""}
     <b class="deco">${esc(l.n)}</b>
     <span class="am-mc-h"><i class="${ab?"ab":"ce"}"></i>${esc(hoy.length?fmtTurnos(hoy):t("closed"))} · València</span>
-    <div class="am-mc-f"><span class="am-mc-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg></span>
-      <div><b>${esc(t("via_h"))} · <span class="${ab?"ab":"ce"}">${esc(ab?t("via_on"):t("via_off"))}</span></b><small>${esc(t("via_p"))}</small></div></div>
     <div class="am-mc-acc">
       <a href="${esc(l.maps)}" target="_blank" rel="noopener">${esc(t("how_get"))}</a>
       <a href="tel:${esc(l.tel.replace(/\s/g,""))}">${esc(t("call_store"))}</a>
@@ -187,11 +178,13 @@ $("amMapaYo").onclick=()=>{if(conPos()&&MAPA.m)MAPA.m.easeTo({center:[YO.lng,YO.
 $("amMapaCard").addEventListener("click",e=>{const b=e.target.closest("[data-am-elegir]");if(b)elegirEnMapa(+b.dataset.amElegir);});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("amMapa").hidden)cerrarMapa();});
 
-/* Tipo de pedido, botón principal y repetir pedido */
-document.querySelectorAll("[data-am-tipo]").forEach(b=>b.onclick=()=>{S.perfil.tipo=b.dataset.amTipo;guardarPerfil();pintarHola();});
-$("amAqui").addEventListener("click",e=>{
-  if(tipoPedido()==="domicilio")return;
-  if(S.local===null){e.preventDefault();abrirMapa();}
+/* Paso 1: «Pide ahora». Paso 2: recoger o a domicilio */
+$("amCta").addEventListener("click",()=>{APP.viaCta=true;});
+document.querySelectorAll("[data-am-tipo]").forEach(b=>b.onclick=()=>{
+  const tipo=b.dataset.amTipo;S.perfil.tipo=tipo;guardarPerfil();
+  if(tipo==="domicilio"){location.hash="domicilio";return;}
+  const l=localSel();if(!l){abrirMapa();return;}
+  const h=hrefPedir(l);if(h.startsWith("#"))location.hash=h.slice(1);else location.href=h;
 });
 $("amRepite").onclick=()=>{
   (S.perfil.ultimo||[]).forEach(x=>{const it=porNombre(x.n);if(it&&!it.oculto)sumar(it.i,x.q,x.nota);});
@@ -255,11 +248,14 @@ function pintarApp(){
   $("appM").hidden=!on;
   if(!on){pintarBarra();return;}
   const p=pantallaApp(),pedir=PANT_PEDIR.includes(p);
+  const tipo=hashApp()==="tipo";
   $("am-hola").hidden=p!=="hola";
+  $("ahInicio").hidden=tipo;$("ahHoja").hidden=!tipo;
+  $("appM").classList.toggle("en-inicio",p==="hola"&&!tipo);
   $("am-pide").hidden=p==="hola"||pedir;
   PANT_PEDIR.forEach(x=>$("am-"+x).hidden=x!==p);
   $("appM").classList.toggle("en-pide",p!=="hola");
-  $("amVolver").hidden=p==="hola";
+  $("amVolver").hidden=p==="hola"&&!tipo;
   $("amMenuB").hidden=p!=="hola";
   $("amLangCode").innerHTML=bandera(LANG);
   if(p==="hola"){pintarHola();pintarBarra();return;}
@@ -281,6 +277,7 @@ function alEntrar(){
   if(APP.pant!==null&&grupo(APP.pant)!==grupo(p))APP.desdeHola=p!=="hola"&&APP.pant==="hola";
   // Al pasar del inicio a «Pide ahora» (o al revés) se vuelve arriba; entre pestañas no
   if(!visible||APP.pant===null||grupo(APP.pant)!==grupo(p)||(APP.pant!==p&&(PANT_PEDIR.includes(p)||PANT_PEDIR.includes(APP.pant))))window.scrollTo(0,0);
+  if(APP.tipo!==(hashApp()==="tipo")){APP.tipo=hashApp()==="tipo";window.scrollTo(0,0);}
   APP.pant=p;
   // La primera vez que se abre la app pide la ubicación (salta el permiso del navegador)
   if(APP.estado===null)buscar();
@@ -301,6 +298,7 @@ $("appM").addEventListener("click",e=>{
 });
 $("amVolver").onclick=()=>{
   const p=pantallaApp();
+  if(hashApp()==="tipo"){if(APP.viaCta){APP.viaCta=false;history.back();}else location.replace("#hola");return;}
   if(p==="cesta"){location.replace("#pedir");return;}
   if(p==="estado"){location.replace("#hola");return;}
   if(APP.desdeHola)history.back();else location.replace("#hola");
@@ -335,7 +333,7 @@ function pintarMenu(){
   const l=localSel(),ult=PEDIDOS_WEB&&(S.perfil.ultimo||[]).length;
   const it=(ic,txt,attr)=>`<li><a ${attr}><span class="am-mi">${MI[ic]}</span><span>${esc(txt)}</span></a></li>`;
   $("amMenuL").innerHTML=[
-    it("pide",t("app_pide_h"),'href="#hola" data-cerrar-menu'),
+    it("pide",t("app_pide_h"),'href="#tipo" data-cerrar-menu'),
     it("carta",t("app_t_menu"),'href="#lacarta" data-cerrar-menu'),
     it("locales",t("app_t_locs"),'href="#ubicaciones" data-cerrar-menu'),
     ult?it("repite",t("app_repite"),'href="#" data-menu-repite'):"",
