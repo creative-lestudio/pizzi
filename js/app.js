@@ -70,6 +70,23 @@ function tablaAlerg(){
     <tbody>${P.filter(x=>!x.oculto).map(fila).join("")}</tbody></table>
     <small>${esc(t("al_ley_p"))}</small> <a href="#alergenos">${esc(t("aler_more"))}</a></div>`;
 }
+/* Ficha de producto: foto completa, ingredientes y alérgenos (la usan la carta de consulta y la de pedir) */
+const ingredientes=it=>desc(it).replace(/\.\s*$/,"").split(/\s*,\s*|\s+(?:y|and|e|et|und)\s+/i).map(s=>s.trim()).filter(Boolean).map(cap);
+function fichaHTML(it,idT){
+  const a=(ALERG[it.n]||[]).filter(x=>ALG_ICO[x]),pz=it.t==="pizza";
+  return `<div class="ap-hoja-f"><img src="${imgDe(it,"")}" alt="${esc(cap(nm(it.n).toLowerCase()))}"></div>
+  <div class="ap-hoja-d">
+    <div class="fi-cab"><h2 class="deco"${idT?` id="${idT}"`:""}>${esc(nm(it.n))}</h2><span class="fi-precio">${eurCarta(it.p)}</span></div>
+    ${pz?`<span class="fi-tam">${esc(t("size31"))}</span><h3 class="fi-h">${esc(t("ing_h"))}</h3><ul class="fi-ing">${ingredientes(it).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:(desc(it)?`<p>${esc(desc(it))}</p>`:"")}
+    <h3 class="fi-h">${esc(t("allergens"))}</h3>
+    ${a.length?`<ul class="fi-al">${a.map(x=>`<li>${algIco(x)}<span>${esc(cap(alg(x)))}</span></li>`).join("")}</ul>`:`<p class="fi-no">${esc(t("al_none"))}</p>`}
+    ${pz?`<small class="fi-ley">${esc(t("al_ley_p"))}</small>`:""}
+  </div>`;
+}
+function abrirFicha(i){const it=P[i];if(!it)return;$("fichaC").innerHTML=fichaHTML(it,"fichaT");$("fichaModal").hidden=false;document.documentElement.classList.add("bloqueado");$("fichaX").focus();}
+function cerrarFicha(){$("fichaModal").hidden=true;document.documentElement.classList.remove("bloqueado");}
+document.addEventListener("click",e=>{if(e.target.id==="fichaModal")cerrarFicha();});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("fichaModal").hidden)cerrarFicha();});
 /* Ventana con la información de alérgenos (se abre desde el botón de la leyenda) */
 function abrirAlerg(){$("alModalC").innerHTML=tablaAlerg();$("alModal").hidden=false;document.documentElement.classList.add("bloqueado");$("alModalX").focus();}
 function cerrarAlerg(){$("alModal").hidden=true;document.documentElement.classList.remove("bloqueado");}

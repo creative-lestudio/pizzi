@@ -108,13 +108,17 @@ function cargarMapLibre(){
 function tintarMapa(m){
   const st=m.getStyle();if(!st)return;
   st.layers.forEach(ly=>{
-    const id=ly.id,set=(p,v)=>{try{m.setPaintProperty(id,p,v);}catch(e){}};
-    if(ly.type==="background")set("background-color","#FBF3F2");
-    else if(/water/.test(id)&&ly.type==="fill")set("fill-color","#F2C9C7");
-    else if(/park|landuse|landcover|grass|wood/.test(id)&&ly.type==="fill")set("fill-color","#F6E2E1");
-    else if(/building/.test(id)&&ly.type==="fill")set("fill-color","#F3E7E6");
+    const id=ly.id,set=(p,v)=>{try{m.setPaintProperty(id,p,v);}catch(e){}},lay=(p,v)=>{try{m.setLayoutProperty(id,p,v);}catch(e){}};
+    if(ly.type==="background")set("background-color","#F7EFE8");
+    else if(/water/.test(id)&&ly.type==="fill")set("fill-color","#DCE8EE");
+    else if(/park|landuse|landcover|grass|wood/.test(id)&&ly.type==="fill")set("fill-color","#E6EDDA");
+    else if(/building/.test(id)&&ly.type==="fill")set("fill-color","#F0E4DB");
     else if(ly.type==="line"&&/road|street|highway|bridge|tunnel/.test(id))set("line-color","#FFFFFF");
-    else if(ly.type==="symbol"&&/label|name|place|poi/.test(id)){set("text-color","#8A5B5E");set("text-halo-color","#FBF3F2");}
+    else if(ly.type==="symbol"&&/^label_/.test(id)){
+      // Barrios y zonas en mayúsculas y más grandes, como en Honest Greens
+      set("text-color","#5A2A30");set("text-halo-color","#F7EFE8");set("text-halo-width",1.8);
+      lay("text-transform","uppercase");lay("text-letter-spacing",.08);lay("text-size",["interpolate",["linear"],["zoom"],11,12,15,18]);lay("text-font",["Noto Sans Bold"]);}
+    else if(ly.type==="symbol"&&/name|water/.test(id)){set("text-color","#8A5B5E");set("text-halo-color","#F7EFE8");}
   });
 }
 function abrirMapa(){
@@ -133,9 +137,9 @@ function iniciarMapa(){
     MAPA.m.once("load",()=>{const at=$("amMapaM").querySelector(".maplibregl-ctrl-attrib");if(at)at.classList.remove("maplibregl-compact-show");});
     MAPA.marcas=LOCALES.map((l,i)=>{
       const el=document.createElement("button");el.type="button";el.className="am-pin";el.setAttribute("aria-label","Pizzi "+l.n);
-      el.innerHTML='<span><img src="assets/img/ic-ubicacion.webp" alt=""></span>';
+      el.innerHTML="<span></span>";
       el.onclick=()=>{MAPA.k=ORDEN.indexOf(i);pintarCardMapa();};
-      return new maplibregl.Marker({element:el,anchor:"bottom"}).setLngLat([l.lng,l.lat]).addTo(MAPA.m);
+      return new maplibregl.Marker({element:el}).setLngLat([l.lng,l.lat]).addTo(MAPA.m);
     });
   }else MAPA.m.resize();
   if(conPos()){
@@ -148,8 +152,10 @@ function centrarMapa(animar=true){
   if(!MAPA.m)return;
   const i=ORDEN[MAPA.k],l=LOCALES[i];
   MAPA.marcas.forEach((m,j)=>m.getElement().classList.toggle("on",j===i));
-  // El centro sube un poco para que el local no quede debajo de la tarjeta
-  MAPA.m.easeTo({center:[l.lng,l.lat],zoom:innerWidth<700?14.2:14.8,padding:{bottom:Math.min(320,innerHeight*.4),top:40},duration:animar?700:0});
+  // Como en Honest Greens: se ven tu posición y el local elegido a la vez (si no está demasiado lejos)
+  const pad={top:90,left:50,right:50,bottom:Math.round(innerHeight*(innerWidth<700?.5:.45))},dur=animar?700:0;
+  if(conPos()&&DIST[i]<4){const b=new maplibregl.LngLatBounds([l.lng,l.lat],[l.lng,l.lat]);b.extend([YO.lng,YO.lat]);MAPA.m.fitBounds(b,{padding:pad,duration:dur,maxZoom:15.4});}
+  else MAPA.m.easeTo({center:[l.lng,l.lat],zoom:14.8,padding:pad,duration:dur});
 }
 function pintarCardMapa(){
   const i=ORDEN[MAPA.k],l=LOCALES[i],ab=abierto(l),d=DIST[i];
@@ -225,8 +231,13 @@ function pintarDomicilio(){
 }
 
 /* La carta de la web, solo para consultar (sin botones de añadir ni ficha) */
-const soloVer=h=>h.replace(/<button type="button" class="mas"[\s\S]*?<\/button>/g,"").replace(/ data-prod="\d+"/g,"").replace(' role="button" tabindex="0"',"")
-  .replace(/<button type="button" class="bb-t">([\s\S]*?)<\/button>/g,'<span class="bb-t">$1</span>');
+const soloVer=h=>h.replace(/<button type="button" class="mas"[\s\S]*?<\/button>/g,"")
+  .replace(/<button type="button" class="bb-t"[^>]*>([\s\S]*?)<\/button>/g,'<span class="bb-t">$1</span>')
+  .replace(/ data-prod="(\d+)"/g,' data-am-ver="$1"');
+/* Al pulsar una pizza de la carta se abre su ficha (con pedidos web, la de pedir) */
+const verFicha=e=>{const v=e.target.closest("[data-am-ver]");if(!v)return false;e.preventDefault();const i=+v.dataset.amVer;if(PEDIDOS_WEB)abrirProdApp(i);else abrirFicha(i);return true;};
+$("appM").addEventListener("click",verFicha);
+$("appM").addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.matches("[data-am-ver]"))verFicha(e);});
 function pintarCartaApp(){
   $("amChips").innerHTML=CATS.map(([id,k])=>`<button type="button" data-am-cat="${id}">${esc(t(k))}</button>`).join("");
   $("amCarta").innerHTML=CATS.map(([id,k,tipo])=>`<section class="am-cat" id="amc-${id}">

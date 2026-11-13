@@ -321,3 +321,5 @@ Object.assign(I,{
 "tip_other":["Otra","Other","Altro","Autre","Andere"],
 "add_more":["+ Añadir más","+ Add more","+ Aggiungi","+ Ajouter","+ Mehr"]
 });
+
+Object.assign(I,{"ing_h":["Ingredientes","Ingredients","Ingredienti","Ingrédients","Zutaten"]});
