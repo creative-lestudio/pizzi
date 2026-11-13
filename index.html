@@ -18,9 +18,9 @@
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 <link rel="preload" href="fonts/TTModernoir-Medium.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/Cervo-Thin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="css/fonts.css?v=202611131228">
-<link rel="stylesheet" href="css/app.css?v=202611131228">
-<link rel="stylesheet" href="css/movil.css?v=202611131228">
+<link rel="stylesheet" href="css/fonts.css?v=202611131241">
+<link rel="stylesheet" href="css/app.css?v=202611131241">
+<link rel="stylesheet" href="css/movil.css?v=202611131241">
 </head>
 <body>
 <a class="saltar" href="#app" data-i="skip">Saltar al contenido</a>
@@ -333,6 +333,7 @@
 <div class="app-m" id="appM" hidden>
   <div class="ah-foto" aria-hidden="true"></div>
   <div class="am-top">
+    <button class="ico-btn am-menu-b" id="amMenuB" type="button" aria-label="Menú" data-ia="menu" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg></button>
     <button class="ico-btn am-volver" id="amVolver" type="button" aria-label="Volver" data-ia="back" hidden>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
     </button>
@@ -420,6 +421,11 @@
       <div class="ap-franjas" id="apFranjas" role="radiogroup"></div>
     </div>
     <div class="ap-caja">
+      <h2 data-i="tip_h">Propina para el equipo</h2>
+      <div class="ap-prop" id="apProp" role="group"></div>
+      <input class="ap-prop-otra" id="apPropOtra" type="text" inputmode="decimal" placeholder="0,00 €" hidden>
+    </div>
+    <div class="ap-caja">
       <h2 data-i="aler_h">¿Alguna alergia?</h2>
       <p class="ap-nota" data-i="aler_p">Márcalas y avisamos a cocina. Las pizzas pueden contener trazas.</p>
       <div class="ap-alerg" id="apAlerg" role="group" data-ia="aler_h"></div>
@@ -471,7 +477,7 @@
       <button type="button" class="am-mapa-fl" id="amMapaSig" aria-label="Siguiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
     </div>
   </div>
-  <div class="ap-barra" id="apBarra" hidden><button type="button" id="apBarraBtn"></button></div>
+  <div class="ap-barra" id="apBarra" hidden><a class="ap-mas2" id="apMas2" href="#pedir" hidden data-i="add_more">+ Añadir más</a><button type="button" id="apBarraBtn"></button></div>
   <div class="ap-velo" id="apVelo" hidden></div>
   <!-- Sugerencia antes de la cesta: «¿Algo para beber?» -->
   <div class="ap-hoja ap-sug" id="apSug" role="dialog" aria-modal="true" aria-labelledby="apSugT" hidden>
@@ -496,14 +502,22 @@
 </div>
 
 <div class="al-modal" id="alModal" role="dialog" aria-modal="true" aria-label="Alérgenos" hidden><div class="al-modal-c"><button type="button" class="al-modal-x" id="alModalX" aria-label="Cerrar" data-ia="close" onclick="cerrarAlerg()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div id="alModalC"></div></div></div>
+<!-- Menú lateral de la app (js/movil.js) -->
+<div class="am-menu" id="amMenu" hidden>
+  <nav class="am-menu-c" aria-label="Menú">
+    <div class="am-menu-cab"><img src="assets/img/logo-rosa.png" alt="PIZZI" width="1231" height="673"><button type="button" class="am-menu-x" id="amMenuX" aria-label="Cerrar" data-ia="close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <ul id="amMenuL"></ul>
+    <div class="am-menu-pie" id="amMenuPie"></div>
+  </nav>
+</div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="js/i18n.js?v=202611131228"></script>
-<script src="js/data.js?v=202611131228"></script>
-<script src="js/legal.js?v=202611131228"></script>
-<script src="js/conector.js?v=202611131228"></script>
-<script src="js/app.js?v=202611131228"></script>
-<script src="js/pedir.js?v=202611131228"></script>
-<script src="js/movil.js?v=202611131228"></script>
+<script src="js/i18n.js?v=202611131241"></script>
+<script src="js/data.js?v=202611131241"></script>
+<script src="js/legal.js?v=202611131241"></script>
+<script src="js/conector.js?v=202611131241"></script>
+<script src="js/app.js?v=202611131241"></script>
+<script src="js/pedir.js?v=202611131241"></script>
+<script src="js/movil.js?v=202611131241"></script>
 </body>
 </html>

@@ -249,6 +249,7 @@ function pintarApp(){
   PANT_PEDIR.forEach(x=>$("am-"+x).hidden=x!==p);
   $("appM").classList.toggle("en-pide",p!=="hola");
   $("amVolver").hidden=p==="hola";
+  $("amMenuB").hidden=p!=="hola";
   $("amLangCode").innerHTML=bandera(LANG);
   if(p==="hola"){pintarHola();pintarBarra();return;}
   if(pedir){repintarPedir();return;}
@@ -309,6 +310,44 @@ amLangL.onclick=e=>{
   cerrarLangApp();aplicarIdioma();refrescar();actCarro();pintarApp();
 };
 document.addEventListener("click",e=>{if(!e.target.closest(".am-lang-w"))cerrarLangApp();});
+/* ---------- Menú lateral ---------- */
+const MI={
+  pide:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 11.1a2 2 0 0 1-2 1.9H8.2a2 2 0 0 1-2-1.9z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>',
+  carta:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5C8 3 16 3 21 5.5L12 21z"/><circle cx="10" cy="9" r="1.2"/><circle cx="14.5" cy="10" r="1"/><circle cx="12" cy="13.5" r="1"/></svg>',
+  locales:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>',
+  repite:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>',
+  alerg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V10.5"/><path d="M12 10.5c-.2-2.6 1.2-4.6 3.6-5.5.3 2.6-1.1 4.7-3.6 5.5zM12 10.5c.2-2.6-1.2-4.6-3.6-5.5-.3 2.6 1.1 4.7 3.6 5.5zM12 16c-.2-2.6 1.2-4.6 3.6-5.5.3 2.6-1.1 4.7-3.6 5.5zM12 16c.2-2.6-1.2-4.6-3.6-5.5-.3 2.6 1.1 4.7 3.6 5.5z"/></svg>',
+  tel:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>',
+  legal:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg>'
+};
+function pintarMenu(){
+  const l=localSel(),ult=PEDIDOS_WEB&&(S.perfil.ultimo||[]).length;
+  const it=(ic,txt,attr)=>`<li><a ${attr}><span class="am-mi">${MI[ic]}</span><span>${esc(txt)}</span></a></li>`;
+  $("amMenuL").innerHTML=[
+    it("pide",t("app_pide_h"),'href="#hola" data-cerrar-menu'),
+    it("carta",t("app_t_menu"),'href="#lacarta" data-cerrar-menu'),
+    it("locales",t("app_t_locs"),'href="#ubicaciones" data-cerrar-menu'),
+    ult?it("repite",t("app_repite"),'href="#" data-menu-repite'):"",
+    it("alerg",t("al_sec_h"),'href="#" data-menu-alerg'),
+    l?it("tel",t("call_store")+" · "+l.n,`href="tel:${l.tel.replace(/\s/g,"")}"`):"",
+    it("legal",t("lg_nav"),'href="#aviso-legal" data-cerrar-menu')
+  ].join("");
+  $("amMenuPie").innerHTML=`<div class="am-menu-lang">${LANGS.map(x=>`<button type="button" aria-pressed="${x===LANG}" data-am-l2="${x}" aria-label="${LNAME[x]}">${bandera(x)}</button>`).join("")}</div>`+document.querySelector(".am-redes").outerHTML;
+}
+function abrirMenu(){pintarMenu();$("amMenu").hidden=false;$("amMenuB").setAttribute("aria-expanded","true");requestAnimationFrame(()=>$("amMenu").classList.add("on"));document.documentElement.classList.add("bloqueado");$("amMenuX").focus();}
+function cerrarMenu(){$("amMenu").classList.remove("on");$("amMenuB").setAttribute("aria-expanded","false");document.documentElement.classList.remove("bloqueado");setTimeout(()=>{if(!$("amMenu").classList.contains("on"))$("amMenu").hidden=true;},250);}
+$("amMenuB").onclick=abrirMenu;
+$("amMenuX").onclick=cerrarMenu;
+$("amMenu").addEventListener("click",e=>{
+  if(e.target===$("amMenu")){cerrarMenu();return;}
+  const l2=e.target.closest("[data-am-l2]");
+  if(l2){LANG=l2.dataset.amL2;try{localStorage.setItem("pizzi-lang",LANG);}catch(x){}aplicarIdioma();refrescar();actCarro();pintarApp();pintarMenu();return;}
+  if(e.target.closest("[data-menu-alerg]")){e.preventDefault();cerrarMenu();abrirAlerg();return;}
+  if(e.target.closest("[data-menu-repite]")){e.preventDefault();cerrarMenu();$("amRepite").click();return;}
+  if(e.target.closest("[data-cerrar-menu]"))cerrarMenu();
+});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("amMenu").hidden)cerrarMenu();});
+
 /* Las horas (abierto / cerrado) cambian con el tiempo */
 setInterval(()=>{if(enApp())pintarApp();},60000);
 
