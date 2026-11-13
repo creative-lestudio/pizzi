@@ -3,7 +3,7 @@
    Tres pantallas dentro de la app (js/movil.js las muestra según la dirección):
      #pedir  → carta del local (la real de su tienda de Shift4), con categorías y ficha de producto
      #cesta  → pedido, bebidas sugeridas, hora de recogida, datos, pago y «Pagar»
-     #estado → seguimiento: recibido → en el horno → listo, y vía rápida para recoger sin cola
+     #estado → seguimiento: recibido → en el horno → listo
    Usa el carrito, los productos y las franjas de app.js, así que escritorio y móvil comparten pedido.
    ========================================================= */
 "use strict";
@@ -78,16 +78,8 @@ function extrasElegidos(){
 }
 function abrirProdApp(i){
   const it=P[i];if(!it)return;PD.prod=it;PD.cant=1;PD.extras=[];
-  const a=ALERG[it.n]||[];
-  $("apHojaC").innerHTML=`<div class="ap-hoja-f"><img src="${imgGrande(it)}" alt=""></div>
-    <div class="ap-hoja-d">
-      <h2 class="deco" id="apHojaT">${esc(nm(it.n))}</h2>
-      <span class="ap-precio">${eur(it.p)}</span>
-      ${desc(it)?`<p>${esc(desc(it))}</p>`:""}
-      <div class="ap-tags">${it.t==="pizza"?`<span>${esc(t("size31"))}</span>`:""}${a.length?`<span>${esc(t("allergens"))}: ${esc(a.map(alg).join(", "))}</span>`:""}</div>
-      <div id="apExtras"></div>
-      ${it.t==="pizza"?`<label class="ap-campo"><span>${esc(t("kitchen_notes"))} <small>${esc(t("optional"))}</small></span><textarea id="apNota" rows="2" placeholder="${esc(t("note_ph"))}"></textarea></label>`:""}
-    </div>`;
+  $("apHojaC").innerHTML=fichaHTML(it,"apHojaT")+`<div class="ap-hoja-d ap-hoja-x"><div id="apExtras"></div>
+    ${it.t==="pizza"?`<label class="ap-campo"><span>${esc(t("kitchen_notes"))} <small>${esc(t("optional"))}</small></span><textarea id="apNota" rows="2" placeholder="${esc(t("note_ph"))}"></textarea></label>`:""}</div>`;
   actHoja();
   $("apVelo").hidden=$("apHoja").hidden=false;
   requestAnimationFrame(()=>{$("apVelo").classList.add("on");$("apHoja").classList.add("on");});

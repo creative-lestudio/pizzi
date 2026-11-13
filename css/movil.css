@@ -593,3 +593,41 @@ html.modo-app,html.modo-app body{background:#96041E}
 .ap-mas2{flex:none; display:grid; place-items:center; min-height:66px; padding:0 18px; border-radius:999px; background:#fff; color:var(--vino); text-decoration:none; box-shadow:inset 0 0 0 2px var(--vino),0 10px 24px rgba(40,0,6,.2); font:600 16px/1 var(--cond); letter-spacing:.03em; text-transform:uppercase; -webkit-text-stroke:var(--t-r) currentColor}
 .ap-mas2[hidden]{display:none}
 .ap-barra button{flex:1}
+
+/* ---------- Fondo de azulejos (app móvil) ----------
+   Patrón continuo de la foto de azulejos, con un velo muy ligero para igualar el vino de la marca */
+html.modo-app,html.modo-app body,.app-m{background:linear-gradient(rgba(150,4,30,.12),rgba(150,4,30,.12)),#96041E url(../assets/img/fondo-azulejo.webp) 0 0/208px auto repeat}
+
+/* ---------- Ficha de producto: foto completa, ingredientes y alérgenos ---------- */
+.ap-hoja-f img{width:100%; aspect-ratio:1; max-height:48dvh; object-fit:contain; padding:20px 28px 8px}
+.ap-hoja-x{padding-top:0}
+.fi-cab{display:flex; align-items:baseline; justify-content:space-between; gap:12px}
+.fi-precio{font:400 30px/1 var(--deco); color:var(--vino); white-space:nowrap}
+.fi-tam{align-self:flex-start; padding:5px 12px; border-radius:999px; background:var(--rosa-cc); color:var(--vino); font:600 13px/1 var(--cond); letter-spacing:.06em; text-transform:uppercase}
+.fi-h{margin:14px 0 8px; font:600 14px/1 var(--cond); letter-spacing:.12em; text-transform:uppercase; color:var(--suave); -webkit-text-stroke:var(--t-r) currentColor}
+.fi-ing,.fi-al{display:flex; flex-wrap:wrap; gap:8px; list-style:none; margin:0; padding:0}
+.fi-ing li{padding:8px 14px; border-radius:999px; background:var(--rosa-cc); color:var(--vino); font-size:16px}
+.fi-al{gap:10px 18px}
+.fi-al li{display:inline-flex; align-items:center; gap:8px; color:var(--vino); font-size:16px}
+.fi-al .al-i{width:34px; height:34px; background:var(--rosa-cc); box-shadow:none}
+.fi-no{margin:0; color:var(--suave); font-size:16px}
+.fi-ley{display:block; margin-top:8px; color:var(--suave); font-size:13px; line-height:1.3}
+.al-modal-c .ap-hoja-d{padding-bottom:calc(24px + var(--sab))}
+.am-cat .pz{cursor:pointer}
+
+/* ---------- Mapa al estilo Honest Greens: puntos pequeños, tu posición con su radio y encuadre conjunto ---------- */
+.am-pin{width:44px; height:44px; padding:0; border:0; background:none; cursor:pointer; display:grid; place-items:center}
+.am-pin span{display:block; width:18px; height:18px; border-radius:50%; background:var(--vino); border:3px solid #fff; box-shadow:0 3px 8px rgba(80,0,16,.35); transform:none; transition:width .25s,height .25s}
+.am-pin img{display:none}
+.am-pin.on{z-index:2}
+.am-pin.on span{width:28px; height:28px; transform:none; animation:am-pin 2s ease-out infinite}
+@keyframes am-pin{0%{box-shadow:0 0 0 0 rgba(150,4,30,.45),0 3px 8px rgba(80,0,16,.35)}100%{box-shadow:0 0 0 18px rgba(150,4,30,0),0 3px 8px rgba(80,0,16,.35)}}
+.am-yo{width:96px; height:96px; display:grid; place-items:center; border-radius:50%; background:rgba(251,114,165,.16)}
+.am-yo span{margin:0}
+/* ---------- Inicio: solo el logo y el botón de pedir; después, recoger o a domicilio ---------- */
+.ah-inicio{flex:1; width:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:40px; padding:0 4px 8vh}
+.ah-logo{width:min(66vw,280px); filter:drop-shadow(0 6px 24px rgba(40,0,8,.4))}
+.ah-inicio .ah-cta{width:100%; max-width:420px; min-height:74px; background:#fff; color:var(--vino); box-shadow:0 14px 34px rgba(40,0,8,.4); font-size:24px}
+.ah-inicio .ah-cta-f{width:52px; height:52px; background:var(--vino); color:#fff}
+.en-inicio .am-logo{visibility:hidden}
+.ah-tipos button{min-height:104px}

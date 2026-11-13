@@ -17,7 +17,7 @@ El inicio es una app de flujo corto (`js/movil.js`, `css/movil.css`), al estilo 
 
 ## Pedidos web conectados al TPV (en pruebas)
 
-Pedido completo dentro de la web, con su diseño, usando la **carta real de cada local en Shift4 (SkyTab / Shift4 Dine)**. En el móvil sigue el estilo de app: carta → ficha de producto → cesta → pago → seguimiento («recibido → en el horno → lista») con **vía rápida**. En el ordenador usa la carta, el panel lateral y el pedido de siempre.
+Pedido completo dentro de la web, con su diseño, usando la **carta real de cada local en Shift4 (SkyTab / Shift4 Dine)**. En el móvil sigue el estilo de app: carta → ficha de producto → cesta → pago → seguimiento («recibido → en el horno → lista»). En el ordenador usa la carta, el panel lateral y el pedido de siempre.
 
 - **`js/conector.js`** es la única pieza que habla con Shift4 (`TPV.carta`, `TPV.franjas`, `TPV.enviar`, `TPV.estado`). El día que Shift4 apruebe la integración oficial (Marketplace API) solo cambia este archivo; el resto de la web no se toca.
 - **`functions/api/skytab/`** es un puente de **solo lectura** (Cloudflare Pages Function) que lee la carta, los precios, las imágenes y las franjas de recogida de la tienda online de Shift4 de cada local. No crea pedidos ni toca pagos. El código de cada tienda se saca de `pedidoUrl` en `LOCALES`.
