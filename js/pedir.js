@@ -22,7 +22,7 @@ function filaProd(it){
       <b>${esc(cap(n.toLowerCase()))}</b>
       ${desc(it)?`<p>${esc(desc(it))}</p>`:""}
       ${algFila(it)}
-      <span class="ap-precio">${eur(it.p)}${it.badge?` <i>${esc(t(it.badge==="top"?"tag_top":"tag_fresh"))}</i>`:""}</span>
+      <span class="ap-precio">${eur(it.p)}${it.badge?` <i>${esc(tagTxt(it.badge))}</i>`:""}</span>
     </div>
     <div class="ap-prod-f"><img src="${imgDe(it,"-s")}" alt="" loading="lazy" decoding="async">
       <button type="button" class="ap-mas${q?" con":""}" data-ap-add="${it.i}" aria-label="${esc(t("quick_add",{n}))}">${q?q:masIco}</button></div>
@@ -31,7 +31,7 @@ function filaProd(it){
 function pintarPedir(){
   const l=localSel();
   if(!l){location.replace("#ubicaciones");return;}
-  $("apLocal").textContent="Pizzi "+l.n;
+  $("apLocal").textContent="Pizzi "+l.n+(DIST[S.local]!=null?" · "+fmtKm(DIST[S.local]):"");
   $("apLocalK").textContent=t("app_pickup_at");
   $("apHora").textContent=horaCorta(l,S.hora);
   $("apCats").innerHTML=CATS.map(([id,k])=>`<button type="button" data-ap-cat="${id}">${esc(t(k))}</button>`).join("");
@@ -134,6 +134,16 @@ function pintarAlergias(){
 }
 
 /* ---------- #cesta ---------- */
+/* Propina para el equipo (opcional): importes fijos u «Otra» */
+PD.propina=0;
+const PROPINAS=[0,1,2];
+const totalApp=()=>total()+PD.propina;
+function pintarPropina(){
+  const otra=PD.propina&&!PROPINAS.includes(PD.propina);
+  $("apProp").innerHTML=PROPINAS.map(v=>`<button type="button" aria-pressed="${!otra&&PD.propina===v}" data-ap-prop="${v}">${v?eur(v):esc(t("tip_no"))}</button>`).join("")
+    +`<button type="button" aria-pressed="${!!otra}" data-ap-prop="otra">${esc(t("tip_other"))}</button>`;
+  $("apPropOtra").hidden=!otra&&!PD.propOtra;
+}
 function pintarCesta(){
   const l=localSel();
   if(!S.carro.length){location.replace("#pedir");return;}
@@ -142,7 +152,8 @@ function pintarCesta(){
     <img src="${imgDe(it,"-s")}" alt="">
     <div class="ap-linea-t"><b>${esc(cap(nm(c.n).toLowerCase()))}</b>${(c.mods||[]).length?`<small>${esc(c.mods.map(m=>m.n).join(", "))}</small>`:""}${c.nota?`<small>“${esc(c.nota)}”</small>`:""}<span>${eur(c.u*c.q)}</span></div>
     <div class="ap-cant ap-cant-s"><button type="button" data-q="-1" data-k="${esc(c.k)}" aria-label="${esc(t("remove_one"))}">−</button><b>${c.q}</b><button type="button" data-q="1" data-k="${esc(c.k)}" aria-label="${esc(t("add_one"))}">+</button></div>
-  </div>`;}).join("")+`<div class="ap-total"><span>${esc(t("total"))}</span><b>${eur(total())}</b></div>`;
+  </div>`;}).join("")+`<div class="ap-total"><span>${esc(t("total"))}</span><b>${eur(totalApp())}</b></div>`;
+  pintarPropina();
   const beb=P.filter(x=>x.t==="bebida"&&!x.oculto&&!S.carro.some(c=>c.i===x.i));
   $("apUpsellBox").hidden=!beb.length;
   $("apUpsell").innerHTML=beb.map(it=>`<button type="button" class="ap-up" data-ap-add="${it.i}"><img src="${imgDe(it,"-s")}" alt=""><b>${esc(cap(nm(it.n).toLowerCase()))}</b><span>${eur(it.p)}</span><i aria-hidden="true">${masIco}</i></button>`).join("");
@@ -161,7 +172,8 @@ function pintarBarra(){
   $("apBarra").hidden=!ver;
   document.documentElement.classList.toggle("con-barra",ver);
   if(!ver)return;
-  b.innerHTML=p==="cesta"?`<span>${esc(t("app_pay"))}</span><b>${eur(total())}</b>`
+  $("apMas2").hidden=p!=="cesta";
+  b.innerHTML=p==="cesta"?`<span>${esc(t("app_pay"))}</span><b>${eur(totalApp())}</b>`
     :`<i>${n}</i><span>${esc(t("view_order"))}</span><b>${eur(total())}</b>`;
   b.dataset.accion=p;
 }
@@ -182,7 +194,7 @@ function pagarApp(){
   const horaES=withES(()=>{const s=slots(l).find(x=>x.v===S.hora);return s?s.t:"";});
   const alergias=withES(()=>[...PD.alergias].map(k=>t("al_"+k)));
   S.pedido={horaVal:S.hora,t0:ahora(),num:"",tipo:"recoger",nom,tel,email:mail,local:l,horaES,
-    alergias,comentario:$("apComent").value.trim(),items:S.carro.map(c=>({...c})),total:total()};
+    alergias,comentario:$("apComent").value.trim(),items:S.carro.map(c=>({...c})),propina:PD.propina,total:totalApp()};
   S.perfil.alergias=[...PD.alergias];
   S.perfil.nom=nom;S.perfil.tel=tel;if(mail)S.perfil.mail=mail;
   S.perfil.ultimo=S.carro.map(c=>({n:c.n,q:c.q,nota:c.nota}));guardarPerfil();
@@ -215,6 +227,11 @@ $("appM").addEventListener("click",e=>{
 $("apHoraBtn").onclick=()=>{const f=$("apFranjasCab");f.hidden=!f.hidden;if(!f.hidden)pintarFranjas(f);};
 $("apBarraBtn").onclick=()=>{if($("apBarraBtn").dataset.accion==="cesta")pagarApp();else abrirSug();};
 $("apSugX").onclick=()=>cerrarSug(false);
+$("apProp").addEventListener("click",e=>{const b=e.target.closest("[data-ap-prop]");if(!b)return;
+  if(b.dataset.apProp==="otra"){PD.propOtra=true;$("apPropOtra").hidden=false;$("apPropOtra").focus();}
+  else{PD.propOtra=false;PD.propina=+b.dataset.apProp;$("apPropOtra").value="";}
+  pintarCesta();});
+$("apPropOtra").addEventListener("change",()=>{const v=Math.max(0,Math.round((parseFloat($("apPropOtra").value.replace(",","."))||0)*100)/100);PD.propina=v;pintarCesta();});
 $("apSugOk").onclick=()=>cerrarSug(true);
 $("apHojaC").addEventListener("change",e=>{if(e.target.closest(".ap-ext")){e.target.closest(".ap-ext").classList.remove("error");actHoja();}});
 $("apAlerg").addEventListener("click",e=>{const b=e.target.closest("[data-ap-aler]");if(!b)return;const k=b.dataset.apAler;

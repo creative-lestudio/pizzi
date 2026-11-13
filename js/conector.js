@@ -126,6 +126,7 @@ const TPV=(()=>{
       expectedTime:pedido.hora.v==="asap"?null:pedido.hora.iso,
       items:pedido.items.map(x=>({ref:x.ref,quantity:x.q,instructions:x.nota||null,modifiers:(x.mods||[]).map(m=>({modifierSetRef:m.set,modifierRef:m.ref,quantity:1}))})),
       // Alergias y comentario van como petición especial del pedido, delante para que cocina las vea
+      tips:pedido.propina?Math.round(pedido.propina*100):0,
       specialRequest:[(pedido.alergias||[]).length?"ALERGIAS: "+pedido.alergias.join(", "):"",pedido.comentario||""].filter(Boolean).join(" · ")||null,
       customer:{name:pedido.cliente.nom,phone:pedido.cliente.tel,email:pedido.cliente.email||null}};
   }

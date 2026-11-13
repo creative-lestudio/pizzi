@@ -7,7 +7,7 @@
    también bajo la barra del navegador del iPhone. <html> y <body> llevan el mismo vino que la app
    para que el rebote al desplazar no muestre otro color. */
 html.modo-app,html.modo-app body{background:#8A0619; scrollbar-gutter:auto}
-html.modo-app body>:not(.app-m):not(.toast):not(.al-modal){display:none!important}
+html.modo-app body>:not(.app-m):not(.toast):not(.al-modal):not(.am-menu){display:none!important}
 
 .app-m{
   --am-rosa:#E2B0AE; --am-borde:rgba(150,4,30,.18); --am-verde:#2E7D4F; --am-verde-bg:#DDF2E3;
@@ -561,3 +561,35 @@ html.modo-app,html.modo-app body{background:#96041E}
 .ah-hoja>.ah-sec:last-child{min-height:40px; padding-bottom:0}
 /* App (móvil): sin foto, fondo vino liso en todas las pantallas */
 .ah-foto{display:none!important}
+
+/* ---------- Menú lateral ---------- */
+.am-menu-b{grid-column:1; grid-row:1; width:44px; height:44px; background:#fff; color:var(--vino); box-shadow:0 6px 18px rgba(40,0,6,.25)}
+.am-menu-b svg{width:22px; height:22px}
+.am-menu-b[hidden]{display:none}
+.am-menu{position:fixed; inset:0; z-index:110; background:rgba(30,0,6,.55); opacity:0; transition:opacity .25s}
+.am-menu.on{opacity:1}
+.am-menu-c{position:absolute; top:0; bottom:0; left:0; width:min(84vw,360px); display:flex; flex-direction:column; overflow-y:auto; background:#fff; color:var(--vino); transform:translateX(-100%); transition:transform .28s cubic-bezier(.2,.8,.2,1); border-radius:0 28px 28px 0}
+.am-menu.on .am-menu-c{transform:none}
+.am-menu-cab{display:flex; align-items:center; justify-content:space-between; padding:calc(var(--sat) + 24px) 20px 22px; background:var(--vino)}
+.am-menu-cab img{width:110px}
+.am-menu-x{width:40px; height:40px; display:grid; place-items:center; border:0; border-radius:50%; background:rgba(255,255,255,.15); color:#fff; cursor:pointer}
+.am-menu-x svg{width:20px; height:20px}
+.am-menu ul{list-style:none; margin:0; padding:8px 14px}
+.am-menu li a{display:flex; align-items:center; gap:14px; min-height:60px; padding:8px 6px; border-bottom:1px solid var(--linea); color:var(--vino); text-decoration:none; font:600 18px/1.1 var(--cond); letter-spacing:.03em; -webkit-text-stroke:var(--t-r) currentColor}
+.am-mi{width:40px; height:40px; flex:none; display:grid; place-items:center; border-radius:12px; background:var(--rosa-cc)}
+.am-mi svg{width:22px; height:22px}
+.am-menu-pie{margin-top:auto; padding:16px 20px calc(20px + var(--sab))}
+.am-menu-lang{display:flex; gap:8px; justify-content:center; margin-bottom:6px}
+.am-menu-lang button{padding:6px; border:0; border-radius:10px; background:none; cursor:pointer}
+.am-menu-lang button[aria-pressed="true"]{background:var(--rosa-cc); box-shadow:inset 0 0 0 2px var(--vino)}
+.am-menu-lang .bandera{width:30px; height:20px}
+.am-menu-pie .am-redes{padding:12px 0 0}
+/* ---------- Propina y «Añadir más» ---------- */
+.ap-prop{display:grid; grid-template-columns:repeat(4,1fr); gap:8px}
+.ap-prop button{min-height:46px; border:0; border-radius:14px; background:var(--rosa-cc); color:var(--vino); cursor:pointer; font:600 15px/1.1 var(--cond); -webkit-text-stroke:var(--t-f) currentColor}
+.ap-prop button[aria-pressed="true"]{background:var(--vino); color:#fff}
+.ap-prop-otra{width:100%; min-height:48px; margin-top:10px; padding:10px 14px; border:1.5px solid var(--linea); border-radius:14px; font:400 18px/1 var(--txt)}
+.ap-barra{display:flex; gap:10px}
+.ap-mas2{flex:none; display:grid; place-items:center; min-height:66px; padding:0 18px; border-radius:999px; background:#fff; color:var(--vino); text-decoration:none; box-shadow:inset 0 0 0 2px var(--vino),0 10px 24px rgba(40,0,6,.2); font:600 16px/1 var(--cond); letter-spacing:.03em; text-transform:uppercase; -webkit-text-stroke:var(--t-r) currentColor}
+.ap-mas2[hidden]{display:none}
+.ap-barra button{flex:1}

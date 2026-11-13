@@ -75,6 +75,8 @@ function abrirAlerg(){$("alModalC").innerHTML=tablaAlerg();$("alModal").hidden=f
 function cerrarAlerg(){$("alModal").hidden=true;document.documentElement.classList.remove("bloqueado");}
 document.addEventListener("click",e=>{if(e.target.closest("[data-al-abrir]")){e.preventDefault();abrirAlerg();}else if(e.target.id==="alModal")cerrarAlerg();});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("alModal").hidden)cerrarAlerg();});
+/* Texto de la etiqueta del producto (top ventas, fresca, novedad) */
+const tagTxt=b=>t({top:"tag_top",fresh:"tag_fresh",nuevo:"tag_new"}[b]||"tag_top");
 function pizzaCarta(it){
   const n=nm(it.n);
   return `<div class="pz" role="button" tabindex="0" data-prod="${it.i}" data-pi="${it.i}" aria-label="${esc(n)}, ${eur(it.p)}">
@@ -82,7 +84,7 @@ function pizzaCarta(it){
     <div class="pz-pill"><h3>${esc(n)}</h3><span class="pz-precio">${eurCarta(it.p)}</span></div>
     <p>${esc(desc(it))}</p>
     ${algFila(it)}
-    ${it.badge?`<span class="tag">${t(it.badge==="top"?"tag_top":"tag_fresh")}</span>`:""}
+    ${it.badge?`<span class="tag">${tagTxt(it.badge)}</span>`:""}
     <button type="button" class="mas" data-add="${it.i}" aria-label="${esc(t("quick_add",{n}))}">${ICO.mas}</button>
   </div>`;
 }

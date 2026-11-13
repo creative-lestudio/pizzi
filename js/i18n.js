@@ -312,3 +312,12 @@ Object.assign(I,{
 "call_order":["Llamar para pedir","Call to order","Chiama per ordinare","Appeler pour commander","Zum Bestellen anrufen"],
 "call_note":["Pizzi {n} aún no tiene pedido online: llámanos y te lo preparamos.","Pizzi {n} doesn't have online ordering yet: call us and we'll get it ready.","Pizzi {n} non ha ancora l'ordine online: chiamaci e te lo prepariamo.","Pizzi {n} n'a pas encore la commande en ligne : appelle-nous et on te la prépare.","Pizzi {n} hat noch keine Online-Bestellung: ruf uns an, wir bereiten sie vor."]
 });
+
+Object.assign(I,{
+"menu":["Menú","Menu","Menù","Menu","Menü"],
+"tag_new":["Novedad","New","Novità","Nouveau","Neu"],
+"tip_h":["Propina para el equipo","Tip for the team","Mancia per lo staff","Pourboire pour l'équipe","Trinkgeld fürs Team"],
+"tip_no":["Sin propina","No tip","Niente mancia","Sans pourboire","Kein Trinkgeld"],
+"tip_other":["Otra","Other","Altro","Autre","Andere"],
+"add_more":["+ Añadir más","+ Add more","+ Aggiungi","+ Ajouter","+ Mehr"]
+});
