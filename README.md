@@ -48,9 +48,7 @@ Idiomas: español, inglés, italiano, francés y alemán. Se puede instalar en l
 - Logo sin tagline (`assets/img/logo-vino.png` y `logo-rosa.png`).
 - La **carta** reproduce la carta impresa: fondo rojo degradado, media pizza sobre la etiqueta rosa con nombre y precio, descripción debajo y bebidas en lista con puntos. El PDF original se puede descargar desde la carta (`assets/carta-pizzi.pdf`).
 
-> ⚠️ **Licencia de TT Modernoir**: el archivo es la versión *Trial* de DaFont, que solo permite evaluación, no uso comercial.
-> Antes de publicar, comprad la licencia web en [typetype.org](https://typetype.org/licensing/) y sustituid `fonts/TTModernoir-Medium.woff2`.
-> Revisad también la licencia de Cervo para uso web.
+> Licencias tipográficas: Pizzi dispone de la licencia de uso web de TT Modernoir y Cervo.
 
 ## Archivos
 
