@@ -93,7 +93,7 @@ function pintarHola(){
    MapLibre (cdnjs) con el mapa vectorial de OpenFreeMap (gratis, sin clave), recoloreado con los
    tonos de Pizzi. Se carga solo al abrir el mapa; si no carga, siguen funcionando las tarjetas. */
 const MAPA={m:null,marcas:[],yo:null,k:0};
-const ESTILO_MAPA="https://tiles.openfreemap.org/styles/positron";
+const ESTILO_MAPA="https://tiles.openfreemap.org/styles/bright";
 function cargarMapLibre(){
   if(window.maplibregl)return Promise.resolve();
   return new Promise((ok,ko)=>{
@@ -129,14 +129,15 @@ function iniciarMapa(){
   const l0=LOCALES[ORDEN[MAPA.k]];
   if(!MAPA.m){
     MAPA.m=new maplibregl.Map({container:"amMapaM",style:ESTILO_MAPA,center:[l0.lng,l0.lat],zoom:14.6,attributionControl:{compact:true}});
-    MAPA.m.on("styledata",()=>tintarMapa(MAPA.m));
+    // Estilo limpio tipo Google Maps: sin puntos de interés ni paradas, solo calles, parques, agua y los locales
+    MAPA.m.on("styledata",()=>{(MAPA.m.getStyle().layers||[]).forEach(ly=>{if(/^poi|transit|housenumber|aeroway/.test(ly.id)&&MAPA.m.getLayoutProperty(ly.id,"visibility")!=="none")MAPA.m.setLayoutProperty(ly.id,"visibility","none");});});
     // Créditos plegados (botón «i») para que no tapen la tarjeta
     MAPA.m.once("load",()=>{const at=$("amMapaM").querySelector(".maplibregl-ctrl-attrib");if(at)at.classList.remove("maplibregl-compact-show");});
     MAPA.marcas=LOCALES.map((l,i)=>{
       const el=document.createElement("button");el.type="button";el.className="am-pin";el.setAttribute("aria-label","Pizzi "+l.n);
-      el.innerHTML="<span></span>";
+      el.innerHTML='<img src="assets/img/ic-ubicacion.webp" alt="" width="64" height="64">';
       el.onclick=()=>{MAPA.k=ORDEN.indexOf(i);pintarCardMapa();};
-      return new maplibregl.Marker({element:el}).setLngLat([l.lng,l.lat]).addTo(MAPA.m);
+      return new maplibregl.Marker({element:el,anchor:"bottom"}).setLngLat([l.lng,l.lat]).addTo(MAPA.m);
     });
   }else MAPA.m.resize();
   if(conPos()){

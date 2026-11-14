@@ -597,7 +597,7 @@ html.modo-app,html.modo-app body{background:#96041E}
 
 /* ---------- Fondo de azulejos (app móvil) ----------
    Patrón continuo de la foto de azulejos, con un velo muy ligero para igualar el vino de la marca */
-html.modo-app,html.modo-app body,.app-m{background:linear-gradient(rgba(150,4,30,.12),rgba(150,4,30,.12)),#96041E url(../assets/img/fondo-azulejo.webp) 0 0/208px auto repeat}
+html.modo-app,html.modo-app body,.app-m{background:#96041E}
 
 /* ---------- Ficha de producto: foto completa, ingredientes y alérgenos ---------- */
 .ap-hoja-f img{width:100%; aspect-ratio:1; max-height:48dvh; object-fit:contain; padding:20px 28px 8px}
@@ -625,3 +625,45 @@ html.modo-app,html.modo-app body,.app-m{background:linear-gradient(rgba(150,4,30
 @keyframes am-pin{0%{box-shadow:0 0 0 0 rgba(150,4,30,.45),0 3px 8px rgba(80,0,16,.35)}100%{box-shadow:0 0 0 18px rgba(150,4,30,0),0 3px 8px rgba(80,0,16,.35)}}
 .am-yo{width:96px; height:96px; display:grid; place-items:center; border-radius:50%; background:rgba(251,114,165,.16)}
 .am-yo span{margin:0}
+
+/* ---------- Portada de la app: foto de la pizza sobre el vino de Pizzi ---------- */
+.app-m:not(.en-pide) .ah-foto{display:block!important; height:62dvh; background:url(../assets/img/portada-app.webp) center 4%/cover no-repeat, #96041E; -webkit-mask-image:linear-gradient(180deg,#000 62%,transparent 100%); mask-image:linear-gradient(180deg,#000 62%,transparent 100%)}
+.am-pill,.am-menu-b{z-index:2}
+
+/* ---------- Iconos de Pizzi en tarjetas y pestañas ---------- */
+.ah-ic img{width:30px; height:30px; object-fit:contain}
+.ah-tipos button[aria-checked="true"] .ah-ic{background:#fff; color:var(--vino)}
+
+/* ---------- Mapa tipo Google Maps con el icono de ubicación de Pizzi ---------- */
+.am-pin{width:34px; height:44px; padding:0; border:0; background:none; cursor:pointer; display:block}
+.am-pin img{display:block; width:34px; height:34px; object-fit:contain; filter:drop-shadow(0 3px 3px rgba(60,0,10,.45)); transform-origin:50% 100%; transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+.am-pin span{display:none}
+.am-pin.on{z-index:3}
+.am-pin.on img{transform:scale(1.45); animation:am-bote .9s ease-out 1}
+@keyframes am-bote{0%{transform:translateY(-18px) scale(1.45)}60%{transform:translateY(0) scale(1.45)}80%{transform:translateY(-5px) scale(1.45)}100%{transform:scale(1.45)}}
+.am-yo{width:96px; height:96px}
+
+/* ---------- Ficha de producto con vida ---------- */
+.ap-hoja-f{position:relative; overflow:hidden; background:radial-gradient(circle at 50% 46%,#B90A29 0%,#96041E 55%,#6E0213 100%)}
+.ap-hoja-f .fi-aro{position:absolute; left:50%; top:50%; width:86%; aspect-ratio:1; transform:translate(-50%,-50%); border-radius:50%; border:2px dashed rgba(248,233,232,.45); animation:fi-gira 40s linear infinite}
+.ap-hoja-f .fi-aro::after{content:""; position:absolute; inset:-9%; border-radius:50%; background:radial-gradient(circle,rgba(251,114,165,.28),transparent 68%)}
+.ap-hoja-f img{position:relative; z-index:1; width:100%; aspect-ratio:1; max-height:46dvh; object-fit:contain; padding:26px 30px 34px; filter:drop-shadow(0 18px 18px rgba(30,0,6,.5)); animation:fi-entra .6s cubic-bezier(.2,.8,.2,1) both}
+.fi-tag{position:absolute; z-index:2; left:16px; top:16px; padding:7px 14px; border-radius:999px; background:#FB72A5; color:#fff; font:600 14px/1 var(--cond); letter-spacing:.08em; text-transform:uppercase; -webkit-text-stroke:var(--t-r) currentColor; box-shadow:0 4px 12px rgba(30,0,6,.3); transform:rotate(-4deg)}
+@keyframes fi-gira{to{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes fi-entra{from{opacity:0; transform:scale(.7) rotate(-14deg)}to{opacity:1; transform:none}}
+.fi-cuerpo{position:relative; z-index:2; margin-top:-26px; padding-top:22px; border-radius:28px 28px 0 0; background:#fff}
+.fi-cab{align-items:center}
+.fi-precio{padding:9px 16px 7px; border-radius:999px; background:var(--vino); color:#fff; font-size:26px; box-shadow:0 6px 14px rgba(150,4,30,.3)}
+.fi-datos{display:flex; flex-wrap:wrap; gap:8px}
+.fi-datos span{display:inline-flex; align-items:center; gap:8px; padding:6px 14px 6px 8px; border-radius:999px; background:var(--rosa-cc); color:var(--vino); font-size:15px; font-weight:600}
+.fi-datos img{width:26px; height:26px; object-fit:contain}
+.fi-h{display:flex; align-items:center; gap:10px; color:var(--vino)}
+.fi-h::after{content:""; flex:1; height:2px; border-radius:2px; background:linear-gradient(90deg,var(--rosa),transparent)}
+.fi-ing li{padding:8px 14px 8px 12px; background:var(--rosa-cc); box-shadow:inset 0 0 0 1.5px var(--rosa-c)}
+.fi-ing li::before{content:""; display:inline-block; width:8px; height:8px; margin-right:8px; border-radius:50%; background:#FB72A5}
+.fi-al li{padding:5px 14px 5px 5px; border-radius:999px; background:var(--rosa-cc)}
+.fi-al .al-i{width:38px; height:38px; background:#fff}
+@media (prefers-reduced-motion:reduce){.ap-hoja-f .fi-aro,.ap-hoja-f img,.am-pin.on img{animation:none}}
+.am-pin.on img{filter:drop-shadow(0 4px 4px rgba(60,0,10,.5))}
+.al-modal-x{float:none; margin:12px 12px -52px auto; background:#fff; box-shadow:0 4px 14px rgba(30,0,6,.3)}
+.al-modal-c{border-radius:28px 28px 0 0}
