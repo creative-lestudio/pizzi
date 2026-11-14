@@ -49,15 +49,9 @@ function foto(it,small=true){
 const eurCarta=(v,corto)=>{const s=corto?String(+v.toFixed(2)):v.toFixed(2);return (LANG==="en"?s:s.replace(".",","))+"€";};
 /* Iconos de alérgenos (los de la carta impresa: gluten, lácteos, pescado, frutos de cáscara).
    Los datos están en ALERG (js/legal.js); cada icono lleva su nombre para lectores de pantalla. */
-const ALG_ICO={
-  gluten:'<path d="M12 22V10.5"/><path d="M12 10.5c-.2-2.6 1.2-4.6 3.6-5.5.3 2.6-1.1 4.7-3.6 5.5zM12 10.5c.2-2.6-1.2-4.6-3.6-5.5-.3 2.6 1.1 4.7 3.6 5.5zM12 15.5c-.2-2.6 1.2-4.6 3.6-5.5.3 2.6-1.1 4.7-3.6 5.5zM12 15.5c.2-2.6-1.2-4.6-3.6-5.5-.3 2.6 1.1 4.7 3.6 5.5zM12 20.5c-.2-2.6 1.2-4.6 3.6-5.5.3 2.6-1.1 4.7-3.6 5.5zM12 20.5c.2-2.6-1.2-4.6-3.6-5.5-.3 2.6 1.1 4.7 3.6 5.5zM12 5.6c-1-1-1-2.6 0-3.6 1 1 1 2.6 0 3.6z"/>',
-  leche:'<path d="M3.5 16.5L15 7l5.5 3.2v6.3z"/><path d="M3.5 16.5v3h17v-3"/><circle cx="9.5" cy="18" r="1" fill="currentColor" stroke="none"/><circle cx="15.5" cy="13.2" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="14.6" r=".8" fill="currentColor" stroke="none"/>',
-  pescado:'<path d="M7 12c2-3.4 5-4.4 8-4 2.6.4 4.6 2 6 4-1.4 2-3.4 3.6-6 4-3 .4-6-.6-8-4z"/><path d="M7 12L3 8.5 3.6 12 3 15.5z"/><path d="M11.5 8.2c.3-1.6 1.5-2.4 3-2"/><path d="M16 10c-.9 1.2-1 2.6-.2 3.8"/><circle cx="18.2" cy="11.6" r=".6" fill="currentColor"/>',
-  "frutos de cáscara":'<path d="M7 18c-2.5-1-2.5-4.5-.5-6 1-.8 1.1-2.5 1.9-4 1-2 4-2.4 5.6-.6 1.2 1.4 1 3.2.6 4.4"/><path d="M13.2 10.2c2.4 1.4 5.2 4.2 5.2 7.4 0 2.4-1.8 3.8-3.8 3.8-2.2 0-3.6-1.8-3.6-3.8 0-3 .8-5.8 2.2-7.4z"/><path d="M14.6 14v5"/>'
-};
+const ALG_ICO={gluten:"ic-trigo",leche:"ic-queso",pescado:"ic-pescado","frutos de cáscara":"ic-frutos"};
 /* Cada icono va en una pastilla redonda rosa con el dibujo en vino, como los iconos de la app */
-const ALG_IMG={gluten:"ic-gluten",leche:"ic-lacteos"};
-const algIco=a=>ALG_IMG[a]?`<span class="al-i" role="img" aria-label="${esc(alg(a))}" title="${esc(cap(alg(a)))}"><img src="assets/img/${ALG_IMG[a]}.webp" alt="" width="24" height="24"></span>`:ALG_ICO[a]?`<span class="al-i" role="img" aria-label="${esc(alg(a))}" title="${esc(cap(alg(a)))}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ALG_ICO[a]}</svg></span>`:"";
+const algIco=a=>ALG_ICO[a]?`<span class="al-i" role="img" aria-label="${esc(alg(a))}" title="${esc(cap(alg(a)))}"><img src="assets/img/${ALG_ICO[a]}.webp" alt="" width="64" height="64"></span>`:"";
 const algFila=it=>{const a=(ALERG[it.n]||[]).filter(x=>ALG_ICO[x]);return a.length?`<span class="al-fila">${a.map(algIco).join("")}</span>`:"";};
 /* Leyenda al principio de la carta */
 function leyendaAlerg(){
@@ -75,10 +69,10 @@ function tablaAlerg(){
 const ingredientes=it=>desc(it).replace(/\.\s*$/,"").split(/\s*,\s*|\s+(?:y|and|e|et|und)\s+/i).map(s=>s.trim()).filter(Boolean).map(cap);
 function fichaHTML(it,idT){
   const a=(ALERG[it.n]||[]).filter(x=>ALG_ICO[x]),pz=it.t==="pizza";
-  return `<div class="ap-hoja-f"><img src="${imgDe(it,"")}" alt="${esc(cap(nm(it.n).toLowerCase()))}"></div>
-  <div class="ap-hoja-d">
+  return `<div class="ap-hoja-f"><i class="fi-aro" aria-hidden="true"></i><img src="${imgDe(it,"")}" alt="${esc(cap(nm(it.n).toLowerCase()))}">${it.badge?`<span class="fi-tag">${esc(tagTxt(it.badge))}</span>`:""}</div>
+  <div class="ap-hoja-d fi-cuerpo">
     <div class="fi-cab"><h2 class="deco"${idT?` id="${idT}"`:""}>${esc(nm(it.n))}</h2><span class="fi-precio">${eurCarta(it.p)}</span></div>
-    ${pz?`<span class="fi-tam">${esc(t("size31"))}</span><h3 class="fi-h">${esc(t("ing_h"))}</h3><ul class="fi-ing">${ingredientes(it).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:(desc(it)?`<p>${esc(desc(it))}</p>`:"")}
+    ${pz?`<div class="fi-datos"><span><img src="assets/img/ic-porcion.webp" alt="" width="64" height="64">${esc(t("size31"))}</span><span><img src="assets/img/ic-reloj.webp" alt="" width="64" height="64">${esc(t("tipo_recoger_s"))}</span></div><h3 class="fi-h">${esc(t("ing_h"))}</h3><ul class="fi-ing">${ingredientes(it).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:(desc(it)?`<p>${esc(desc(it))}</p>`:"")}
     <h3 class="fi-h">${esc(t("allergens"))}</h3>
     ${a.length?`<ul class="fi-al">${a.map(x=>`<li>${algIco(x)}<span>${esc(cap(alg(x)))}</span></li>`).join("")}</ul>`:`<p class="fi-no">${esc(t("al_none"))}</p>`}
     ${pz?`<small class="fi-ley">${esc(t("al_ley_p"))}</small>`:""}

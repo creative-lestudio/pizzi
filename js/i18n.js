@@ -194,7 +194,7 @@ Object.assign(I,{
 "app_pide_h":["Pide ahora","Order now","Ordina ora","Commande maintenant","Jetzt bestellen"],
 "app_pide_p":["Elige cómo quieres pedir.","Choose how you want to order.","Scegli come vuoi ordinare.","Choisis comment commander.","Wähle, wie du bestellen möchtest."],
 "app_t_locs":["Ubicaciones","Locations","Sedi","Adresses","Standorte"],
-"app_t_online":["Pedidos online","Online orders","Ordini online","Commandes en ligne","Online bestellen"],
+"app_t_online":["Pedir a domicilio","Order delivery","Ordina a domicilio","Commander à domicile","Lieferung bestellen"],
 "app_t_menu":["Carta","Menu","Menù","Carte","Speisekarte"],
 "app_pdf":["Carta en PDF","PDF menu","Menù in PDF","Carte en PDF","Speisekarte als PDF"],
 "app_locs_sorted":["Ordenados del más cercano al más lejano.","Sorted from nearest to farthest.","Ordinati dal più vicino al più lontano.","Classés du plus proche au plus éloigné.","Sortiert von nah nach fern."],
