@@ -21,7 +21,7 @@ const PANT_APP=["","inicio","hola",...TABS,...PANT_PEDIR];
 const APP={estado:null,manual:false,abierto:null,desdeHola:false,pant:null,cartaLang:null};
 const PLAT={glovo:"Glovo",uber:"Uber Eats"};
 
-const hashApp=()=>location.hash.replace("#","");
+const hashApp=()=>rutaActual();
 /* La app es la versión móvil; en el ordenador se ve la web de escritorio (inicio, carta, locales, pedido) */
 const MOVIL=matchMedia("(max-width:899px)");
 const enApp=()=>MOVIL.matches&&PANT_APP.includes(hashApp());
@@ -282,6 +282,7 @@ function alEntrar(){
   if(APP.estado===null)buscar();
 }
 window.addEventListener("hashchange",alEntrar);
+window.addEventListener("popstate",()=>{if(!location.hash)alEntrar();});
 MOVIL.addEventListener("change",()=>{alEntrar();if(!enApp())ir();});
 
 $("appM").addEventListener("click",e=>{

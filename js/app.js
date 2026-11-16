@@ -620,8 +620,21 @@ setInterval(()=>{if(S.pedido&&S.pedido.web){if(VISTA==="hecho"&&!$("okEstado").h
 const VISTAS=["inicio","carta","locales","pedido","hecho","legal"];
 const ALIAS={"":"inicio",menu:"carta"};
 let VISTA=null;
+/* Rutas: la web va por #secciones, pero las páginas legales se ven como /aviso-legal (sin #).
+   Solo donde el servidor devuelve index.html para esas rutas (Cloudflare Pages); en GitHub Pages se queda el #. */
+const LIMPIO=location.protocol!=="file:"&&!/github\.io$/.test(location.hostname);
+const rutaActual=()=>{const h=location.hash.replace("#","");if(h)return h;const p=location.pathname.replace(/^\/+|\/+$/g,"");return PAGINAS.includes(p)?p:"";};
+function limpiarUrl(){
+  if(!LIMPIO)return;
+  const h=location.hash.replace("#",""),p=location.pathname.replace(/^\/+|\/+$/g,"");
+  try{
+    if(PAGINAS.includes(h))history.replaceState(null,"","/"+h+location.search);
+    else if(h&&PAGINAS.includes(p))history.replaceState(null,"","/"+location.search+"#"+h);
+  }catch(e){}
+}
 function ir(){
-  let v=location.hash.replace("#","");
+  limpiarUrl();
+  let v=rutaActual();
   // Enlace directo a una categoría (#cat-pizzas): abre la carta si no está abierta
   let cat=null;
   if(v.startsWith("cat-")){cat=v.slice(4);if(VISTA==="carta"){irACat(cat,true);return;}v="carta";}
@@ -653,6 +666,7 @@ const RECUERDA=["inicio","carta","locales"],POS={};
 /* Tocar la pestaña de la vista actual vuelve arriba, como en las apps */
 document.querySelectorAll("[data-tab]").forEach(a=>a.addEventListener("click",e=>{if(a.dataset.tab===VISTA){e.preventDefault();window.scrollTo({top:0,behavior:"smooth"});}}));
 window.addEventListener("hashchange",ir);
+window.addEventListener("popstate",()=>{if(!location.hash)ir();});
 $("volver").onclick=()=>{
   if(VISTA==="legal"&&history.length>1){history.back();return;}
   location.hash={pedido:"carta",hecho:"inicio",legal:"inicio"}[VISTA]||"inicio";
