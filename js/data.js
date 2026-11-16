@@ -28,7 +28,7 @@ const CONFIG={
     radioCentro:3,
     radioMax:7,
     uberTodos:"",
-    glovoTodos:"https://glovoapp.com/es/es/valencia/search/?query=pizzi"
+    glovoTodos:"https://glovoapp.com/es/es/valencia/stores/pizzi-val"
   }
 };
 
@@ -48,9 +48,9 @@ const CONFIG={
    Si cierra después de medianoche usa horas >24 (ej. "25:00" = 01:00). [] = cerrado. */
 const T=(a,c)=>[[a,c]];
 const LOCALES=[
-  {id:"mercado",uber:"",glovo:"",pedidoUrl:"https://online.skytab.com/da319e8ac0b86fb917ae77215beeec67",lat:39.4737,lng:-0.3789,n:"Mercado Central",d:"C/ de les Carabasses, 3, Ciutat Vella, 46001 València",tel:"+34 744 78 47 37",whatsapp:"",maps:"https://maps.app.goo.gl/rAKcLgmbYJYk6TSh9",
+  {id:"mercado",uber:"https://www.ubereats.com/es/store/pizzi-pizzeria-pizza-mercat/ma7jsFEOVoy8ZuEhhnjisw",glovo:"",pedidoUrl:"https://online.skytab.com/da319e8ac0b86fb917ae77215beeec67",lat:39.4737,lng:-0.3789,n:"Mercado Central",d:"C/ de les Carabasses, 3, Ciutat Vella, 46001 València",tel:"+34 744 78 47 37",whatsapp:"",maps:"https://maps.app.goo.gl/rAKcLgmbYJYk6TSh9",
    h:[[["12:00","15:00"],["19:00","24:00"]],[["12:00","15:00"],["19:00","24:00"]],[["12:00","15:00"],["19:00","24:00"]],[["12:00","15:00"],["19:00","24:00"]],T("12:00","24:00"),T("12:00","24:00"),T("12:00","24:00")]},
-  {id:"abastos",uber:"https://www.ubereats.com/es/search?diningMode=DELIVERY&q=Pizzi%20Pizzer%C3%ADa%20Pizza%20Abastos",glovo:"",lat:39.4664,lng:-0.3851,n:"Abastos",d:"C/ de Sant Francesc de Borja, 20, Extramurs, 46007 València",tel:"+34 673 16 14 66",whatsapp:"",maps:"https://maps.app.goo.gl/iob1fPZKLdyD8FNF9",
+  {id:"abastos",uber:"https://www.ubereats.com/es/store/pizzi-pizzeria-pizza-abastos/SZ1zWDKFXxCiyAqtotOs9A",glovo:"",lat:39.4664,lng:-0.3851,n:"Abastos",d:"C/ de Sant Francesc de Borja, 20, Extramurs, 46007 València",tel:"+34 673 16 14 66",whatsapp:"",maps:"https://maps.app.goo.gl/iob1fPZKLdyD8FNF9",
    h:[[],T("18:30","23:30"),T("18:30","23:30"),T("18:30","23:30"),T("18:30","24:00"),T("18:30","24:00"),T("18:30","23:30")]},
   {id:"russafa",uber:"",glovo:"",lat:39.4631,lng:-0.3739,n:"Ruzafa",d:"C. de Ruzafa, 58, L'Eixample, 46004 València",tel:"+34 744 78 47 37",whatsapp:"",maps:"https://maps.app.goo.gl/VfqsVDEDcRsKXxyu9",
    h:[T("18:30","23:30"),T("18:30","23:30"),T("18:30","23:30"),T("18:30","23:30"),T("18:30","24:00"),T("18:30","24:00"),T("18:30","23:30")]},
