@@ -35,7 +35,7 @@ const TPV=(()=>{
   const VIGENCIA=5*60e3;   // la carta se vuelve a pedir pasados 5 min
 
   /* Código de la tienda online del local: lo último de su enlace online.skytab.com */
-  const refDe=l=>{const m=l&&l.pedidoUrl&&l.pedidoUrl.match(/online\.skytab\.com\/([0-9a-f]{32})/);return m?m[1]:null;};
+  const refDe=l=>{const u=l&&(l.pedidoUrl||l.skytabUrl),m=u&&u.match(/online\.skytab\.com\/([0-9a-f]{32})/);return m?m[1]:null;};
 
   async function pedir(ruta){
     const ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),8000);

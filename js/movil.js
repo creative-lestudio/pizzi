@@ -83,7 +83,7 @@ function pintarHola(){
   // Botón principal: a domicilio lleva a las apps de reparto; si no, a pedir en el local elegido
   const a=$("amAqui");
   if(tipo==="domicilio"){a.href="#domicilio";$("amAquiT").textContent=t("app_deliv_cta");}
-  else{a.href=l?hrefPedir(l):"#";$("amAquiT").textContent=t(l&&!l.pedidoUrl&&!PEDIDOS_WEB?"call_order":"app_pide_h");}
+  else{a.href=l?hrefPedir(l):"#";$("amAquiT").textContent=t(l&&!l.pedidoUrl&&!PEDIDOS_WEB?"order_here":"app_pide_h");}
   // Repetir el último pedido (solo con pedidos web)
   const ult=(S.perfil.ultimo||[]).filter(x=>{const it=porNombre(x.n);return it&&!it.oculto;});
   $("amRepite").hidden=!(PEDIDOS_WEB&&ult.length&&tipo!=="domicilio"&&l);
@@ -207,7 +207,7 @@ function pintarUbicaciones(){
       ${on?`<div class="am-loc-c">
         <img src="${fotoLocal(l)}" alt="" loading="lazy">
         <p class="am-loc-d">${esc(l.d)}<br>${esc(hrTexto(l))}</p>
-        ${pillPedir(hrefPedir(l),t(l.pedidoUrl||PEDIDOS_WEB?"order_here":"call_order"),` data-am-pedir="${i}"`)}
+        ${pillPedir(hrefPedir(l),t("order_here"),` data-am-pedir="${i}"`)}
         <div class="am-loc-acc">
           <a class="am-mini" href="${esc(l.maps)}" target="_blank" rel="noopener">${esc(t("how_get"))}</a>
           <a class="am-mini" href="tel:${esc(l.tel.replace(/\s/g,""))}">${esc(t("call_store"))}</a>
