@@ -6,11 +6,11 @@ const EMPRESA={
   razon:"PIZZILA SL",
   cif:"B23966229",
   domicilio:"C/ de les Carabasses, 3, 46001 València (Valencia)",
-  email:"[EMAIL DE CONTACTO]",
+  email:"hola@pidepizzi.es",
   tel:"+34 744 78 47 37",
-  registro:"Registro Mercantil de Valencia (constituida el 17/10/2025) [tomo, folio y hoja pendientes]",
+  registro:"Registro Mercantil de Valencia (sociedad constituida el 17/10/2025)",
   web:"https://pidepizzi.es",
-  actualizado:"12 de noviembre de 2026",
+  actualizado:"19 de noviembre de 2026",
   alergenosValidados:true   // pasar a true cuando Pizzi valide la tabla con las fichas de sus proveedores
 };
 const pv=x=>String(x).startsWith("[")?`<mark class="pend">${esc(x)}</mark>`:esc(x);
