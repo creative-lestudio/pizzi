@@ -7,6 +7,7 @@
 */
 const CONFIG={
   demo:false,
+  pedirPorLlamada:true,
   whatsappDemo:"",
   /* CONECTOR CON EL TPV (js/conector.js)
      - envio: "demo" simula el pedido (no llega al local ni se cobra). "shift4" cuando Shift4 lo apruebe.
@@ -56,9 +57,13 @@ const LOCALES=[
    h:[T("18:30","23:30"),T("18:30","23:30"),T("18:30","23:30"),T("18:30","23:30"),T("18:30","24:00"),T("18:30","24:00"),T("18:30","23:30")]},
   {id:"canovas",uber:"https://www.ubereats.com/es/store/pizzi-pizzeria-pizza-canovas/JRksootZWQS7D1WcK4h_qQ",glovo:"",lat:39.465,lng:-0.3676,n:"Cánovas",d:"C. de Joaquín Costa, 12, L'Eixample, 46005 València",tel:"+34 604 81 24 26",whatsapp:"",maps:"https://maps.app.goo.gl/L3ei1jMcgYXmEefz7",
    h:[T("18:00","23:30"),T("18:00","23:30"),T("18:00","23:30"),T("18:00","23:30"),T("18:00","25:00"),T("18:00","25:00"),T("18:00","23:30")]},
-  {id:"peris",uber:"",glovo:"",lat:39.4624,lng:-0.3633,pedidoUrl:"https://online.skytab.com/ca7f91bfeed306f50f4147d0dd13b011",n:"Peris y Valero",d:"Av. de Peris i Valero, 189, L'Eixample, 46005 València",tel:"+34 643 21 52 82",whatsapp:"",maps:"https://maps.app.goo.gl/iMcQYmXb9bt8SR686",
+  {id:"peris",uber:"",glovo:"",lat:39.4624,lng:-0.3633,pedidoUrl:"https://online.skytab.com/ca7f91bfeed306f50f4147d0dd13b011",n:"Peris y Valero",d:"Av. de Peris i Valero, 189, L'Eixample, 46005 València",tel:"+34 744 78 47 37",whatsapp:"",maps:"https://maps.app.goo.gl/iMcQYmXb9bt8SR686",
    h:[T("18:30","23:30"),T("18:30","23:30"),T("18:30","23:30"),T("18:30","23:30"),T("18:30","24:00"),T("18:30","24:00"),T("18:30","23:30")]}
 ];
+/* Pedidos por teléfono (decisión del negocio, nov. 2026): mientras los pedidos online no avisen al local,
+   el botón de pedir marca el teléfono del local. Las tiendas de SkyTab se guardan en skytabUrl para
+   reactivarlas: poner pedirPorLlamada:false en CONFIG. */
+if(CONFIG.pedirPorLlamada)LOCALES.forEach(l=>{if(l.pedidoUrl){l.skytabUrl=l.pedidoUrl;delete l.pedidoUrl;}});
 const FOTO_LOCAL={mercado:"l-mercado",abastos:"l-abastos",russafa:"l-russafa",canovas:"l-canovas",peris:"l-peris"};
 
 /* CARTA · [nombre, tipo, descripción ES, descripción EN, precio, etiqueta, imagen]
